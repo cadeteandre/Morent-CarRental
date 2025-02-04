@@ -5,9 +5,9 @@ import SeatIcon from "../assets/SVG/SeatIcon";
 
 const AutoCard = () => {
   return (
-    <div className="card bg-base-100 w-96 shadow-sm font-display">
+    <div className="card bg-base-100 w-[327px] shadow-sm font-display ">
       {" "}
-      <div className="card-body">
+      <div className="card-body p-6">
         <div className="flex flex-row justify-between items-center">
           <h2 className="font-bold text-base">Volkswagen Golf</h2>{" "}
           <button
@@ -50,11 +50,13 @@ const AutoCard = () => {
           </li>
         </ul>
 
-        <div className="card-actions justify-end">
+        <div className="card-actions justify-end items-center">
           <p className="text-base font-bold ">
             € 50 / <span className="text-neutral-400 text-sm">day</span>
           </p>
-          <button className="btn btn-primary  text-xs">Rent Now</button>
+          <button className="btn btn-primary  text-xs font-Jakarta-SemiBold">
+            Rent Now
+          </button>
         </div>
       </div>
     </div>
