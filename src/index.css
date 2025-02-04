@@ -1,4 +1,9 @@
 @import "tailwindcss";
-@plugin "daisyui"{
-    themes: corporate;
+@plugin "daisyui" {
+  themes: corporate;
+}
+
+@theme {
+  --font-display: "Arial";
+  --font-Jakarta-SemiBold: "PlusJakartaSans-SemiBold";
 }

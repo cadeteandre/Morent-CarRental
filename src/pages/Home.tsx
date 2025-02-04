@@ -1,7 +1,11 @@
+import Reviews from "../components/Reviews";
+
 const Home = () => {
-    return (  
-        <div>Home</div>
-    );
-}
+  return (
+    <div>
+      <Reviews />
+    </div>
+  );
+};
 
 export default Home;
