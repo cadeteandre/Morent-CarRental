@@ -1,11 +1,13 @@
 import { Outlet } from "react-router";
+import Footer from "../components/Footer";
 
 const RootLayout = () => {
-    return (  
-        <>
-            <Outlet />
-        </>
-    );
-}
+  return (
+    <>
+      <Outlet />
+      <Footer />
+    </>
+  );
+};
 
 export default RootLayout;
