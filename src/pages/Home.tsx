@@ -1,7 +1,7 @@
+import PickUpDropOff from "../components/PickUpDropOff";
+
 const Home = () => {
-    return (  
-        <div>Home</div>
-    );
-}
+    return <PickUpDropOff />;
+};
 
 export default Home;
