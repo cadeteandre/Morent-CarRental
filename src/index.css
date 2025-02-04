@@ -7,3 +7,8 @@
   --font-display: "Arial";
   --font-Jakarta-SemiBold: "PlusJakartaSans-SemiBold";
 }
+
+@font-face {
+  font-family: "PlusJakartaSans-SemiBold";
+  src: url("/fonts/PlusJakartaSans-SemiBold.ttf");
+}
