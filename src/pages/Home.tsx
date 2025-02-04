@@ -1,11 +1,9 @@
 import AdCard from "../components/AdCard";
-import CarDetails from "../components/Cardetails";
 
 const Home = () => {
   return (
     <>
       <div>Home</div>
-      <CarDetails />
 
       <div className="p-4">
         <AdCard
