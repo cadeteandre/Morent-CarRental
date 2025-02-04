@@ -1,7 +1,12 @@
+import AutoCard from "../components/autoCard";
+
 const Home = () => {
-    return (  
-        <div>Home</div>
-    );
-}
+  return (
+    <div>
+      Home
+      <AutoCard />
+    </div>
+  );
+};
 
 export default Home;
