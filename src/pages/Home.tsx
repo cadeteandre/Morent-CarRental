@@ -1,6 +1,5 @@
 import AdCard from "../components/AdCard";
 import CarDetails from "../components/Cardetails";
-import Reviews from "../components/Reviews";
 
 const Home = () => {
   return (
