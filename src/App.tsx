@@ -1,15 +1,20 @@
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router"
-import RootLayout from "./rootLayout/RootLayout"
-import Home from "./pages/Home"
-import Details from "./pages/Details"
-import Payment from "./pages/Payment"
-import Favorites from "./pages/Favorites"
-import MyBookings from "./pages/MyBookings"
-import Register from "./pages/Register"
-import Login from "./pages/Login"
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router";
+import RootLayout from "./rootLayout/RootLayout";
+import Home from "./pages/Home";
+import Details from "./pages/Details";
+import Payment from "./pages/Payment";
+import Favorites from "./pages/Favorites";
+import MyBookings from "./pages/MyBookings";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import { UserProvider } from "./UserContext";
 
 function App() {
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<RootLayout />}>
@@ -22,13 +27,15 @@ function App() {
         <Route path="login" element={<Login />} />
       </Route>
     )
-  )
+  );
 
   return (
     <>
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
