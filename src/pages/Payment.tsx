@@ -1,3 +1,7 @@
+import BitcoinIcon from "../assets/SVG/BitcoinIcon";
+import CreditCardIcon from "../assets/SVG/CreditCardIcon";
+import PayPalIcon from "../assets/SVG/PayPalIcon";
+
 const Payment = () => {
   return (
     <main>
@@ -90,32 +94,47 @@ const Payment = () => {
         </div>
         <p>Please enter your payment method</p>
         <div className="flex flex-col ">
-          <div>
+          <div className="flex ">
             <input
               type="radio"
               name="paymentMethod"
-              className="radio radio-primary"
+              className="radio radio-primary  radio-xs"
               id="creditCard"
             />{" "}
-            <label htmlFor="creditCard">Credit Card</label>
+            <label
+              className="flex justify-between items-center w-full"
+              htmlFor="creditCard"
+            >
+              Credit Card <CreditCardIcon />
+            </label>
           </div>
-          <div>
+          <div className="flex ">
             <input
               type="radio"
               name="paymentMethod"
-              className="radio radio-primary"
+              className="radio radio-primary radio-xs"
               id="PayPal"
             />{" "}
-            <label htmlFor="PayPal">PayPal</label>
+            <label
+              className="flex justify-between items-center w-full"
+              htmlFor="PayPal"
+            >
+              PayPal <PayPalIcon />
+            </label>
           </div>{" "}
-          <div>
+          <div className="flex ">
             <input
               type="radio"
               name="paymentMethod"
-              className="radio radio-primary"
+              className="radio radio-primary radio-xs"
               id="Bitcoin"
             />{" "}
-            <label htmlFor="Bitcoin">Bitcoin</label>
+            <label
+              className="flex justify-between items-center w-full"
+              htmlFor="Bitcoin"
+            >
+              Bitcoin <BitcoinIcon />
+            </label>
           </div>
         </div>
       </fieldset>
