@@ -54,7 +54,7 @@ const AutoCard = () => {
           <p className="text-base font-bold ">
             € 50 / <span className="text-neutral-400 text-sm">day</span>
           </p>
-          <button className="btn btn-primary  text-xs font-Jakarta-SemiBold">
+          <button className="btn bg-blue-600 text-white  text-xs font-Jakarta-SemiBold">
             Rent Now
           </button>
         </div>
