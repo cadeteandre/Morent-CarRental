@@ -70,9 +70,12 @@ const Home = () => {
                     <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />
                 ))}
             </section>
-            <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
-                Load More
-            </button>
+            <section>
+                <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
+                    Load More
+                </button>
+                <p>{`${fetchedVehicle.length} von ${tableRows} Ergebnisse angezeigt.`}</p>
+            </section>
         </>
     );
 };
