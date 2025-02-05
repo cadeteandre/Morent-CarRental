@@ -2,8 +2,8 @@ import { Link } from "react-router";
 
 const Header = () => {
     return (  
-        <header>
-            <nav className="navbar bg-base-100 shadow-sm">
+        <header className="my-6">
+            <nav className="navbar bg-base-100">
                 <div className="flex-1 flex-wrap px-4">
                     <Link to={'/'} className="btn btn-ghost text-2xl text-blue-600">MORENT</Link>
                     <label className="input rounded-4xl mt-4 sm:mt-0 relative left-7 top-4 -translate-y-1/2 sm:relative sm:top-auto sm:left-auto sm:translate-y-0">
