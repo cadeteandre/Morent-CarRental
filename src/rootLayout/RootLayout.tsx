@@ -6,7 +6,9 @@ const RootLayout = () => {
     return (  
         <>
             <Header />
-            <Outlet />
+            <main className="bg-gray-200 py-8">
+                <Outlet />
+            </main>
             <Footer />
         </>
     );
