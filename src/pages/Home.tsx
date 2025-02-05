@@ -74,7 +74,7 @@ const Home = () => {
                 <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                     Load More
                 </button>
-                <p>{`${fetchedVehicle.length} von ${tableRows} Ergebnisse angezeigt.`}</p>
+                <p>{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
             </section>
         </>
     );
