@@ -12,7 +12,7 @@ interface AutoCardProps {
     gear_type: string;
     seats: number;
     price_per_day: number | null;
-    car_img: string;
+    car_img: string | null;
 }
 
 const AutoCard: FC<AutoCardProps> = (props) => {
@@ -28,7 +28,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
                 <p className="text-neutral-400 font-bold text-[10.7px]">{props.vehicle_type}</p>
 
                 <figure>
-                    <img src={props.car_img} alt={`${props.brand} ${props.model}`} />
+                    <img src={props.car_img ? props.car_img : "./svg/platzhalter_bild.svg"} alt={props.car_img ? `${props.brand} ${props.model}` : `Picture not available.`} />
                 </figure>
 
                 <ul className="flex justify-between items-center mb-9">
