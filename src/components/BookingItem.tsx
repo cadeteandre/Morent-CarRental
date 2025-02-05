@@ -42,7 +42,7 @@ const BookingItem: React.FC<IBookingItemProps> = ({
     return (  
         <div className='flex flex-col'>
             <p className='font-bold text-left ml-6 mb-2'>{pickupDate}</p>
-            <div className="flex flex-col rounded-xl py-4 bg-white">
+            <div className="flex flex-col rounded-box py-4 bg-white">
                 <div className='flex flex-col rounded-xl px-6'>
                     <div className='flex gap-2 items-center sm:self-start'>
                         <img src={carImg} alt="Booking Car" className='max-w-[100px] rounded-xl' />
