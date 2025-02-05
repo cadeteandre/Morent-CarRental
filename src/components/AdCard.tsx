@@ -9,7 +9,7 @@ interface IAdCardProps {
 const AdCard: React.FC<IAdCardProps> = ({ adTitle, adText, adBackgroundImg, adButtonColor, adCarImg }) => {
     return (  
         <div 
-            className="card max-w-96 sm:w-96 rounded-md text-white bg-cover bg-center -z-1 mt-4"
+            className="card max-w-96 sm:w-96 rounded-md text-white bg-cover bg-center static mt-4"
             style={{ backgroundImage: `url(${adBackgroundImg})` }}>
             <div className="card-body">
                 <h2 className="text-2xl font-bold max-w-[68%]">{adTitle}</h2>

@@ -5,7 +5,6 @@ const Home = () => {
   return (
     <>
       <div>Home</div>
-      <NavBarSide />
       <div className="p-4">
         <AdCard
           adTitle={`The Best Platform for Car Rental`}
