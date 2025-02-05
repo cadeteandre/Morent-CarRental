@@ -16,21 +16,47 @@ type Vehicle = {
 
 const Home = () => {
     const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[]>([]);
+    const [fetchLimit, setFetchLimit] = useState<number>(8);
+    const [tableRows, setTableRows] = useState<number>(0);
+
+    async function fetchVehicles(limit: number) {
+        const { data, error } = await supabase.from("vehicles").select("brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
+        if (error) {
+            console.error("Fehler beim Fetchen der Vehicles: ", error);
+        } else {
+            setFetchedVehicle(data);
+        }
+    }
+
+    async function getTableRows() {
+        const { count, error } = await supabase.from("vehicles").select("*", { count: "exact", head: true });
+        if (error) {
+            console.error("Fehler beim abfragen der Zeilen der Tabelle 'vehicles': ", error);
+        } else if (!count) {
+            setTableRows(0);
+        } else {
+            setTableRows(count);
+        }
+    }
+
+    function loadMore() {
+        setFetchLimit((prev) => {
+            if (prev < tableRows) {
+                const newLimit = prev + 8;
+                return newLimit;
+            } else {
+                return prev;
+            }
+        });
+    }
 
     useEffect(() => {
-        async function fetchVehicles() {
-            const { data, error } = await supabase.from("vehicles").select("brand(*), consumption, gear_type, model, price_per_day, seats, vehicle_type(*), car_img ");
-            if (error) {
-                console.error("Fehler beim Fetchen der Vehicles: ", error);
-            } else {
-                setFetchedVehicle(data);
-            }
-        }
+        fetchVehicles(fetchLimit);
+    }, [fetchLimit]);
 
-        fetchVehicles();
+    useEffect(() => {
+        getTableRows();
     }, []);
-
-    console.log(fetchedVehicle);
 
     return (
         <>
@@ -44,6 +70,9 @@ const Home = () => {
                     <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />
                 ))}
             </section>
+            <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
+                Load More
+            </button>
         </>
     );
 };
