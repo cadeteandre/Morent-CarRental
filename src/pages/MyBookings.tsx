@@ -5,7 +5,7 @@ const MyBookings = () => {
 
     const [selected, setSelected] = useState("Upcoming");
     return (  
-        <section className="flex flex-col px-4 text-center">
+        <section className="flex flex-col px-4 text-center py-8">
             <h1 className="text-2xl font-bold mb-8">My Bookings</h1>
             <hr className="w-full self-center text-gray-400" />
             <div className="flex flex-col items-center space-y-4 border rounded-3xl self-center my-6">

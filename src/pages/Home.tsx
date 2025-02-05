@@ -4,7 +4,7 @@ import PickUpDropOff from "../components/PickUpDropOff";
 
 const Home = () => {
   return (
-    <section className="mx-4 flex flex-col gap-6">
+    <section className="mx-4 flex flex-col gap-6 py-8">
       <div className="flex flex-col sm:flex-row items-center justify-around gap-6">
         <AdCard
           adTitle={`The Best Platform for Car Rental`}

@@ -4,7 +4,7 @@ import Reviews from "../components/Reviews";
 
 const Details = () => {
     return (  
-        <>
+        <section className="py-8">
             <button className="cursor-pointer flex items-center justify-center mb-6">
                 <img src="/svg/back-btn-icon.svg" alt="Back button icon" />
                 <span className="text-[#90A3BF] py-1 text-lg">back</span>
@@ -25,7 +25,7 @@ const Details = () => {
                     <span className="text-[#90A3BF]">120 Car</span>
                 </div>
             </div>
-        </>
+        </section>
     );
 }
 
