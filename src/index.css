@@ -6,9 +6,14 @@
 @theme {
   --font-display: "Arial";
   --font-Jakarta-SemiBold: "PlusJakartaSans-SemiBold";
+  --font-Jakarta-Regular: "PlusJakartaSans-Regular";
 }
 
 @font-face {
   font-family: "PlusJakartaSans-SemiBold";
   src: url("/fonts/PlusJakartaSans-SemiBold.ttf");
+}
+@font-face {
+  font-family: "PlusJakartaSans-Regular";
+  src: url("/fonts/PlusJakartaSans-Regular.ttf");
 }

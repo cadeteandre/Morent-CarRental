@@ -1,10 +1,10 @@
 import AdCard from "../components/AdCard";
+import NavBarSide from "../components/NavBarSide";
 
 const Home = () => {
   return (
     <>
       <div>Home</div>
-
       <div className="p-4">
         <AdCard
           adTitle={`The Best Platform for Car Rental`}
