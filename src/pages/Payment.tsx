@@ -243,23 +243,19 @@ const Payment = () => {
         <div className="flex w-full flex-col">
           <div className=" flex flex-row items-center">
             <img
-              className="size-10 rounded-full "
-              src="https://img.daisyui.com/images/profile/demo/1@94.webp"
+              className="size-10 rounded-md "
+              src="https://res.cloudinary.com/dg1qeccqc/image/upload/v1712567777/Cars/Golf.webp"
             />
 
             <div className="flex flex-col gap-3.5 w-full">
-              <div className="flex flex-row justify-between items-center ">
-                <p className="text-[18.7px] font-bold">Olivia King</p>{" "}
-                <div>
-                  <p className="text-neutral-400">2024.09.02</p>
-                  <p className="text-lg text-amber-400">★★★☆☆</p>
-                </div>
+              <h1 className="text-[28px] font-bold text-blue-950">
+                Volkswagen Golf
+              </h1>
+              <div className="flex items-center gap-2.5">
+                {" "}
+                <p className="text-lg text-amber-400">★★★☆☆</p>
+                <p className="text-sm text-neutral-500">2 Reviewer</p>
               </div>
-
-              <p className=" text-sm opacity-60">
-                Comfortable and stylish, this car is perfect for long drives.
-                (Model: Volkswagen Golf)
-              </p>
             </div>
           </div>
           <div className="divider h-[1px]"></div>
