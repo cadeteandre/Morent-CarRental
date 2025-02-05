@@ -1,5 +1,4 @@
 import AdCard from "../components/AdCard";
-import NavBarSide from "../components/NavBarSide";
 
 const Home = () => {
   return (
