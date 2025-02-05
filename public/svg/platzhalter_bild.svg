@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.89 595.28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        font-family: ArialMT, Arial;
+        font-size: 36.15px;
+      }
+
+      .cls-2 {
+        fill: #adadad;
+      }
+    </style>
+  </defs>
+  <rect class="cls-2" width="841.89" height="595.28"/>
+  <text class="cls-1" transform="translate(122.73 269.5)"><tspan x="0" y="0">Picture of your next car coming soon.</tspan><tspan x="206.95" y="75">Stay tuned!</tspan></text>
+</svg>
