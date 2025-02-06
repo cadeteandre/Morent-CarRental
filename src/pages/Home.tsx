@@ -61,7 +61,7 @@ const Home = () => {
 
     return (
         <section className="p-4 flex flex-col gap-6 items-center">
-            <section className="flex flex-col sm:flex-row justify-center gap-6 w-full">
+            <section className="flex flex-col sm:flex-row justify-center gap-6 lg:gap-24 w-full">
                 <AdCard 
                     adTitle={`The Best Platform for Car Rental`} 
                     adText="Ease of doing a car rental safely and reliably. Of course at a low price." 
@@ -77,8 +77,11 @@ const Home = () => {
                     adCarImg="/images/ad-car2.png" 
                 />
             </section>
-            <section>
+            <section className="flex flex-col md:flex-row items-center gap-4">
                 <PickUpDropOff componentTitle="Pickup" />
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800">
+                    <img src="./svg/austauschen.svg" alt="Change Locations Icon" className="w-7 h-7" />
+                </button>
                 <PickUpDropOff componentTitle="Drop-off" />
             </section>
             <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
