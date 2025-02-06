@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AdCard from "../components/AdCard";
 import { supabase } from "../utils/supabase/setupSupabase";
 import AutoCard from "../components/autoCard";
+import PickUpDropOff from "../components/PickUpDropOff";
 
 type Vehicle = {
     brand: { name: string };
@@ -18,6 +19,14 @@ const Home = () => {
     const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[]>([]);
     const [fetchLimit, setFetchLimit] = useState<number>(8);
     const [tableRows, setTableRows] = useState<number>(0);
+
+    const pickupLocationRef = useRef<HTMLInputElement>(null);
+    const pickupDateRef = useRef<HTMLInputElement>(null);
+    const pickupTimeRef = useRef<HTMLInputElement>(null);
+
+    const dropoffLocationRef = useRef<HTMLInputElement>(null);
+    const dropoffDateRef = useRef<HTMLInputElement>(null);
+    const dropoffTimeRef = useRef<HTMLInputElement>(null);
 
     async function fetchVehicles(limit: number) {
         const { data, error } = await supabase.from("vehicles").select("brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
@@ -50,6 +59,24 @@ const Home = () => {
         });
     }
 
+    function handleSwitch() {
+        const pickupLocation = pickupLocationRef.current?.value;
+        const pickupDate = pickupDateRef.current?.value;
+        const pickupTime = pickupTimeRef.current?.value;
+
+        const dropoffLocation = dropoffLocationRef.current?.value;
+        const dropoffDate = dropoffDateRef.current?.value;
+        const dropoffTime = dropoffTimeRef.current?.value;
+
+        pickupLocationRef.current!.value = dropoffLocation as string;
+        pickupDateRef.current!.value = dropoffDate as string;
+        pickupTimeRef.current!.value = dropoffTime as string;
+
+        dropoffLocationRef.current!.value = pickupLocation as string;
+        dropoffDateRef.current!.value = pickupDate as string;
+        dropoffTimeRef.current!.value = pickupTime as string;
+    }
+
     useEffect(() => {
         fetchVehicles(fetchLimit);
     }, [fetchLimit]);
@@ -63,6 +90,13 @@ const Home = () => {
             <section className="p-4">
                 <AdCard adTitle={`The Best Platform for Car Rental`} adText="Ease of doing a car rental safely and reliably. Of course at a low price." adBackgroundImg="/images/ad-card-bg1.png" adButtonColor="bg-blue-600" adCarImg="/images/ad-car1.png" />
                 <AdCard adTitle="Easy way to rent a car at a low price" adText="Providing cheap car rental services and safe and comfortable facilities." adBackgroundImg="/images/ad-card-bg2.png" adButtonColor="bg-blue-400" adCarImg="/images/ad-car2.png" />
+            </section>
+            <section className="flex flex-col md:flex-row items-center gap-4">
+                <PickUpDropOff componentTitle="Pickup" listId="pickup" locationRef={pickupLocationRef} dateRef={pickupDateRef} timeRef={pickupTimeRef} />
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={handleSwitch}>
+                    <img src="./svg/austauschen.svg" alt="Change Locations Icon" className="w-7 h-7" />
+                </button>
+                <PickUpDropOff componentTitle="Drop-Off" listId="dropoff" locationRef={dropoffLocationRef} dateRef={dropoffDateRef} timeRef={dropoffTimeRef} />
             </section>
             <section>
                 {fetchedVehicle.map((vehicle, i) => (
