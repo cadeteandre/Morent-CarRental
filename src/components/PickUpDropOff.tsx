@@ -37,7 +37,7 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(({ componentTitl
                     <label htmlFor="pickup-location" className="self-start">
                         Location:
                     </label>
-                    <input list={listId} name="locations" className="border p-2 rounded" ref={locationRef} />
+                    <input list={listId} name="locations" className="border-none" placeholder="type here..." ref={locationRef} />
                     <datalist id={listId}>
                         {locations?.length > 0 &&
                             locations?.map((location, i) => (
