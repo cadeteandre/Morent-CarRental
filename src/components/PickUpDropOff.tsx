@@ -1,13 +1,34 @@
-import { forwardRef, RefObject } from "react";
+import { forwardRef, RefObject, useEffect, useState } from "react";
+import { supabase } from "../utils/supabase/setupSupabase";
 
 interface IPickUpDropOffProps {
     componentTitle: string;
-    locationRef: RefObject<HTMLSelectElement>;
+    listId: string;
+    locationRef: RefObject<HTMLInputElement>;
     dateRef: RefObject<HTMLInputElement>;
     timeRef: RefObject<HTMLInputElement>;
 }
 
-const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(({ componentTitle, locationRef, dateRef, timeRef }) => {
+interface Data {
+    name: string | null;
+}
+
+const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(({ componentTitle, listId, locationRef, dateRef, timeRef }) => {
+    const [locations, setLocations] = useState<Data[]>([]);
+
+    async function fetchLocations() {
+        const { data, error } = await supabase.from("locations").select("name");
+        if (error) {
+            console.error("es ist ein Fehler beim fetchen der Locations aufgetreten: ", error);
+        } else {
+            setLocations(data);
+        }
+    }
+
+    useEffect(() => {
+        fetchLocations();
+    }, []);
+
     return (
         <div className="card bg-white rounded-box flex items-center justify-center p-4 max-w-full">
             <p className="text-[14px] font-bold self-start mb-2">{componentTitle}</p>
@@ -16,12 +37,15 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(({ componentTitl
                     <label htmlFor="pickup-location" className="self-start">
                         Location:
                     </label>
-                    <select name="pickup-location" id="pickup-location" className="border-none" ref={locationRef}>
-                        <option value="">Please select</option>
-                        <option value="Hamburg">Hamburg</option>
-                        <option value="Berlin">Berlin</option>
-                        <option value="München">München</option>
-                    </select>
+                    <input list={listId} name="locations" className="border p-2 rounded" ref={locationRef} />
+                    <datalist id={listId}>
+                        {locations?.length > 0 &&
+                            locations?.map((location, i) => (
+                                <option value={location.name as string} key={i}>
+                                    {location.name}
+                                </option>
+                            ))}
+                    </datalist>
                 </div>
                 <div className="flex flex-col items-center max-w-[35%]">
                     <label htmlFor="pickup-date" className="self-start">
