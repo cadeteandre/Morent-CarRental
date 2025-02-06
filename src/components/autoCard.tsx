@@ -51,7 +51,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
                         {props.price_per_day ? `€ ${props.price_per_day} / ` : `not available`}
                         <span className="text-neutral-400 text-sm">day</span>
                     </p>
-                    <button className="btn btn-primary  text-xs font-Jakarta-SemiBold">Rent Now</button>
+                    <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">Rent Now</button>
                 </div>
             </div>
         </article>

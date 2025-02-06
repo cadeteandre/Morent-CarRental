@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdCard from "../components/AdCard";
 import { supabase } from "../utils/supabase/setupSupabase";
 import AutoCard from "../components/autoCard";
+import PickUpDropOff from "../components/PickUpDropOff";
 
 type Vehicle = {
     brand: { name: string };
@@ -59,23 +60,49 @@ const Home = () => {
     }, []);
 
     return (
-        <>
-            <section className="p-4">
-                <AdCard adTitle={`The Best Platform for Car Rental`} adText="Ease of doing a car rental safely and reliably. Of course at a low price." adBackgroundImg="/images/ad-card-bg1.png" adButtonColor="bg-blue-600" adCarImg="/images/ad-car1.png" />
-                <AdCard adTitle="Easy way to rent a car at a low price" adText="Providing cheap car rental services and safe and comfortable facilities." adBackgroundImg="/images/ad-card-bg2.png" adButtonColor="bg-blue-400" adCarImg="/images/ad-car2.png" />
+        <section className="p-4 flex flex-col gap-6 items-center">
+            <section className="flex flex-col sm:flex-row justify-center gap-6 w-full">
+                <AdCard 
+                    adTitle={`The Best Platform for Car Rental`} 
+                    adText="Ease of doing a car rental safely and reliably. Of course at a low price." 
+                    adBackgroundImg="/images/ad-card-bg1.png" 
+                    adButtonColor="bg-blue-600" 
+                    adCarImg="/images/ad-car1.png" 
+                />
+                <AdCard 
+                    adTitle="Easy way to rent a car at a low price" 
+                    adText="Providing cheap car rental services and safe and comfortable facilities." 
+                    adBackgroundImg="/images/ad-card-bg2.png" 
+                    adButtonColor="bg-blue-400" 
+                    adCarImg="/images/ad-car2.png" 
+                />
             </section>
             <section>
+                <PickUpDropOff componentTitle="Pickup" />
+                <PickUpDropOff componentTitle="Drop-off" />
+            </section>
+            <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
                 {fetchedVehicle.map((vehicle, i) => (
-                    <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />
+                    <AutoCard 
+                        key={i} 
+                        brand={vehicle.brand.name} 
+                        consumption={vehicle.consumption} 
+                        gear_type={vehicle.gear_type} 
+                        model={vehicle.model} 
+                        price_per_day={vehicle.price_per_day} 
+                        seats={vehicle.seats} 
+                        vehicle_type={vehicle.vehicle_type.name} 
+                        car_img={vehicle.car_img} 
+                    />
                 ))}
             </section>
-            <section>
-                <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
+            <section className="w-full items-center flex justify-between">
+                <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                     Load More
                 </button>
-                <p>{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
+                <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
             </section>
-        </>
+        </section>
     );
 };
 
