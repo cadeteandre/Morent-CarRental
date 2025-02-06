@@ -1,5 +1,6 @@
 import { useRef, useState, FormEvent } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
+import ImageUploadIcon from "../assets/SVG/ImageUploadIcon";
 
 type TUser = {
   email: string;
@@ -18,6 +19,7 @@ const Register = () => {
   const lastNameRef = useRef<HTMLInputElement>(null!);
   const passwordRef = useRef<HTMLInputElement>(null!);
   const confirmPasswordRef = useRef<HTMLInputElement>(null!);
+  const imageFileRef = useRef<HTMLInputElement>(null!);
 
   const [isPasswordMismatch, setIsPasswordMismatch] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -73,85 +75,103 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen pb-32">
-      <div className="bg-slate-100 rounded-xl shadow-lg overflow-hidden w-72 mx-auto p-8">
-        <h3 className="text-xl font-semibold pb-2 text-center">
-          Create new Account
+    <section className="pt-8 pb-16">
+      <fieldset className="fieldset  shadow-lg  rounded-lg  mx-auto p-8 flex items-center justify-center flex-col w-sm mb-32 font-Jakarta-Regular">
+        <h3 className="text-2xl font-Jakarta-Regular font-semibold pb-8 text-center">
+          Create a new account
         </h3>
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <div>
-            <label className="block text-gray-700" htmlFor="email">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="emailInput">
               Email
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full input"
               type="email"
-              name="email"
+              id="emailInput"
               ref={emailRef}
-              placeholder="email@mail.com"
+              placeholder="email@morent.com"
             />
           </div>
-          <div>
-            <label className="block text-gray-700" htmlFor="firstname">
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="firstname">
               First Name
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full input"
               type="text"
-              name="firstname"
+              id="firstname"
               ref={firstNameRef}
               placeholder="Vorname"
             />
           </div>
-          <div>
-            <label className="block text-gray-700" htmlFor="lastname">
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="lastname">
               Last Name
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full input"
               type="text"
-              name="lastname"
+              id="lastname"
               ref={lastNameRef}
               placeholder="Nachname"
             />
           </div>
-          <div>
-            <label className="block text-gray-700" htmlFor="password">
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="password">
               Password
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full input"
               type="password"
-              name="password"
+              id="password"
               ref={passwordRef}
               placeholder="********"
             />
           </div>
-          <div>
-            <label className="block text-gray-700" htmlFor="confirm_password">
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="confirm_password">
               Confirm Password
             </label>
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full input"
               type="password"
-              name="confirm_password"
+              id="confirm_password"
               ref={confirmPasswordRef}
               placeholder="********"
             />
           </div>
+          <div className="w-full flex flex-col gap-0.5">
+            <label className="text-sm" htmlFor="profile_image">
+              Profile-Image
+            </label>
+
+            <input
+              type="file"
+              ref={imageFileRef}
+              id="profile_image"
+              className="file-input file-input-xs"
+            />
+            <button
+              type="button"
+              className="btn btn-outline py-3.5 text-xs font-Jakarta-SemiBold "
+            >
+              <ImageUploadIcon /> Image-Upload
+            </button>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary py-3.5 text-base font-Jakarta-SemiBold "
+          >
+            Register
+          </button>{" "}
           {isPasswordMismatch && (
             <p className="text-red-500">Passwords do not match.</p>
           )}
           {isError && <p className="text-red-500">Registration failed.</p>}
-          <button
-            type="submit"
-            className="p-2 bg-blue-700 rounded-lg w-full text-center"
-          >
-            Register
-          </button>
         </form>
-      </div>
-    </div>
+      </fieldset>
+    </section>
   );
 };
 
