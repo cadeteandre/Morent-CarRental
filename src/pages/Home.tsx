@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabase/setupSupabase";
 import AutoCard from "../components/autoCard";
 import PickUpDropOff from "../components/PickUpDropOff";
 
-type Vehicle = {
+export type Vehicle = {
     brand: { name: string };
     consumption: number;
     gear_type: "Automatic" | "Manuel";

@@ -17,7 +17,7 @@ interface AutoCardProps {
 
 const AutoCard: FC<AutoCardProps> = (props) => {
     return (
-        <article className="card bg-base-100 w-[327px] shadow-sm font-display ">
+        <article className="card bg-base-100 w-[327px] shadow-sm font-display static">
             <div className="card-body p-6">
                 <div className="flex flex-row justify-between items-center">
                     <h2 className="font-bold text-base">{`${props.brand} ${props.model}`}</h2>
