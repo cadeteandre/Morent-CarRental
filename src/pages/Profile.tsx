@@ -1,46 +1,88 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ImageUploadIcon from "../assets/SVG/ImageUploadIcon";
+import { useUserContext } from "../UserContext";
+import { supabase } from "../utils/supabase/setupSupabase";
 
 const Profile = () => {
   const imageFileRef = useRef<HTMLInputElement>(null!);
+  const imageUrlRef = useRef<string | null>(null!);
+  const [uploadSuccess, setUploadSuccess] = useState<string>("");
+  const [uploadError, setUploadError] = useState<string>("");
+  const { user } = useUserContext();
+
+  async function uploadImgFile() {
+    try {
+      console.log("user", user);
+
+      if (imageFileRef.current.files && user) {
+        const imageFile = imageFileRef.current?.files[0];
+        const fileName = `${user.id}_${imageFile.name}`;
+
+        const { data, error } = await supabase.storage
+          .from("profile_pictures")
+          .upload(fileName, imageFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (data) {
+          setUploadSuccess(`"${imageFile.name}" ✅uploaded`);
+          setUploadError("");
+
+          const { data: publicURL } = supabase.storage
+            .from("profile_pictures")
+            .getPublicUrl(data.path);
+
+          if (publicURL) {
+            imageUrlRef.current = publicURL.publicUrl;
+          }
+        }
+        if (error) {
+          setUploadSuccess("");
+          setUploadError("Failed to upload ❌");
+        }
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.error(err);
+      setUploadSuccess("");
+      setUploadError("Failed to upload ❌");
+    } finally {
+      imageFileRef.current.value = "";
+    }
+  }
+
   return (
-    <>
+    <section>
       {" "}
-      <div className="w-full flex flex-col gap-0.5">
+      <div className="w-md mx-auto p-16 flex flex-col gap-4 font-Jakarta-SemiBold">
         <label className="text-sm" htmlFor="profile_image">
           Profile-Image
         </label>
 
-        <div className="dropdown dropdown-right w-full">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-outline py-3.5 text-xs font-Jakarta-SemiBold w-full"
-          >
-            {" "}
-            <ImageUploadIcon /> Image-Upload
-          </div>
-          <div
-            tabIndex={0}
-            className="dropdown-content menu bg-base-200 rounded-box z-1 w-full p-2 ml-2.5 shadow-sm"
-          >
-            {" "}
-            <input
-              type="file"
-              ref={imageFileRef}
-              id="profile_image"
-              className="file-input file-input-xs"
-            />
-            <button
-              type="button"
-              className="btn btn-neutral  text-xs font-Jakarta-SemiBold mt-2.5 "
-            >
-              Upload
-            </button>
-          </div>
-        </div>
+        <input
+          type="file"
+          ref={imageFileRef}
+          id="profile_image"
+          className="file-input file-input-xs w-full"
+        />
+        {uploadError.length > 0 && (
+          <p className="text-red-600 text-center">🚨{uploadError}</p>
+        )}
+        {uploadSuccess.length > 0 && (
+          <p className="text-green-900 text-center  ">{uploadSuccess}</p>
+        )}
+        <button
+          type="button"
+          onClick={uploadImgFile}
+          className="btn btn-outline py-3.5 text-xs font-Jakarta-SemiBold w-full"
+        >
+          {" "}
+          <ImageUploadIcon /> Image-Upload
+        </button>
       </div>
-    </>
+    </section>
   );
 };
 
