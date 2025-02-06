@@ -1,6 +1,7 @@
 import { useRef, useState, FormEvent } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
-import ImageUploadIcon from "../assets/SVG/ImageUploadIcon";
+import { useUserContext } from "../UserContext";
+import { useNavigate } from "react-router";
 
 type TUser = {
   email: string;
@@ -19,11 +20,10 @@ const Register = () => {
   const lastNameRef = useRef<HTMLInputElement>(null!);
   const passwordRef = useRef<HTMLInputElement>(null!);
   const confirmPasswordRef = useRef<HTMLInputElement>(null!);
-  const imageFileRef = useRef<HTMLInputElement>(null!);
-
+  const { setUser } = useUserContext();
   const [isPasswordMismatch, setIsPasswordMismatch] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -49,28 +49,9 @@ const Register = () => {
       console.error(result.error);
       setIsError(true);
       return;
-    }
-
-    const userId = result.data.user?.id;
-
-    if (userId) {
-      //   const { data, error } = await supabase
-      //     .from("profiles")
-      //     .update({
-      //       firstname: firstNameRef.current.value,
-      //       lastname: lastNameRef.current.value,
-      //     })
-      //     .eq("id", userId);
-      //   console.log(data);
-      //   console.log(error);
-      //   if (error) {
-      //     console.error(error);
-      //     setIsError(true);
-      //     return;
-      //   }
-      //   setIsError(false);
-      // } else {
-      //   setIsError(true);
+    } else {
+      setUser(result.data.user);
+      navigate("/");
     }
   };
 
@@ -141,40 +122,6 @@ const Register = () => {
               placeholder="********"
             />
           </div>
-          <div className="w-full flex flex-col gap-0.5">
-            <label className="text-sm" htmlFor="profile_image">
-              Profile-Image
-            </label>
-
-            <div className="dropdown dropdown-right w-full">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-outline py-3.5 text-xs font-Jakarta-SemiBold w-full"
-              >
-                {" "}
-                <ImageUploadIcon /> Image-Upload
-              </div>
-              <div
-                tabIndex={0}
-                className="dropdown-content menu bg-base-200 rounded-box z-1 w-full p-2 ml-2.5 shadow-sm"
-              >
-                {" "}
-                <input
-                  type="file"
-                  ref={imageFileRef}
-                  id="profile_image"
-                  className="file-input file-input-xs"
-                />
-                <button
-                  type="button"
-                  className="btn btn-neutral  text-xs font-Jakarta-SemiBold mt-2.5 "
-                >
-                  Upload
-                </button>
-              </div>
-            </div>
-          </div>
           <button
             type="submit"
             className="btn btn-primary py-3.5 text-base font-Jakarta-SemiBold "
@@ -184,7 +131,7 @@ const Register = () => {
           {isPasswordMismatch && (
             <p className="text-red-500">Passwords do not match.</p>
           )}
-          {isError && <p className="text-red-500">Registration failed.</p>}
+          {isError && <p className="text-red-500">Registeration failed.</p>}
         </form>
       </fieldset>
     </section>

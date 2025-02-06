@@ -13,6 +13,7 @@ import MyBookings from "./pages/MyBookings";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import { UserProvider } from "./UserContext";
+import Profile from "./pages/Profile";
 
 function App() {
   const router = createBrowserRouter(
@@ -25,6 +26,7 @@ function App() {
         <Route path="my_bookings" element={<MyBookings />} />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     )
   );
