@@ -1,7 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
-// import { useUserContext } from "../UserContext";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 
@@ -11,8 +10,7 @@ export const Login = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { user, setUser } = useContext(mainContext) as {
-    user: User;
+  const { setUser } = useContext(mainContext) as {
     setUser: React.Dispatch<React.SetStateAction<User>>;
   };
   const navigate = useNavigate();
@@ -20,20 +18,20 @@ export const Login = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     formRef.current?.reportValidity();
-    const result = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: emailRef.current.value,
       password: passwordRef.current.value,
     });
 
-    if (result.data.user) {
-      setUser(result.data.user);
+    if (data.user) {
+      setUser(data.user);
       navigate("/");
     } else {
-      console.error(result.error);
+      console.error(error);
       setIsError(true);
     }
   };
-  console.log(user);
+
   return (
     <section className="pt-8 pb-16">
       <fieldset className="fieldset  shadow-lg  rounded-lg  mx-auto p-8 flex items-center justify-center flex-col w-sm mb-32 font-Jakarta-Regular">

@@ -1,7 +1,8 @@
-import { useRef, useState, FormEvent } from "react";
+import { useRef, useState, FormEvent, useContext } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
-import { useUserContext } from "../UserContext";
 import { useNavigate } from "react-router";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 type TUser = {
   email: string;
@@ -20,10 +21,12 @@ const Register = () => {
   const lastNameRef = useRef<HTMLInputElement>(null!);
   const passwordRef = useRef<HTMLInputElement>(null!);
   const confirmPasswordRef = useRef<HTMLInputElement>(null!);
-  const { setUser } = useUserContext();
   const [isPasswordMismatch, setIsPasswordMismatch] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { setUser } = useContext(mainContext) as {
+    setUser: React.Dispatch<React.SetStateAction<User>>;
+  };
   const formRef = useRef<HTMLFormElement>(null);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,14 +49,15 @@ const Register = () => {
       },
     };
 
-    const result = await supabase.auth.signUp(user);
+    const { data, error } = await supabase.auth.signUp(user);
 
-    if (result.error) {
-      console.error(result.error);
+    if (error) {
+      console.error(error);
       setIsError(true);
       return;
-    } else {
-      setUser(result.data.user);
+    }
+    if (data.user) {
+      setUser(data.user);
       navigate("/");
     }
   };

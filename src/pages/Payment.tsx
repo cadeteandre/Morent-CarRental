@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BackIcon from "../assets/SVG/BackIcon";
 import BitcoinIcon from "../assets/SVG/BitcoinIcon";
 import CreditCardIcon from "../assets/SVG/CreditCardIcon";
@@ -6,8 +6,9 @@ import PayPalIcon from "../assets/SVG/PayPalIcon";
 import SecurityIcon from "../assets/SVG/SecurityIcon";
 import { useNavigate } from "react-router";
 import { supabase } from "../utils/supabase/setupSupabase";
-import { useUserContext } from "../UserContext";
 import { Tables } from "../utils/supabase/supabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 type Booking = Tables<"bookings">;
 
@@ -17,7 +18,6 @@ interface Data {
 }
 
 const Payment = () => {
-<<<<<<< HEAD
   const nameRef = useRef<HTMLInputElement>(null!);
   const phoneNumberRef = useRef<HTMLInputElement>(null!);
   const addressRef = useRef<HTMLInputElement>(null!);
@@ -30,11 +30,12 @@ const Payment = () => {
   const dropOffTimeRef = useRef<HTMLInputElement>(null!);
   const navigate = useNavigate();
   const [locations, setLocations] = useState<Data[]>([]);
-  const { user } = useUserContext();
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
-
   const formRef = useRef<HTMLFormElement>(null);
+  const { user } = useContext(mainContext) as {
+    user: User;
+  };
 
   async function fetchLocations() {
     const { data, error } = await supabase.from("locations").select("*");
@@ -80,7 +81,7 @@ const Payment = () => {
         | "end_date"
         | "price"
       > = {
-        profile_id: "02638fa2-0b2b-4369-945c-5f55a95d8b6f",
+        profile_id: user.id,
         location_start: pickUpLocationUUID,
         location_end: dropOffLocationUUID,
         start_date: pickUpDateValue,
@@ -138,8 +139,6 @@ const Payment = () => {
       dropOffTimeRef.current.value = "";
     }
   }
-=======
->>>>>>> main
 
   return (
     <form onSubmit={handleSubmit} ref={formRef} className="font-display">
