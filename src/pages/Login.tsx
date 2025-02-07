@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
-import { useUserContext } from "../UserContext";
+// import { useUserContext } from "../UserContext";
 import { Link } from "react-router";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 export const Login = () => {
   const emailRef = useRef<HTMLInputElement>(null!);
@@ -10,7 +12,7 @@ export const Login = () => {
   //   const [message, setMessage] = useState<string | null>(null);
   //   const [isError, setIsError] = useState<boolean>(false);
 
-  const { setUser } = useUserContext();
+  const { user, setUser } = useContext(mainContext) as {user: User, setUser: React.Dispatch<React.SetStateAction<User>>}
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,7 +35,7 @@ export const Login = () => {
       //   setIsError(true);
     }
   };
-
+  console.log(user);
   return (
     <section className="bg-white p-6">
       <div className="bg-slate-100 rounded-xl shadow-lg overflow-hidden w-72 mx-auto p-8">
