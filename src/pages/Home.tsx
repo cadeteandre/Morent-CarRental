@@ -57,7 +57,6 @@ const Home = () => {
             }
         }
     }
-  }
 
   async function getTableRows() {
     const { count, error } = await supabase
