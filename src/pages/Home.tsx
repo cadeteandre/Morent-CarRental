@@ -20,6 +20,7 @@ const Home = () => {
     const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[] | null>([]);
     const [fetchLimit, setFetchLimit] = useState<number>(8);
     const [tableRows, setTableRows] = useState<number>(0);
+    const [showFilter, setShowFilter] = useState<boolean>(false);
 
     const pickupLocationRef = useRef<HTMLInputElement>(null);
     const pickupDateRef = useRef<HTMLInputElement>(null);
@@ -104,6 +105,10 @@ const Home = () => {
         getTableRows();
     }, []);
 
+    function toggleFilter() {
+        setShowFilter((prev) => !prev);
+    }
+
     return (
         <>
             <section className="p-4">
@@ -123,7 +128,12 @@ const Home = () => {
                     Search Car
                 </button>
             </section>
-            <section>{fetchedVehicle && fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />)}</section>
+            <section>
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={toggleFilter}>
+                    Filter
+                </button>
+                {fetchedVehicle && fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />)}
+            </section>
             <section>
                 <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                     Load More
