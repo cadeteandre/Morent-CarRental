@@ -195,6 +195,39 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_location: {
+        Row: {
+          created_at: string
+          location_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          location_id: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          location_id?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "locations_cars_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_cars_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

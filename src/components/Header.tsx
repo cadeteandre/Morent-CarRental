@@ -8,7 +8,7 @@ const Header = () => {
                     <Link to={'/'} className="btn btn-ghost text-2xl text-blue-600">MORENT</Link>
                     <label className="input rounded-4xl mt-4 sm:mt-0 relative left-7 top-4 -translate-y-1/2 sm:relative sm:top-auto sm:left-auto sm:translate-y-0">
                         <svg className="h-[1.8em] opacity-30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-                        <input type="search" required placeholder="Search"/>
+                        <input type="search" required placeholder="Search something here" />
                     </label>
                 </div>
                 <div className="flex gap-2">
