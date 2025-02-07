@@ -5,6 +5,7 @@ import AutoCard from "../components/autoCard";
 import PickUpDropOff from "../components/PickUpDropOff";
 
 type Vehicle = {
+    id: string;
     brand: { name: string };
     consumption: number;
     gear_type: "Automatic" | "Manuel";
@@ -16,7 +17,7 @@ type Vehicle = {
 };
 
 const Home = () => {
-    const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[]>([]);
+    const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[] | null>([]);
     const [fetchLimit, setFetchLimit] = useState<number>(8);
     const [tableRows, setTableRows] = useState<number>(0);
 
@@ -28,12 +29,30 @@ const Home = () => {
     const dropoffDateRef = useRef<HTMLInputElement>(null);
     const dropoffTimeRef = useRef<HTMLInputElement>(null);
 
-    async function fetchVehicles(limit: number) {
-        const { data, error } = await supabase.from("vehicles").select("brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
-        if (error) {
-            console.error("Fehler beim Fetchen der Vehicles: ", error);
-        } else {
-            setFetchedVehicle(data);
+    async function fetchVehicles(type: "initial" | "search", limit: number) {
+        if (type === "initial") {
+            const { data, error } = await supabase.from("vehicles").select("id, brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
+            if (error) {
+                console.error("Fehler beim Fetchen der Vehicles: ", error);
+            } else {
+                setFetchedVehicle(data);
+            }
+        }
+
+        if (type === "search") {
+            const pickupLocation = pickupLocationRef.current?.value as string;
+            const pickupDate = pickupDateRef.current?.value as string;
+
+            const dropoffLocation = dropoffLocationRef.current?.value as string;
+            const dropoffDate = dropoffDateRef.current?.value as string;
+
+            const { data } = await supabase.rpc("get_available_vehicles", { city: pickupLocation, start_date: pickupDate, end_date: dropoffDate });
+
+            setFetchedVehicle(data as Vehicle[]);
+
+            if (data) {
+                setTableRows(data?.length);
+            }
         }
     }
 
@@ -78,7 +97,7 @@ const Home = () => {
     }
 
     useEffect(() => {
-        fetchVehicles(fetchLimit);
+        fetchVehicles("initial", fetchLimit);
     }, [fetchLimit]);
 
     useEffect(() => {
@@ -91,23 +110,25 @@ const Home = () => {
                 <AdCard adTitle={`The Best Platform for Car Rental`} adText="Ease of doing a car rental safely and reliably. Of course at a low price." adBackgroundImg="/images/ad-card-bg1.png" adButtonColor="bg-blue-600" adCarImg="/images/ad-car1.png" />
                 <AdCard adTitle="Easy way to rent a car at a low price" adText="Providing cheap car rental services and safe and comfortable facilities." adBackgroundImg="/images/ad-card-bg2.png" adButtonColor="bg-blue-400" adCarImg="/images/ad-car2.png" />
             </section>
-            <section className="flex flex-col md:flex-row items-center gap-4">
-                <PickUpDropOff componentTitle="Pickup" listId="pickup" locationRef={pickupLocationRef} dateRef={pickupDateRef} timeRef={pickupTimeRef} />
-                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={handleSwitch}>
-                    <img src="./svg/austauschen.svg" alt="Change Locations Icon" className="w-7 h-7" />
-                </button>
-                <PickUpDropOff componentTitle="Drop-Off" listId="dropoff" locationRef={dropoffLocationRef} dateRef={dropoffDateRef} timeRef={dropoffTimeRef} />
-            </section>
             <section>
-                {fetchedVehicle.map((vehicle, i) => (
-                    <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />
-                ))}
+                <h2>Find your car for today!</h2>
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                    <PickUpDropOff componentTitle="Pickup" listId="pickup" locationRef={pickupLocationRef} dateRef={pickupDateRef} timeRef={pickupTimeRef} />
+                    <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={handleSwitch}>
+                        <img src="./svg/austauschen.svg" alt="Change Locations Icon" className="w-7 h-7" />
+                    </button>
+                    <PickUpDropOff componentTitle="Drop-Off" listId="dropoff" locationRef={dropoffLocationRef} dateRef={dropoffDateRef} timeRef={dropoffTimeRef} />
+                </div>
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={() => fetchVehicles("search", fetchLimit)}>
+                    Search Car
+                </button>
             </section>
+            <section>{fetchedVehicle && fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} />)}</section>
             <section>
                 <button className="btn btn-primary  text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                     Load More
                 </button>
-                <p>{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
+                {fetchedVehicle && <p>{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>}
             </section>
         </>
     );

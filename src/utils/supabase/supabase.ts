@@ -195,56 +195,26 @@ export type Database = {
         }
         Relationships: []
       }
-      locations_cars: {
-        Row: {
-          created_at: string
-          location_id: string
-          vehicle_id: string
-        }
-        Insert: {
-          created_at?: string
-          location_id: string
-          vehicle_id: string
-        }
-        Update: {
-          created_at?: string
-          location_id?: string
-          vehicle_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "locations_cars_location_id_fkey"
-            columns: ["location_id"]
-            isOneToOne: false
-            referencedRelation: "locations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "locations_cars_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "vehicles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           created_at: string
           firstname: string
           id: string
+          img_url: string | null
           lastname: string
         }
         Insert: {
           created_at?: string
           firstname: string
           id: string
+          img_url?: string | null
           lastname: string
         }
         Update: {
           created_at?: string
           firstname?: string
           id?: string
+          img_url?: string | null
           lastname?: string
         }
         Relationships: []
@@ -283,6 +253,39 @@ export type Database = {
             foreignKeyName: "reviews_vehicle_id_fkey"
             columns: ["vehicle_id"]
             isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicle_location: {
+        Row: {
+          created_at: string
+          location_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          location_id: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          location_id?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_location_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_location_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: true
             referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
@@ -397,7 +400,32 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_end_date_and_update: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      check_start_date_and_update: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_available_vehicles: {
+        Args: {
+          city: string
+          start_date: string
+          end_date: string
+        }
+        Returns: {
+          id: string
+          brand: Json
+          consumption: number
+          gear_type: Database["public"]["Enums"]["enum_gear_types"]
+          model: string
+          price_per_day: number
+          seats: number
+          vehicle_type: Json
+          car_img: string
+        }[]
+      }
     }
     Enums: {
       enum_gear_types: "Automatic" | "Manuel"
