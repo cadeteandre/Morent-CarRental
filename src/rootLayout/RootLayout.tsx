@@ -6,7 +6,7 @@ const RootLayout = () => {
     return (  
         <>
             <Header />
-            <main className="bg-gray-200 py-8">
+            <main className="bg-[#F6F7F9]">
                 <Outlet />
             </main>
             <Footer />

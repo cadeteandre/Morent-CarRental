@@ -1,27 +1,112 @@
+import { useEffect, useState } from "react";
 import AdCard from "../components/AdCard";
+import { supabase } from "../utils/supabase/setupSupabase";
+import AutoCard from "../components/autoCard";
+import PickUpDropOff from "../components/PickUpDropOff";
+
+export type Vehicle = {
+    brand: { name: string };
+    consumption: number;
+    gear_type: "Automatic" | "Manuel";
+    model: string;
+    price_per_day: number | null;
+    seats: number;
+    vehicle_type: { name: string };
+    car_img: string | null;
+};
 
 const Home = () => {
-  return (
-    <>
-      <div>Home</div>
-      <div className="p-4">
-        <AdCard
-          adTitle={`The Best Platform for Car Rental`}
-          adText="Ease of doing a car rental safely and reliably. Of course at a low price."
-          adBackgroundImg="/images/ad-card-bg1.png"
-          adButtonColor="bg-blue-600"
-          adCarImg="/images/ad-car1.png"
-        />
-        <AdCard
-          adTitle="Easy way to rent a car at a low price"
-          adText="Providing cheap car rental services and safe and comfortable facilities."
-          adBackgroundImg="/images/ad-card-bg2.png"
-          adButtonColor="bg-blue-400"
-          adCarImg="/images/ad-car2.png"
-        />
-      </div>
-    </>
-  );
+    const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[]>([]);
+    const [fetchLimit, setFetchLimit] = useState<number>(8);
+    const [tableRows, setTableRows] = useState<number>(0);
+
+    async function fetchVehicles(limit: number) {
+        const { data, error } = await supabase.from("vehicles").select("brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
+        if (error) {
+            console.error("Fehler beim Fetchen der Vehicles: ", error);
+        } else {
+            setFetchedVehicle(data);
+        }
+    }
+
+    async function getTableRows() {
+        const { count, error } = await supabase.from("vehicles").select("*", { count: "exact", head: true });
+        if (error) {
+            console.error("Fehler beim abfragen der Zeilen der Tabelle 'vehicles': ", error);
+        } else if (!count) {
+            setTableRows(0);
+        } else {
+            setTableRows(count);
+        }
+    }
+
+    function loadMore() {
+        setFetchLimit((prev) => {
+            if (prev < tableRows) {
+                const newLimit = prev + 8;
+                return newLimit;
+            } else {
+                return prev;
+            }
+        });
+    }
+
+    useEffect(() => {
+        fetchVehicles(fetchLimit);
+    }, [fetchLimit]);
+
+    useEffect(() => {
+        getTableRows();
+    }, []);
+
+    return (
+        <section className="p-4 flex flex-col gap-6 items-center">
+            <section className="flex flex-col sm:flex-row justify-center gap-6 lg:gap-24 w-full">
+                <AdCard 
+                    adTitle={`The Best Platform for Car Rental`} 
+                    adText="Ease of doing a car rental safely and reliably. Of course at a low price." 
+                    adBackgroundImg="/images/ad-card-bg1.png" 
+                    adButtonColor="bg-blue-600" 
+                    adCarImg="/images/ad-car1.png" 
+                />
+                <AdCard 
+                    adTitle="Easy way to rent a car at a low price" 
+                    adText="Providing cheap car rental services and safe and comfortable facilities." 
+                    adBackgroundImg="/images/ad-card-bg2.png" 
+                    adButtonColor="bg-blue-400" 
+                    adCarImg="/images/ad-car2.png" 
+                />
+            </section>
+            <section className="flex flex-col md:flex-row items-center gap-4">
+                <PickUpDropOff componentTitle="Pickup" />
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800">
+                    <img src="./svg/austauschen.svg" alt="Change Locations Icon" className="w-7 h-7" />
+                </button>
+                <PickUpDropOff componentTitle="Drop-off" />
+            </section>
+            <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
+                {fetchedVehicle.map((vehicle, i) => (
+                    <AutoCard 
+                        key={i} 
+                        brand={vehicle.brand.name} 
+                        consumption={vehicle.consumption} 
+                        gear_type={vehicle.gear_type} 
+                        model={vehicle.model} 
+                        price_per_day={vehicle.price_per_day} 
+                        seats={vehicle.seats} 
+                        vehicle_type={vehicle.vehicle_type.name} 
+                        car_img={vehicle.car_img} 
+                    />
+                ))}
+            </section>
+            <section className="w-full items-center flex justify-between">
+                <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
+                    Load More
+                </button>
+                <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
+            </section>
+        </section>
+    );
 };
 
 export default Home;
