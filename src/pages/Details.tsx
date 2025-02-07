@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import CarDetails from "../components/CarDetails";
 import Reviews from "../components/Reviews";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { Vehicle } from "./Home";
 import AutoCard from "../components/autoCard";
 import fetchReviewsByCar from "../utils/functions/fetchReviewsByCar";
 import { IReview } from "../interfaces/IReview";
+import fetchTotalVehiclesInCity from "../utils/functions/fetchTotalVehiclesInCity";
 
 export type TVehicleDetail = {
     brand: { name: string },
@@ -28,10 +29,15 @@ export type TVehicleDetail = {
 const Details = () => {
 
     const { carId } = useParams()
+
+    const navigate = useNavigate();
+
     const [vehicle, setVehicle] = useState<TVehicleDetail | null>(null);
     const [location, setLocation] = useState<string | null>(null);
     const [vehicleList, setVehicleList] = useState<Vehicle[]>([]);
     const [reviews, setReviews] = useState<IReview[]>([]);
+    const [fetchLimit, setFetchLimit] = useState<number>(2);
+    const [totalVehicles, setTotalVehicles] = useState<number>(0);
 
     useEffect(() => {
         if(carId) {
@@ -40,14 +46,28 @@ const Details = () => {
             fetchReviewsByCar(carId, setReviews);
         } 
 
-        if(location) fetchCarsByCity(location, setVehicleList);
+        if(location) {
+            fetchCarsByCity(location, setVehicleList, fetchLimit);
+            fetchTotalVehiclesInCity(location, setTotalVehicles);
+        }
 
-    }, [carId, location])
+    }, [carId, location, fetchLimit])
+
+    function loadMore() {
+        setFetchLimit((prev) => {
+            if (prev < totalVehicles) {
+                const newLimit = prev + 2;
+                return newLimit;
+            } else {
+                return prev;
+            }
+        });
+    }
 
     if(!vehicle || !location) return <p>Loading...</p>
     return (  
         <section className="py-8">
-            <button className="cursor-pointer flex items-center justify-center mb-6">
+            <button onClick={() => navigate(-1)} className="cursor-pointer flex items-center justify-center mb-6">
                 <img src="/svg/back-btn-icon.svg" alt="Back button icon" />
                 <span className="text-[#90A3BF] py-1 text-lg">back</span>
             </button> 
@@ -77,8 +97,8 @@ const Details = () => {
                     </section>
                 </div>
                 <div className="w-full items-center flex justify-between">
-                    <button className="btn border-0 bg-blue-600 text-white">Show more car</button>
-                    <span className="text-[#90A3BF]">120 Car</span>
+                    <button onClick={loadMore} className="btn border-0 bg-blue-600 text-white">Show more car</button>
+                    <span className="text-[#90A3BF]">{`${vehicleList.length} of ${totalVehicles} cars shown`}</span>
                 </div>
             </div>
         </section>

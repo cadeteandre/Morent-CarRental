@@ -1,7 +1,7 @@
 import { Vehicle } from "../../pages/Home";
 import { supabase } from "../supabase/setupSupabase";
 
-export default async function fetchCarsByCity(cityName: string, setVehicleList: React.Dispatch<React.SetStateAction<Vehicle[]>>) {
+export default async function fetchCarsByCity(cityName: string, setVehicleList: React.Dispatch<React.SetStateAction<Vehicle[]>>, limit: number) {
   const { data: locationData, error: locationError } = await supabase
     .from("locations")
     .select("id")
@@ -31,7 +31,8 @@ export default async function fetchCarsByCity(cityName: string, setVehicleList: 
       )
     `
     )
-    .eq("location_id", locationId);
+    .eq("location_id", locationId)
+    .limit(limit);
 
     if (vehiclesError) {
       console.error("Error by fetching vehicles:", vehiclesError);

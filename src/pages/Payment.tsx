@@ -17,6 +17,7 @@ interface Data {
 }
 
 const Payment = () => {
+<<<<<<< HEAD
   const nameRef = useRef<HTMLInputElement>(null!);
   const phoneNumberRef = useRef<HTMLInputElement>(null!);
   const addressRef = useRef<HTMLInputElement>(null!);
@@ -137,6 +138,8 @@ const Payment = () => {
       dropOffTimeRef.current.value = "";
     }
   }
+=======
+>>>>>>> main
 
   return (
     <form onSubmit={handleSubmit} ref={formRef} className="font-display">

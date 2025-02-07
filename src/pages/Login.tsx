@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
-import { useUserContext } from "../UserContext";
-import { Link, useNavigate } from "react-router";
+// import { useUserContext } from "../UserContext";
+import { Link } from "react-router";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 export const Login = () => {
   const emailRef = useRef<HTMLInputElement>(null!);
@@ -9,7 +11,10 @@ export const Login = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { setUser } = useUserContext();
+  const { user, setUser } = useContext(mainContext) as {
+    user: User;
+    setUser: React.Dispatch<React.SetStateAction<User>>;
+  };
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -28,7 +33,7 @@ export const Login = () => {
       setIsError(true);
     }
   };
-
+  console.log(user);
   return (
     <section className="pt-8 pb-16">
       <fieldset className="fieldset  shadow-lg  rounded-lg  mx-auto p-8 flex items-center justify-center flex-col w-sm mb-32 font-Jakarta-Regular">

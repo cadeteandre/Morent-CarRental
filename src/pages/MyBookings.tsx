@@ -1,9 +1,47 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BookingItem from "../components/BookingItem";
+import { supabase } from "../utils/supabase/setupSupabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 const MyBookings = () => {
 
+    const { user } = useContext(mainContext) as {user: User};
+    useEffect(() => {
+        console.log(user.user_metadata.email);
+    }, [user])
+
+    //* Die Logik funktioniert immer noch nicht
     const [selected, setSelected] = useState("Upcoming");
+    const [userBookings, setUserBookings] = useState<any>(null);
+
+    useEffect(() => {
+        async function fetchBookings() {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if(user?.id) {
+                const { data, error } = await supabase
+                .from('bookings')
+                .select('*')
+                .eq('profile_id', user?.id)
+
+                if(data) {
+                    const bookings = data.map((booked) => booked.vehicle_id);
+                    const { data: vehicles } = await supabase
+                    .from('vehicles')
+                    .select('*')
+                    .in('id', bookings);
+                    setUserBookings(vehicles);
+                }
+
+                if(error) console.error(error.message);
+            }
+        }
+        fetchBookings();
+    }, [])
+    console.log(userBookings);
+    //* Die Logik funktioniert immer noch nicht
+
     return (  
         <section className="flex flex-col px-4 text-center py-8">
             <h1 className="text-2xl font-bold mb-8">My Bookings</h1>
