@@ -37,7 +37,7 @@ const Payment = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const { user, selectedCar } = useContext(mainContext) as {
     user: User;
-    selectedCar: Vehicle | TVehicleDetail | null;
+    selectedCar: Vehicle | TVehicleDetail;
   };
 
   async function fetchLocations() {
@@ -51,6 +51,7 @@ const Payment = () => {
       setLocations(data);
     }
   }
+
   useEffect(() => {
     fetchLocations();
   }, []);
@@ -65,8 +66,6 @@ const Payment = () => {
     const dropOffDateValue = dropOffDateRef.current?.value;
 
     if (formRef.current && formRef.current.checkValidity()) {
-      console.log("Form is valid, sending data...");
-
       const pickUpLocationUUID = locations?.find(
         (location) => location.name === pickUpLocationValue
       )?.id as string;
@@ -89,7 +88,7 @@ const Payment = () => {
         location_end: dropOffLocationUUID,
         start_date: pickUpDateValue,
         end_date: dropOffDateValue,
-        vehicle_id: "4aac4dc4-914b-4f6a-b869-18e9c86bc163",
+        vehicle_id: selectedCar?.id,
         price: 500,
       };
 
@@ -115,6 +114,7 @@ const Payment = () => {
       if (data) {
         setError("");
         setSuccess("Successfully booked!");
+        navigate("/my_bookings");
         nameRef.current.value = "";
         phoneNumberRef.current.value = "";
         addressRef.current.value = "";
@@ -507,13 +507,17 @@ const Payment = () => {
               <figure className="size-20 rounded-md overflow-hidden flex items-center justify-center">
                 <img
                   className="w-full h-full object-contain "
-                  src="https://res.cloudinary.com/dg1qeccqc/image/upload/v1712567777/Cars/Golf.webp"
+                  src={
+                    selectedCar.car_img
+                      ? selectedCar.car_img
+                      : `/images/img_placeholder.png`
+                  }
                 />
               </figure>
 
               <div className="flex flex-col ">
                 <h1 className="text-lg font-bold text-neutral-800">
-                  Ford Transit
+                  {selectedCar.model}
                 </h1>
                 <div className="flex items-center gap-2.5">
                   <p className="text-lg text-amber-400">★★★☆☆</p>
@@ -527,7 +531,7 @@ const Payment = () => {
                 className="flex justify-between items-center mb-5
               "
               >
-                <p>Price per Day</p> <p>€100</p>
+                <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
               </div>
               <div className="flex justify-between items-center">
                 <p>Tax</p> <p>€0</p>
