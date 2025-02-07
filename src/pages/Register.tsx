@@ -24,9 +24,11 @@ const Register = () => {
   const [isPasswordMismatch, setIsPasswordMismatch] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  const formRef = useRef<HTMLFormElement>(null);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    formRef.current?.reportValidity();
 
     if (passwordRef.current.value !== confirmPasswordRef.current.value) {
       setIsPasswordMismatch(true);
@@ -62,51 +64,62 @@ const Register = () => {
         <h3 className="text-2xl font-Jakarta-Regular font-semibold pb-8 text-center">
           Create a new account
         </h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+        <form
+          onSubmit={handleSubmit}
+          ref={formRef}
+          className="flex flex-col gap-4 w-full"
+        >
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="emailInput">
               Email
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="email"
               id="emailInput"
               ref={emailRef}
+              required
               placeholder="email@morent.com"
             />
+            <div className="validator-hint">Enter valid email address</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="firstname">
               First Name
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="text"
               id="firstname"
               ref={firstNameRef}
+              required
               placeholder="Vorname"
             />
+            <div className="validator-hint">Enter valid name</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="lastname">
               Last Name
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="text"
               id="lastname"
               ref={lastNameRef}
               placeholder="Nachname"
+              required
             />
+            <div className="validator-hint">Enter valid name</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="password">
               Password
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="password"
               id="password"
+              required
               ref={passwordRef}
               placeholder="********"
             />
@@ -116,9 +129,10 @@ const Register = () => {
               Confirm Password
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="password"
               id="confirm_password"
+              required
               ref={confirmPasswordRef}
               placeholder="********"
             />

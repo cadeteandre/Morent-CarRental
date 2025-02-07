@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router";
 export const Login = () => {
   const emailRef = useRef<HTMLInputElement>(null!);
   const passwordRef = useRef<HTMLInputElement>(null!);
-
+  const formRef = useRef<HTMLFormElement>(null);
   const [isError, setIsError] = useState<boolean>(false);
 
   const { setUser } = useUserContext();
@@ -14,7 +14,7 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    formRef.current?.reportValidity();
     const result = await supabase.auth.signInWithPassword({
       email: emailRef.current.value,
       password: passwordRef.current.value,
@@ -35,30 +35,38 @@ export const Login = () => {
         <h3 className="text-2xl font-Jakarta-Regular font-semibold pb-8 text-center">
           Login
         </h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+        <form
+          onSubmit={handleSubmit}
+          ref={formRef}
+          className="flex flex-col gap-4 w-full"
+        >
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="emailInput">
               Email
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="email"
               id="emailInput"
               ref={emailRef}
+              required
               placeholder="email@morent.com"
             />
+            <div className="validator-hint">Enter valid email address</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="password">
               Password
             </label>
             <input
-              className="w-full input"
+              className="w-full input validator"
               type="password"
               id="password"
+              required
               ref={passwordRef}
               placeholder="********"
             />
+            <div className="validator-hint">Enter valid password</div>
           </div>
           <button
             type="submit"
