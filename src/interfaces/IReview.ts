@@ -5,5 +5,6 @@ export interface IReview {
     profiles: {
       firstname: string;
       lastname: string;
+      img_url: string;
     };
   }

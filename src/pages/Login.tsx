@@ -24,6 +24,7 @@ export const Login = () => {
 
     if (result.data.user) {
       setUser(result.data.user);
+
       //   setMessage("Du bist eingeloggt.");
       //   setIsError(false);
     } else {

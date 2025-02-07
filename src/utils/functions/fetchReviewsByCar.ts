@@ -9,7 +9,7 @@ export default async function fetchReviewsByCar(carId: string, setReviews: React
         text,
         stars,
         created_at,
-        profiles:profile_id (firstname, lastname)
+        profiles:profile_id (firstname, lastname, img_url)
       `
       )
       .eq("vehicle_id", carId);
