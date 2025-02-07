@@ -1,10 +1,20 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BackIcon from "../assets/SVG/BackIcon";
 import BitcoinIcon from "../assets/SVG/BitcoinIcon";
 import CreditCardIcon from "../assets/SVG/CreditCardIcon";
 import PayPalIcon from "../assets/SVG/PayPalIcon";
 import SecurityIcon from "../assets/SVG/SecurityIcon";
 import { useNavigate } from "react-router";
+import { supabase } from "../utils/supabase/setupSupabase";
+import { useUserContext } from "../UserContext";
+import { Tables } from "../utils/supabase/supabase";
+
+type Booking = Tables<"bookings">;
+
+interface Data {
+  name: string | null;
+  id: string;
+}
 
 const Payment = () => {
   const nameRef = useRef<HTMLInputElement>(null!);
@@ -13,12 +23,32 @@ const Payment = () => {
   const townCityRef = useRef<HTMLInputElement>(null!);
   const pickUpLocationRef = useRef<HTMLInputElement>(null!);
   const pickUpDateRef = useRef<HTMLInputElement>(null!);
+  const pickUpTimeRef = useRef<HTMLInputElement>(null!);
   const dropOffLocationRef = useRef<HTMLInputElement>(null!);
   const dropOffDateRef = useRef<HTMLInputElement>(null!);
-
-  // const [success, setSuccess] = useState<string>("");
-  // const [error, setError] = useState<string>("");
+  const dropOffTimeRef = useRef<HTMLInputElement>(null!);
   const navigate = useNavigate();
+  const [locations, setLocations] = useState<Data[]>([]);
+  const { user } = useUserContext();
+  const [success, setSuccess] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  async function fetchLocations() {
+    const { data, error } = await supabase.from("locations").select("*");
+    if (error) {
+      console.error(
+        "es ist ein Fehler beim fetchen der Locations aufgetreten: ",
+        error
+      );
+    } else {
+      setLocations(data);
+    }
+  }
+  useEffect(() => {
+    fetchLocations();
+    console.log("locations", locations);
+  }, []);
+
   async function handelRentNowButton() {
     const nameValue = nameRef.current?.value;
     const phoneNumberValue = phoneNumberRef.current?.value;
@@ -26,21 +56,12 @@ const Payment = () => {
     const townCityValue = townCityRef.current?.value;
     const pickUpLocationValue = pickUpLocationRef.current?.value;
     const pickUpDateValue = pickUpDateRef.current?.value;
+    const pickUpTimeValue = pickUpTimeRef.current?.value;
     const dropOffLocationValue = dropOffLocationRef.current?.value;
     const dropOffDateValue = dropOffDateRef.current?.value;
+    const dropOffTimeValue = dropOffTimeRef.current?.value;
 
-    console.log(
-      "payment input values",
-      nameValue,
-      phoneNumberValue,
-      addressValue,
-      townCityValue,
-      pickUpLocationValue,
-      pickUpDateValue,
-      dropOffLocationValue,
-      dropOffDateValue
-    );
-
+    // *for validation for all fields
     if (
       !nameValue ||
       !phoneNumberValue ||
@@ -49,11 +70,73 @@ const Payment = () => {
       !pickUpLocationValue ||
       !pickUpDateValue ||
       !dropOffLocationValue ||
-      !dropOffDateValue
+      !dropOffDateValue ||
+      !pickUpTimeValue ||
+      !dropOffTimeValue
     ) {
-      // setError("All required fields must be filled out.");
-      // setSuccess("");
+      setError("All required fields must be filled out.");
+      setSuccess("");
       return;
+    }
+
+    const pickUpLocationUUID = locations?.find(
+      (location) => location.name === pickUpLocationValue
+    )?.id as string;
+    const dropOffLocationUUID = locations?.find(
+      (location) => location.name === dropOffLocationValue
+    )?.id as string;
+
+    const newBooking: Pick<
+      Booking,
+      | "profile_id"
+      | "vehicle_id"
+      | "location_start"
+      | "location_end"
+      | "start_date"
+      | "end_date"
+      | "price"
+    > = {
+      profile_id: "02638fa2-0b2b-4369-945c-5f55a95d8b6f",
+      location_start: pickUpLocationUUID,
+      location_end: dropOffLocationUUID,
+      start_date: pickUpDateValue,
+      end_date: dropOffDateValue,
+      vehicle_id: "4aac4dc4-914b-4f6a-b869-18e9c86bc163",
+      price: 500,
+    };
+
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert(newBooking)
+      .select();
+
+    if (error) {
+      setSuccess("");
+      setError(error.message);
+      nameRef.current.value = "";
+      phoneNumberRef.current.value = "";
+      addressRef.current.value = "";
+      townCityRef.current.value = "";
+      pickUpLocationRef.current.value = "";
+      pickUpDateRef.current.value = "";
+      pickUpTimeRef.current.value = "";
+      dropOffLocationRef.current.value = "";
+      dropOffDateRef.current.value = "";
+      dropOffTimeRef.current.value = "";
+    }
+    if (data) {
+      setError("");
+      setSuccess("Successfully booked!");
+      nameRef.current.value = "";
+      phoneNumberRef.current.value = "";
+      addressRef.current.value = "";
+      townCityRef.current.value = "";
+      pickUpLocationRef.current.value = "";
+      pickUpDateRef.current.value = "";
+      pickUpTimeRef.current.value = "";
+      dropOffLocationRef.current.value = "";
+      dropOffDateRef.current.value = "";
+      dropOffTimeRef.current.value = "";
     }
   }
 
@@ -178,12 +261,20 @@ const Payment = () => {
                     Locations
                   </label>
                   <input
-                    type="text"
+                    list="pickUpLocations"
                     className="input  bg-neutral-50 md:w-full"
                     ref={pickUpLocationRef}
                     id="pickUpLocation"
                     placeholder="Bremen"
-                  />
+                  />{" "}
+                  <datalist id="pickUpLocations">
+                    {locations?.length > 0 &&
+                      locations?.map((location, i) => (
+                        <option value={location.name as string} key={i}>
+                          {location.name}
+                        </option>
+                      ))}
+                  </datalist>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -212,6 +303,7 @@ const Payment = () => {
                 <input
                   type="time"
                   id="pickUpTime"
+                  ref={pickUpTimeRef}
                   className="input  bg-neutral-50 md:w-[354px]"
                 />
               </div>
@@ -227,12 +319,20 @@ const Payment = () => {
                     Locations
                   </label>
                   <input
-                    type="text"
+                    list="dropOffLocations"
                     className="input  bg-neutral-50 md:w-full"
                     id="dropOffLocation"
                     ref={dropOffLocationRef}
                     placeholder="Bremen"
                   />
+                  <datalist id="dropOffLocations">
+                    {locations?.length > 0 &&
+                      locations?.map((location, i) => (
+                        <option value={location.name as string} key={i}>
+                          {location.name}
+                        </option>
+                      ))}
+                  </datalist>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -261,6 +361,7 @@ const Payment = () => {
                 <input
                   type="time"
                   id="dropOffTime"
+                  ref={dropOffTimeRef}
                   className="input  bg-neutral-50 md:w-[354px]"
                 />
               </div>
@@ -415,6 +516,8 @@ const Payment = () => {
       >
         Rent Now!
       </button>
+      {error.length > 0 && <p className="text-red-600 ">🚨{error}</p>}
+      {success.length > 0 && <p className="text-green-900 ">{success}</p>}
     </main>
   );
 };
