@@ -3,6 +3,7 @@ import AdCard from "../components/AdCard";
 import { supabase } from "../utils/supabase/setupSupabase";
 import AutoCard from "../components/autoCard";
 import PickUpDropOff from "../components/PickUpDropOff";
+import NavBarSide from "../components/NavBarSide";
 
 export type Vehicle = {
     id: string;
@@ -44,7 +45,7 @@ const Home = () => {
             const pickupLocation = pickupLocationRef.current?.value as string;
             const pickupDate = pickupDateRef.current?.value as string;
 
-            const dropoffLocation = dropoffLocationRef.current?.value as string;
+            // const dropoffLocation = dropoffLocationRef.current?.value as string;
             const dropoffDate = dropoffDateRef.current?.value as string;
 
             const { data } = await supabase.rpc("get_available_vehicles", { city: pickupLocation, start_date: pickupDate, end_date: dropoffDate });
@@ -138,8 +139,10 @@ const Home = () => {
                 <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={toggleFilter}>
                     Filter
                 </button>
-                {fetchedVehicle && fetchedVehicle.map((vehicle, i) =>
-                      <AutoCard
+                <div className="flex flex-col">
+                    <div>{showFilter && <NavBarSide data={fetchedVehicle} />}</div>
+                    <div>{fetchedVehicle ? fetchedVehicle.map((vehicle, i) =>                       
+                        <AutoCard
                         key={i}
                         brand={vehicle.brand.name}
                         consumption={vehicle.consumption}
@@ -150,7 +153,8 @@ const Home = () => {
                         vehicle_type={vehicle.vehicle_type.name}
                         car_img={vehicle.car_img}
                         vehicle_id={vehicle.id}
-                      />)}
+                      />) : "keine Fahrzeuge gefunden, welche deinen Wünschen entsprechen"}</div>
+                </div>
             </section>
             <section className="w-full items-center flex justify-between">
                 <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
