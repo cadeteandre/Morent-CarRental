@@ -195,7 +195,7 @@ export type Database = {
         }
         Relationships: []
       }
-      locations_cars: {
+      vehicle_location: {
         Row: {
           created_at: string
           location_id: string
