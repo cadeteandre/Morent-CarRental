@@ -90,6 +90,8 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
         }
     }, [data]);
 
+    useEffect(() => {}, [checkboxStates]);
+
     console.log(checkboxStates);
 
     return (
@@ -100,7 +102,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
                 <div className="flex flex-col gap-8">
                     {types.map((type, index) => (
                         <div key={index} className="flex items-center gap-2 font-Jakarta-SemiBold text-neutral-600 text-xl">
-                            <input type="checkbox" id={`type-${type.toLowerCase()}`} className="checkbox  checkbox-xs checkbox-primary" onChange={handleCheckboxChange} />
+                            <input type="checkbox" id={type} className="checkbox  checkbox-xs checkbox-primary" onChange={handleCheckboxChange} />
                             <label htmlFor={`type-${type.toLowerCase()}`}>{type}</label>
                             <span className="text-neutral-400">{countedTypes ? countedTypes[type] : ""}</span>
                         </div>
