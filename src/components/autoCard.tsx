@@ -10,6 +10,7 @@ import {
   removeFavorite,
 } from "../utils/functions/userFavoriteCars";
 import RedHeartIcon from "../assets/SVG/RedHeartIcon";
+import { Link } from "react-router";
 
 interface AutoCardProps {
   vehicle_id: string;

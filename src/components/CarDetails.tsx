@@ -1,15 +1,19 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { TVehicleDetail } from "../pages/Details";
 import getCityCoordinates from "../utils/functions/getCityCoordinates";
+import { Link } from "react-router";
+import { mainContext } from "../context/MainProvider";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail,
-  location: string
+  location: string,
 }
 
 const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
+
+  const { setSelectedCar } = useContext(mainContext) as {setSelectedCar: React.Dispatch<React.SetStateAction<TVehicleDetail>>};
 
   useEffect(() => {
     const map = L.map("map").setView([50.938361, 6.959974], 13);
@@ -89,9 +93,11 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
           <p className="text-2xl font-bold ">
             {`€ ${vehicle.price_per_day}`} / <span className="text-neutral-400 text-base">day</span>
           </p>
-          <button className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit">
-            Rent Now
-          </button>
+          <Link to={'/payment'}>
+            <button onClick={() => setSelectedCar(vehicle)} className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit">
+              Rent Now
+            </button>
+          </Link>
         </div>
       </div>
 
