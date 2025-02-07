@@ -1,38 +1,97 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BookingItem from "../components/BookingItem";
 import { supabase } from "../utils/supabase/setupSupabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
+import { IBookedVehicle } from "../interfaces/IBookedVehicle";
 
 const MyBookings = () => {
-    //* Die Logik funktioniert immer noch nicht
+
+    const { user, setUser } = useContext(mainContext) as {user: User, setUser: React.Dispatch<React.SetStateAction<User>>}
+
     const [selected, setSelected] = useState("Upcoming");
-    const [userBookings, setUserBookings] = useState<any>(null);
+    const [userBookings, setUserBookings] = useState<IBookedVehicle[]>([]);
 
     useEffect(() => {
         async function fetchBookings() {
             const { data: { user } } = await supabase.auth.getUser();
-            
-            if(user?.id) {
-                const { data, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .eq('profile_id', user?.id)
-
-                if(data) {
-                    const bookings = data.map((booked) => booked.vehicle_id);
-                    const { data: vehicles } = await supabase
-                    .from('vehicles')
-                    .select('*')
-                    .in('id', bookings);
-                    setUserBookings(vehicles);
+        
+            if (user?.id) {
+              setUser(user);
+        
+              const { data: bookings, error: bookingsError } = await supabase
+              .from('bookings')
+              .select(`
+                vehicle_id,
+                start_date,
+                end_date,
+                price,
+                pickupLocation:location_start(id, name),
+                dropoffLocation:location_end(id, name)
+              `)
+              .eq('profile_id', user.id);
+        
+              if (bookingsError) {
+                console.error("Erro ao buscar bookings:", bookingsError.message);
+                return;
+              }
+        
+              const bookingsWithVehicleIds = bookings.map((booked) => booked.vehicle_id);
+              console.log("IDs dos veículos alugados:", bookingsWithVehicleIds);
+        
+              if (bookingsWithVehicleIds.length > 0) {
+                const { data: vehicles, error: vehiclesError } = await supabase
+                  .from('vehicles')
+                  .select(`
+                    id,
+                    model,
+                    gear_type,
+                    price_per_day,
+                    seats,
+                    consumption,
+                    car_img,
+                    brand(name),
+                    vehicle_type(name),
+                    fuel(name),
+                    color(name)
+                  `)
+                  .in('id', bookingsWithVehicleIds);
+        
+                if (vehiclesError) {
+                  console.error("Erro ao buscar veículos:", vehiclesError.message);
+                } else {
+                  // Maps bookings to corresponding vehicles
+                  const vehiclesWithBookings = vehicles.map(vehicle => {
+                    const bookingDetails = bookings.find(b => b.vehicle_id === vehicle.id);
+                    return {
+                      ...vehicle,
+                      booking: bookingDetails
+                        ? {
+                            startDate: bookingDetails.start_date,
+                            endDate: bookingDetails.end_date,
+                            price: bookingDetails.price,
+                            pickupLocation: bookingDetails.pickupLocation,
+                            dropoffLocation: bookingDetails.dropoffLocation
+                          }
+                        : null
+                    };
+                  });
+        
+                  console.log("Veículos encontrados com detalhes de aluguel:", vehiclesWithBookings);
+                  console.log(vehiclesWithBookings);
+                  setUserBookings(vehiclesWithBookings);
                 }
-
-                if(error) console.error(error.message);
+              } else {
+                setUserBookings([]);
+                console.log("Nenhum veículo alugado encontrado para este usuário.");
+              }
             }
-        }
-        fetchBookings();
-    }, [])
-    console.log(userBookings);
-    //* Die Logik funktioniert immer noch nicht
+          }
+        
+          fetchBookings();
+    }, [setUser])
+
+    console.log(user);
     return (  
         <section className="flex flex-col px-4 text-center py-8">
             <h1 className="text-2xl font-bold mb-8">My Bookings</h1>
@@ -57,14 +116,19 @@ const MyBookings = () => {
                     </button>
                 </div>
             </div>
-            <BookingItem 
-                carModel="Audi A4" 
-                pickupDate="04.02.2025" 
-                dropOffDate="05-02-2025" 
-                price={1275} 
-                pickupCity="Düsseldorf" 
-                dropOffCity="Köln"
-                carImg="https://res.cloudinary.com/dg1qeccqc/image/upload/v1712569915/Cars/DALL_E_2024-04-08_11.51.48_-_Create_an_image_featuring_a_red_2019_Audi_A4_sedan_on_a_pure_white_background_including_the_floor_with_the_car_positioned_frontally_from_the_left_si_qdhpdq.webp"  />
+            {userBookings.map((singleVehicle) => (
+                <BookingItem
+                    key={singleVehicle.id}
+                    carModel={singleVehicle.model} 
+                    pickupDate="04.02.2025" 
+                    dropOffDate="05-02-2025" 
+                    price={singleVehicle.price_per_day} 
+                    pickupCity="Düsseldorf" 
+                    dropOffCity="Köln"
+                    carImg={singleVehicle.car_img}
+                />
+            ))
+            }
         </section>
     );
 }

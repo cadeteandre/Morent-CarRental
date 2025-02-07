@@ -1,20 +1,160 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import BackIcon from "../assets/SVG/BackIcon";
 import BitcoinIcon from "../assets/SVG/BitcoinIcon";
 import CreditCardIcon from "../assets/SVG/CreditCardIcon";
 import PayPalIcon from "../assets/SVG/PayPalIcon";
 import SecurityIcon from "../assets/SVG/SecurityIcon";
+import { useNavigate } from "react-router";
+import { supabase } from "../utils/supabase/setupSupabase";
+import { Tables } from "../utils/supabase/supabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
+import { Vehicle } from "./Home";
+import { TVehicleDetail } from "./Details";
+
+type Booking = Tables<"bookings">;
+
+interface Data {
+  name: string | null;
+  id: string;
+}
 
 const Payment = () => {
+  const nameRef = useRef<HTMLInputElement>(null!);
+  const phoneNumberRef = useRef<HTMLInputElement>(null!);
+  const addressRef = useRef<HTMLInputElement>(null!);
+  const townCityRef = useRef<HTMLInputElement>(null!);
+  const pickUpLocationRef = useRef<HTMLInputElement>(null!);
+  const pickUpDateRef = useRef<HTMLInputElement>(null!);
+  const pickUpTimeRef = useRef<HTMLInputElement>(null!);
+  const dropOffLocationRef = useRef<HTMLInputElement>(null!);
+  const dropOffDateRef = useRef<HTMLInputElement>(null!);
+  const dropOffTimeRef = useRef<HTMLInputElement>(null!);
+  const navigate = useNavigate();
+  const [locations, setLocations] = useState<Data[]>([]);
+  const [success, setSuccess] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const { user, selectedCar } = useContext(mainContext) as {
+    user: User;
+    selectedCar: Vehicle | TVehicleDetail | null;
+  };
+
+  async function fetchLocations() {
+    const { data, error } = await supabase.from("locations").select("*");
+    if (error) {
+      console.error(
+        "es ist ein Fehler beim fetchen der Locations aufgetreten: ",
+        error
+      );
+    } else {
+      setLocations(data);
+    }
+  }
+  useEffect(() => {
+    fetchLocations();
+  }, []);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const pickUpLocationValue = pickUpLocationRef.current?.value;
+    const pickUpDateValue = pickUpDateRef.current?.value;
+
+    const dropOffLocationValue = dropOffLocationRef.current?.value;
+    const dropOffDateValue = dropOffDateRef.current?.value;
+
+    if (formRef.current && formRef.current.checkValidity()) {
+      console.log("Form is valid, sending data...");
+
+      const pickUpLocationUUID = locations?.find(
+        (location) => location.name === pickUpLocationValue
+      )?.id as string;
+      const dropOffLocationUUID = locations?.find(
+        (location) => location.name === dropOffLocationValue
+      )?.id as string;
+
+      const newBooking: Pick<
+        Booking,
+        | "profile_id"
+        | "vehicle_id"
+        | "location_start"
+        | "location_end"
+        | "start_date"
+        | "end_date"
+        | "price"
+      > = {
+        profile_id: user.id,
+        location_start: pickUpLocationUUID,
+        location_end: dropOffLocationUUID,
+        start_date: pickUpDateValue,
+        end_date: dropOffDateValue,
+        vehicle_id: "4aac4dc4-914b-4f6a-b869-18e9c86bc163",
+        price: 500,
+      };
+
+      const { data, error } = await supabase
+        .from("bookings")
+        .insert(newBooking)
+        .select();
+
+      if (error) {
+        setSuccess("");
+        setError(error.message);
+        nameRef.current.value = "";
+        phoneNumberRef.current.value = "";
+        addressRef.current.value = "";
+        townCityRef.current.value = "";
+        pickUpLocationRef.current.value = "";
+        pickUpDateRef.current.value = "";
+        pickUpTimeRef.current.value = "";
+        dropOffLocationRef.current.value = "";
+        dropOffDateRef.current.value = "";
+        dropOffTimeRef.current.value = "";
+      }
+      if (data) {
+        setError("");
+        setSuccess("Successfully booked!");
+        nameRef.current.value = "";
+        phoneNumberRef.current.value = "";
+        addressRef.current.value = "";
+        townCityRef.current.value = "";
+        pickUpLocationRef.current.value = "";
+        pickUpDateRef.current.value = "";
+        pickUpTimeRef.current.value = "";
+        dropOffLocationRef.current.value = "";
+        dropOffDateRef.current.value = "";
+        dropOffTimeRef.current.value = "";
+      }
+    } else {
+      formRef.current?.reportValidity();
+      setError("All required fields must be filled out.");
+      setSuccess("");
+      nameRef.current.value = "";
+      phoneNumberRef.current.value = "";
+      addressRef.current.value = "";
+      townCityRef.current.value = "";
+      pickUpLocationRef.current.value = "";
+      pickUpDateRef.current.value = "";
+      pickUpTimeRef.current.value = "";
+      dropOffLocationRef.current.value = "";
+      dropOffDateRef.current.value = "";
+      dropOffTimeRef.current.value = "";
+    }
+  }
 
   return (
-    <main className="font-display">
+    <form onSubmit={handleSubmit} ref={formRef} className="font-display">
       {/* back btn für desktop version */}
-      <a
-        role="tab"
+      <button
+        type="button"
+        onClick={() => {
+          navigate(-1);
+        }}
         className="tab p-0 justify-start items-center text-base mb-12  hidden md:flex"
       >
         <BackIcon /> Back
-      </a>
+      </button>
       <section className="flex flex-col gap-[30px] md:flex-row">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
@@ -41,11 +181,14 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50  md:w-full"
+                    className="input validator bg-neutral-50  md:w-full"
                     id="yourName"
+                    ref={nameRef}
                     placeholder="Your name"
+                    required
                   />
-                </div>
+                  <div className="validator-hint">Enter valid name</div>
+                </div>{" "}
                 <div className="md:w-full">
                   {" "}
                   <label
@@ -56,10 +199,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="tel"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input  validator required  bg-neutral-50 md:w-full"
                     id="phoneNumber"
+                    ref={phoneNumberRef}
+                    required
                     placeholder="Phone number"
                   />
+                  <div className="validator-hint">Enter valid Phone number</div>
                 </div>
               </div>
               <div className="flex flex-col gap-5 md:flex-row">
@@ -73,10 +219,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input validator  bg-neutral-50 md:w-full"
                     id="YourAddress"
+                    ref={addressRef}
                     placeholder="Address"
+                    required
                   />
+                  <div className="validator-hint">Enter valid address</div>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -88,10 +237,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input validator bg-neutral-50 md:w-full"
                     id="townOrCity"
+                    ref={townCityRef}
+                    required
                     placeholder="Town or city"
                   />
+                  <div className="validator-hint">Enter valid town or city</div>
                 </div>
               </div>
             </div>
@@ -120,11 +272,22 @@ const Payment = () => {
                     Locations
                   </label>
                   <input
-                    type="text"
-                    className="input  bg-neutral-50 md:w-full"
+                    list="pickUpLocations"
+                    className="input validator bg-neutral-50 md:w-full"
+                    ref={pickUpLocationRef}
                     id="pickUpLocation"
                     placeholder="Bremen"
-                  />
+                    required
+                  />{" "}
+                  <div className="validator-hint">Enter valid Location</div>
+                  <datalist id="pickUpLocations">
+                    {locations?.length > 0 &&
+                      locations?.map((location, i) => (
+                        <option value={location.name as string} key={i}>
+                          {location.name}
+                        </option>
+                      ))}
+                  </datalist>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -137,8 +300,11 @@ const Payment = () => {
                   <input
                     type="date"
                     id="pickUpDate"
-                    className="input  bg-neutral-50 md:w-full"
+                    ref={pickUpDateRef}
+                    className="input validator bg-neutral-50 md:w-full"
+                    required
                   />
+                  <div className="validator-hint">Enter valid Date</div>
                 </div>
               </div>
               <div className="md:w-full">
@@ -152,8 +318,11 @@ const Payment = () => {
                 <input
                   type="time"
                   id="pickUpTime"
-                  className="input  bg-neutral-50 md:w-[354px]"
+                  ref={pickUpTimeRef}
+                  required
+                  className="input validator bg-neutral-50 md:w-[354px]"
                 />
+                <div className="validator-hint">Enter valid Time</div>
               </div>
             </div>
             <p className="text-base my-5">Drop – Off</p>
@@ -167,11 +336,22 @@ const Payment = () => {
                     Locations
                   </label>
                   <input
-                    type="text"
-                    className="input  bg-neutral-50 md:w-full"
+                    list="dropOffLocations"
+                    className="input validator bg-neutral-50 md:w-full"
                     id="dropOffLocation"
+                    ref={dropOffLocationRef}
                     placeholder="Bremen"
+                    required
                   />
+                  <div className="validator-hint">Enter valid Location</div>
+                  <datalist id="dropOffLocations">
+                    {locations?.length > 0 &&
+                      locations?.map((location, i) => (
+                        <option value={location.name as string} key={i}>
+                          {location.name}
+                        </option>
+                      ))}
+                  </datalist>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -184,8 +364,11 @@ const Payment = () => {
                   <input
                     type="date"
                     id="dropOffDate"
-                    className="input  bg-neutral-50 md:w-full"
+                    ref={dropOffDateRef}
+                    required
+                    className="input validator bg-neutral-50 md:w-full"
                   />
+                  <div className="validator-hint">Enter valid Date</div>
                 </div>
               </div>
               <div className="md:w-full">
@@ -199,8 +382,11 @@ const Payment = () => {
                 <input
                   type="time"
                   id="dropOffTime"
-                  className="input  bg-neutral-50 md:w-[354px]"
+                  ref={dropOffTimeRef}
+                  required
+                  className="input validator bg-neutral-50 md:w-[354px]"
                 />
+                <div className="validator-hint">Enter valid Time</div>
               </div>
             </div>
           </fieldset>
@@ -221,7 +407,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary  radio-xs"
+                  className="radio validator  radio-primary  radio-xs"
+                  required
                   id="creditCard"
                 />{" "}
                 <label
@@ -235,7 +422,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary radio-xs"
+                  className="radio validator radio-primary radio-xs"
+                  required
                   id="PayPal"
                 />{" "}
                 <label
@@ -249,7 +437,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary radio-xs"
+                  className="radio validator radio-primary radio-xs"
+                  required
                   id="Bitcoin"
                 />{" "}
                 <label
@@ -288,7 +477,8 @@ const Payment = () => {
                 <input
                   type="checkbox"
                   name="checkboxPolicy"
-                  className="checkbox checkbox-xs mr-2.5"
+                  required
+                  className="checkbox validator checkbox-xs mr-2.5"
                 />
                 I agree with our terms and conditions and privacy policy.
               </label>
@@ -347,10 +537,15 @@ const Payment = () => {
         </div>
       </section>
       {/* Rent now! button */}
-      <button className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8">
+      <button
+        type="submit"
+        className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8"
+      >
         Rent Now!
       </button>
-    </main>
+      {error.length > 0 && <p className="text-red-600 ">🚨{error}</p>}
+      {success.length > 0 && <p className="text-green-900 ">{success}</p>}
+    </form>
   );
 };
 
