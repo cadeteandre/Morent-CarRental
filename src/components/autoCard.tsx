@@ -17,7 +17,7 @@ interface AutoCardProps {
 
 const AutoCard: FC<AutoCardProps> = (props) => {
     return (
-        <article className="card bg-base-100 w-[327px] shadow-sm font-display ">
+        <article className="card bg-base-100 w-[327px] shadow-sm font-display static">
             <div className="card-body p-6">
                 <div className="flex flex-row justify-between items-center">
                     <h2 className="font-bold text-base">{`${props.brand} ${props.model}`}</h2>
@@ -51,7 +51,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
                         {props.price_per_day ? `€ ${props.price_per_day} / ` : `not available`}
                         <span className="text-neutral-400 text-sm">day</span>
                     </p>
-                    <button className="btn btn-primary  text-xs font-Jakarta-SemiBold">Rent Now</button>
+                    <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">Rent Now</button>
                 </div>
             </div>
         </article>
