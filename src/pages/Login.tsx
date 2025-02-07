@@ -118,7 +118,7 @@ export const Login = () => {
           </form>
         </div>
       </section>
-    </div>
+    </section>
   );
 };
 
