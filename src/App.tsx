@@ -12,7 +12,6 @@ import Favorites from "./pages/Favorites";
 import MyBookings from "./pages/MyBookings";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { UserProvider } from "./UserContext";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -33,9 +32,7 @@ function App() {
 
   return (
     <>
-      <UserProvider>
-        <RouterProvider router={router} />
-      </UserProvider>
+      <RouterProvider router={router} />
     </>
   );
 }

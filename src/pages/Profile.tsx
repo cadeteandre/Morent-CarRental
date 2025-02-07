@@ -1,15 +1,18 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import ImageUploadIcon from "../assets/SVG/ImageUploadIcon";
-import { useUserContext } from "../UserContext";
+
 import { supabase } from "../utils/supabase/setupSupabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 const Profile = () => {
   const imageFileRef = useRef<HTMLInputElement>(null!);
   const imageUrlRef = useRef<string | null>(null!);
   const [uploadSuccess, setUploadSuccess] = useState<string>("");
   const [uploadError, setUploadError] = useState<string>("");
-  const { user } = useUserContext();
-
+  const { user } = useContext(mainContext) as {
+    user: User;
+  };
   async function uploadImgFile() {
     try {
       console.log("user", user);
