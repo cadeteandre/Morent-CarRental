@@ -1,19 +1,74 @@
+import { useRef, useState } from "react";
 import BackIcon from "../assets/SVG/BackIcon";
 import BitcoinIcon from "../assets/SVG/BitcoinIcon";
 import CreditCardIcon from "../assets/SVG/CreditCardIcon";
 import PayPalIcon from "../assets/SVG/PayPalIcon";
 import SecurityIcon from "../assets/SVG/SecurityIcon";
+import { useNavigate } from "react-router";
 
 const Payment = () => {
+  const nameRef = useRef<HTMLInputElement>(null!);
+  const phoneNumberRef = useRef<HTMLInputElement>(null!);
+  const addressRef = useRef<HTMLInputElement>(null!);
+  const townCityRef = useRef<HTMLInputElement>(null!);
+  const pickUpLocationRef = useRef<HTMLInputElement>(null!);
+  const pickUpDateRef = useRef<HTMLInputElement>(null!);
+  const dropOffLocationRef = useRef<HTMLInputElement>(null!);
+  const dropOffDateRef = useRef<HTMLInputElement>(null!);
+
+  // const [success, setSuccess] = useState<string>("");
+  // const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
+  async function handelRentNowButton() {
+    const nameValue = nameRef.current?.value;
+    const phoneNumberValue = phoneNumberRef.current?.value;
+    const addressValue = addressRef.current?.value;
+    const townCityValue = townCityRef.current?.value;
+    const pickUpLocationValue = pickUpLocationRef.current?.value;
+    const pickUpDateValue = pickUpDateRef.current?.value;
+    const dropOffLocationValue = dropOffLocationRef.current?.value;
+    const dropOffDateValue = dropOffDateRef.current?.value;
+
+    console.log(
+      "payment input values",
+      nameValue,
+      phoneNumberValue,
+      addressValue,
+      townCityValue,
+      pickUpLocationValue,
+      pickUpDateValue,
+      dropOffLocationValue,
+      dropOffDateValue
+    );
+
+    if (
+      !nameValue ||
+      !phoneNumberValue ||
+      !addressValue ||
+      !townCityValue ||
+      !pickUpLocationValue ||
+      !pickUpDateValue ||
+      !dropOffLocationValue ||
+      !dropOffDateValue
+    ) {
+      // setError("All required fields must be filled out.");
+      // setSuccess("");
+      return;
+    }
+  }
+
   return (
     <main className="font-display">
       {/* back btn für desktop version */}
-      <a
-        role="tab"
+      <button
+        type="button"
+        onClick={() => {
+          navigate(-1);
+        }}
         className="tab p-0 justify-start items-center text-base mb-12  hidden md:flex"
       >
         <BackIcon /> Back
-      </a>
+      </button>
       <section className="flex flex-col gap-[30px] md:flex-row">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
@@ -42,6 +97,7 @@ const Payment = () => {
                     type="text"
                     className="input bg-neutral-50  md:w-full"
                     id="yourName"
+                    ref={nameRef}
                     placeholder="Your name"
                   />
                 </div>
@@ -57,6 +113,7 @@ const Payment = () => {
                     type="tel"
                     className="input bg-neutral-50 md:w-full"
                     id="phoneNumber"
+                    ref={phoneNumberRef}
                     placeholder="Phone number"
                   />
                 </div>
@@ -74,6 +131,7 @@ const Payment = () => {
                     type="text"
                     className="input bg-neutral-50 md:w-full"
                     id="YourAddress"
+                    ref={addressRef}
                     placeholder="Address"
                   />
                 </div>
@@ -89,6 +147,7 @@ const Payment = () => {
                     type="text"
                     className="input bg-neutral-50 md:w-full"
                     id="townOrCity"
+                    ref={townCityRef}
                     placeholder="Town or city"
                   />
                 </div>
@@ -121,6 +180,7 @@ const Payment = () => {
                   <input
                     type="text"
                     className="input  bg-neutral-50 md:w-full"
+                    ref={pickUpLocationRef}
                     id="pickUpLocation"
                     placeholder="Bremen"
                   />
@@ -136,6 +196,7 @@ const Payment = () => {
                   <input
                     type="date"
                     id="pickUpDate"
+                    ref={pickUpDateRef}
                     className="input  bg-neutral-50 md:w-full"
                   />
                 </div>
@@ -169,6 +230,7 @@ const Payment = () => {
                     type="text"
                     className="input  bg-neutral-50 md:w-full"
                     id="dropOffLocation"
+                    ref={dropOffLocationRef}
                     placeholder="Bremen"
                   />
                 </div>
@@ -183,6 +245,7 @@ const Payment = () => {
                   <input
                     type="date"
                     id="dropOffDate"
+                    ref={dropOffDateRef}
                     className="input  bg-neutral-50 md:w-full"
                   />
                 </div>
@@ -346,7 +409,10 @@ const Payment = () => {
         </div>
       </section>
       {/* Rent now! button */}
-      <button className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8">
+      <button
+        onClick={handelRentNowButton}
+        className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8"
+      >
         Rent Now!
       </button>
     </main>
