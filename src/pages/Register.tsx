@@ -24,6 +24,7 @@ const Register = () => {
   const [isPasswordMismatch, setIsPasswordMismatch] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
