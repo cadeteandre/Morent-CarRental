@@ -33,6 +33,8 @@ const Payment = () => {
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   async function fetchLocations() {
     const { data, error } = await supabase.from("locations").select("*");
     if (error) {
@@ -46,87 +48,83 @@ const Payment = () => {
   }
   useEffect(() => {
     fetchLocations();
-    console.log("locations", locations);
   }, []);
 
-  async function handelRentNowButton() {
-    const nameValue = nameRef.current?.value;
-    const phoneNumberValue = phoneNumberRef.current?.value;
-    const addressValue = addressRef.current?.value;
-    const townCityValue = townCityRef.current?.value;
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     const pickUpLocationValue = pickUpLocationRef.current?.value;
     const pickUpDateValue = pickUpDateRef.current?.value;
-    const pickUpTimeValue = pickUpTimeRef.current?.value;
+
     const dropOffLocationValue = dropOffLocationRef.current?.value;
     const dropOffDateValue = dropOffDateRef.current?.value;
-    const dropOffTimeValue = dropOffTimeRef.current?.value;
 
-    // *for validation for all fields
-    if (
-      !nameValue ||
-      !phoneNumberValue ||
-      !addressValue ||
-      !townCityValue ||
-      !pickUpLocationValue ||
-      !pickUpDateValue ||
-      !dropOffLocationValue ||
-      !dropOffDateValue ||
-      !pickUpTimeValue ||
-      !dropOffTimeValue
-    ) {
+    if (formRef.current && formRef.current.checkValidity()) {
+      console.log("Form is valid, sending data...");
+
+      const pickUpLocationUUID = locations?.find(
+        (location) => location.name === pickUpLocationValue
+      )?.id as string;
+      const dropOffLocationUUID = locations?.find(
+        (location) => location.name === dropOffLocationValue
+      )?.id as string;
+
+      const newBooking: Pick<
+        Booking,
+        | "profile_id"
+        | "vehicle_id"
+        | "location_start"
+        | "location_end"
+        | "start_date"
+        | "end_date"
+        | "price"
+      > = {
+        profile_id: "02638fa2-0b2b-4369-945c-5f55a95d8b6f",
+        location_start: pickUpLocationUUID,
+        location_end: dropOffLocationUUID,
+        start_date: pickUpDateValue,
+        end_date: dropOffDateValue,
+        vehicle_id: "4aac4dc4-914b-4f6a-b869-18e9c86bc163",
+        price: 500,
+      };
+
+      const { data, error } = await supabase
+        .from("bookings")
+        .insert(newBooking)
+        .select();
+
+      if (error) {
+        setSuccess("");
+        setError(error.message);
+        nameRef.current.value = "";
+        phoneNumberRef.current.value = "";
+        addressRef.current.value = "";
+        townCityRef.current.value = "";
+        pickUpLocationRef.current.value = "";
+        pickUpDateRef.current.value = "";
+        pickUpTimeRef.current.value = "";
+        dropOffLocationRef.current.value = "";
+        dropOffDateRef.current.value = "";
+        dropOffTimeRef.current.value = "";
+      }
+      if (data) {
+        setError("");
+        setSuccess("Successfully booked!");
+        nameRef.current.value = "";
+        phoneNumberRef.current.value = "";
+        addressRef.current.value = "";
+        townCityRef.current.value = "";
+        pickUpLocationRef.current.value = "";
+        pickUpDateRef.current.value = "";
+        pickUpTimeRef.current.value = "";
+        dropOffLocationRef.current.value = "";
+        dropOffDateRef.current.value = "";
+        dropOffTimeRef.current.value = "";
+      }
+    } else {
+      formRef.current?.reportValidity();
       setError("All required fields must be filled out.");
       setSuccess("");
-      return;
-    }
-
-    const pickUpLocationUUID = locations?.find(
-      (location) => location.name === pickUpLocationValue
-    )?.id as string;
-    const dropOffLocationUUID = locations?.find(
-      (location) => location.name === dropOffLocationValue
-    )?.id as string;
-
-    const newBooking: Pick<
-      Booking,
-      | "profile_id"
-      | "vehicle_id"
-      | "location_start"
-      | "location_end"
-      | "start_date"
-      | "end_date"
-      | "price"
-    > = {
-      profile_id: "02638fa2-0b2b-4369-945c-5f55a95d8b6f",
-      location_start: pickUpLocationUUID,
-      location_end: dropOffLocationUUID,
-      start_date: pickUpDateValue,
-      end_date: dropOffDateValue,
-      vehicle_id: "4aac4dc4-914b-4f6a-b869-18e9c86bc163",
-      price: 500,
-    };
-
-    const { data, error } = await supabase
-      .from("bookings")
-      .insert(newBooking)
-      .select();
-
-    if (error) {
-      setSuccess("");
-      setError(error.message);
-      nameRef.current.value = "";
-      phoneNumberRef.current.value = "";
-      addressRef.current.value = "";
-      townCityRef.current.value = "";
-      pickUpLocationRef.current.value = "";
-      pickUpDateRef.current.value = "";
-      pickUpTimeRef.current.value = "";
-      dropOffLocationRef.current.value = "";
-      dropOffDateRef.current.value = "";
-      dropOffTimeRef.current.value = "";
-    }
-    if (data) {
-      setError("");
-      setSuccess("Successfully booked!");
       nameRef.current.value = "";
       phoneNumberRef.current.value = "";
       addressRef.current.value = "";
@@ -141,7 +139,7 @@ const Payment = () => {
   }
 
   return (
-    <main className="font-display">
+    <form onSubmit={handleSubmit} ref={formRef} className="font-display">
       {/* back btn für desktop version */}
       <button
         type="button"
@@ -178,12 +176,14 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50  md:w-full"
+                    className="input validator bg-neutral-50  md:w-full"
                     id="yourName"
                     ref={nameRef}
                     placeholder="Your name"
+                    required
                   />
-                </div>
+                  <div className="validator-hint">Enter valid name</div>
+                </div>{" "}
                 <div className="md:w-full">
                   {" "}
                   <label
@@ -194,11 +194,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="tel"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input  validator required  bg-neutral-50 md:w-full"
                     id="phoneNumber"
                     ref={phoneNumberRef}
+                    required
                     placeholder="Phone number"
                   />
+                  <div className="validator-hint">Enter valid Phone number</div>
                 </div>
               </div>
               <div className="flex flex-col gap-5 md:flex-row">
@@ -212,11 +214,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input validator  bg-neutral-50 md:w-full"
                     id="YourAddress"
                     ref={addressRef}
                     placeholder="Address"
+                    required
                   />
+                  <div className="validator-hint">Enter valid address</div>
                 </div>
                 <div className="md:w-full">
                   {" "}
@@ -228,11 +232,13 @@ const Payment = () => {
                   </label>
                   <input
                     type="text"
-                    className="input bg-neutral-50 md:w-full"
+                    className="input validator bg-neutral-50 md:w-full"
                     id="townOrCity"
                     ref={townCityRef}
+                    required
                     placeholder="Town or city"
                   />
+                  <div className="validator-hint">Enter valid town or city</div>
                 </div>
               </div>
             </div>
@@ -262,11 +268,13 @@ const Payment = () => {
                   </label>
                   <input
                     list="pickUpLocations"
-                    className="input  bg-neutral-50 md:w-full"
+                    className="input validator bg-neutral-50 md:w-full"
                     ref={pickUpLocationRef}
                     id="pickUpLocation"
                     placeholder="Bremen"
+                    required
                   />{" "}
+                  <div className="validator-hint">Enter valid Location</div>
                   <datalist id="pickUpLocations">
                     {locations?.length > 0 &&
                       locations?.map((location, i) => (
@@ -288,8 +296,10 @@ const Payment = () => {
                     type="date"
                     id="pickUpDate"
                     ref={pickUpDateRef}
-                    className="input  bg-neutral-50 md:w-full"
+                    className="input validator bg-neutral-50 md:w-full"
+                    required
                   />
+                  <div className="validator-hint">Enter valid Date</div>
                 </div>
               </div>
               <div className="md:w-full">
@@ -304,8 +314,10 @@ const Payment = () => {
                   type="time"
                   id="pickUpTime"
                   ref={pickUpTimeRef}
-                  className="input  bg-neutral-50 md:w-[354px]"
+                  required
+                  className="input validator bg-neutral-50 md:w-[354px]"
                 />
+                <div className="validator-hint">Enter valid Time</div>
               </div>
             </div>
             <p className="text-base my-5">Drop – Off</p>
@@ -320,11 +332,13 @@ const Payment = () => {
                   </label>
                   <input
                     list="dropOffLocations"
-                    className="input  bg-neutral-50 md:w-full"
+                    className="input validator bg-neutral-50 md:w-full"
                     id="dropOffLocation"
                     ref={dropOffLocationRef}
                     placeholder="Bremen"
+                    required
                   />
+                  <div className="validator-hint">Enter valid Location</div>
                   <datalist id="dropOffLocations">
                     {locations?.length > 0 &&
                       locations?.map((location, i) => (
@@ -346,8 +360,10 @@ const Payment = () => {
                     type="date"
                     id="dropOffDate"
                     ref={dropOffDateRef}
-                    className="input  bg-neutral-50 md:w-full"
+                    required
+                    className="input validator bg-neutral-50 md:w-full"
                   />
+                  <div className="validator-hint">Enter valid Date</div>
                 </div>
               </div>
               <div className="md:w-full">
@@ -362,8 +378,10 @@ const Payment = () => {
                   type="time"
                   id="dropOffTime"
                   ref={dropOffTimeRef}
-                  className="input  bg-neutral-50 md:w-[354px]"
+                  required
+                  className="input validator bg-neutral-50 md:w-[354px]"
                 />
+                <div className="validator-hint">Enter valid Time</div>
               </div>
             </div>
           </fieldset>
@@ -384,7 +402,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary  radio-xs"
+                  className="radio validator  radio-primary  radio-xs"
+                  required
                   id="creditCard"
                 />{" "}
                 <label
@@ -398,7 +417,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary radio-xs"
+                  className="radio validator radio-primary radio-xs"
+                  required
                   id="PayPal"
                 />{" "}
                 <label
@@ -412,7 +432,8 @@ const Payment = () => {
                 <input
                   type="radio"
                   name="paymentMethod"
-                  className="radio radio-primary radio-xs"
+                  className="radio validator radio-primary radio-xs"
+                  required
                   id="Bitcoin"
                 />{" "}
                 <label
@@ -451,7 +472,8 @@ const Payment = () => {
                 <input
                   type="checkbox"
                   name="checkboxPolicy"
-                  className="checkbox checkbox-xs mr-2.5"
+                  required
+                  className="checkbox validator checkbox-xs mr-2.5"
                 />
                 I agree with our terms and conditions and privacy policy.
               </label>
@@ -511,14 +533,14 @@ const Payment = () => {
       </section>
       {/* Rent now! button */}
       <button
-        onClick={handelRentNowButton}
+        type="submit"
         className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8"
       >
         Rent Now!
       </button>
       {error.length > 0 && <p className="text-red-600 ">🚨{error}</p>}
       {success.length > 0 && <p className="text-green-900 ">{success}</p>}
-    </main>
+    </form>
   );
 };
 
