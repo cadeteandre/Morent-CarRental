@@ -25,8 +25,8 @@ const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
       <li className="p-4 pb-2 text-base font-bold tracking-wide flex items-center gap-2.5">
         Reviews <div className="badge bg-blue-600 text-white badge-lg">{reviews.length}</div>
       </li>
-      {reviews.map((singleReview) => (
-        <li className="list-row flex flex-row items-center">
+      {reviews.map((singleReview, i) => (
+        <li key={i} className="list-row flex flex-row items-center">
           <img
             className="size-10 rounded-full "
             src={singleReview.profiles.img_url}

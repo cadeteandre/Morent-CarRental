@@ -24,6 +24,5 @@ export default async function fetchTotalVehiclesInCity(cityName: string, setTota
       return;
     }
 
-    console.log(vehicles);
     setTotalVehicles(vehicles.length);
   }
