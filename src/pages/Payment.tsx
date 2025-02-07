@@ -32,7 +32,6 @@ const Payment = () => {
   const dropOffTimeRef = useRef<HTMLInputElement>(null!);
   const navigate = useNavigate();
   const [locations, setLocations] = useState<Data[]>([]);
-  const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
   const formRef = useRef<HTMLFormElement>(null);
   const { user, selectedCar } = useContext(mainContext) as {
@@ -98,7 +97,6 @@ const Payment = () => {
         .select();
 
       if (error) {
-        setSuccess("");
         setError(error.message);
         nameRef.current.value = "";
         phoneNumberRef.current.value = "";
@@ -113,8 +111,8 @@ const Payment = () => {
       }
       if (data) {
         setError("");
-        setSuccess("Successfully booked!");
-        navigate("/my_bookings");
+
+        navigate("/payment_confirmed");
         nameRef.current.value = "";
         phoneNumberRef.current.value = "";
         addressRef.current.value = "";
@@ -129,7 +127,6 @@ const Payment = () => {
     } else {
       formRef.current?.reportValidity();
       setError("All required fields must be filled out.");
-      setSuccess("");
       nameRef.current.value = "";
       phoneNumberRef.current.value = "";
       addressRef.current.value = "";
@@ -547,8 +544,11 @@ const Payment = () => {
       >
         Rent Now!
       </button>
-      {error.length > 0 && <p className="text-red-600 ">🚨{error}</p>}
-      {success.length > 0 && <p className="text-green-900 ">{success}</p>}
+      {error.length > 0 && (
+        <div role="alert" className="alert alert-error alert-soft">
+          <span>{error}</span>
+        </div>
+      )}
     </form>
   );
 };
