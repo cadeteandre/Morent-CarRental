@@ -9,6 +9,8 @@ import { supabase } from "../utils/supabase/setupSupabase";
 import { Tables } from "../utils/supabase/supabase";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
+import { Vehicle } from "./Home";
+import { TVehicleDetail } from "./Details";
 
 type Booking = Tables<"bookings">;
 
@@ -33,8 +35,9 @@ const Payment = () => {
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
   const formRef = useRef<HTMLFormElement>(null);
-  const { user } = useContext(mainContext) as {
+  const { user, selectedCar } = useContext(mainContext) as {
     user: User;
+    selectedCar: Vehicle | TVehicleDetail | null;
   };
 
   async function fetchLocations() {
