@@ -5,6 +5,7 @@ import PayPalIcon from "../assets/SVG/PayPalIcon";
 import SecurityIcon from "../assets/SVG/SecurityIcon";
 
 const Payment = () => {
+
   return (
     <main className="font-display">
       {/* back btn für desktop version */}

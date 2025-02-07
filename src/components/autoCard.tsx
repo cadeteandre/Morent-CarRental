@@ -3,6 +3,7 @@ import ConsumptionIcon from "../assets/SVG/ConsumptionIcon";
 import GearTypeIcon from "../assets/SVG/GearTypeIcon";
 import HeartIcon from "../assets/SVG/HeartIcon";
 import SeatIcon from "../assets/SVG/SeatIcon";
+import { Link } from "react-router";
 
 interface AutoCardProps {
     brand: string;
@@ -51,7 +52,9 @@ const AutoCard: FC<AutoCardProps> = (props) => {
                         {props.price_per_day ? `€ ${props.price_per_day} / ` : `not available`}
                         <span className="text-neutral-400 text-sm">day</span>
                     </p>
-                    <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">Rent Now</button>
+                    <Link to={'/payment'}>
+                        <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">Rent Now</button>
+                    </Link>
                 </div>
             </div>
         </article>
