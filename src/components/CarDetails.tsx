@@ -3,10 +3,11 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { TVehicleDetail } from "../pages/Details";
 import getCityCoordinates from "../utils/functions/getCityCoordinates";
+import { Link } from "react-router";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail,
-  location: string
+  location: string,
 }
 
 const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
@@ -89,9 +90,11 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
           <p className="text-2xl font-bold ">
             {`€ ${vehicle.price_per_day}`} / <span className="text-neutral-400 text-base">day</span>
           </p>
-          <button className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit">
-            Rent Now
-          </button>
+          <Link to={'/payment'}>
+            <button className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit">
+              Rent Now
+            </button>
+          </Link>
         </div>
       </div>
 
