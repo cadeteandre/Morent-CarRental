@@ -43,6 +43,8 @@ const MyBookings = () => {
             {userBookings.map((singleVehicle) => (
                 <BookingItem
                     key={singleVehicle.id}
+                    carId={singleVehicle.id}
+                    carBrand={singleVehicle.brand.name}
                     carModel={singleVehicle.model} 
                     pickupDate={singleVehicle.booking.startDate} 
                     dropOffDate={singleVehicle.booking.endDate} 

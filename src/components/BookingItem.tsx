@@ -2,8 +2,11 @@ import * as L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { useEffect } from 'react';
 import getCityCoordinates from '../utils/functions/getCityCoordinates';
+import { Link } from 'react-router';
 
 interface IBookingItemProps {
+    carId: string,
+    carBrand: string,
     carModel: string,
     pickupDate: string,
     dropOffDate: string,
@@ -14,6 +17,8 @@ interface IBookingItemProps {
 }
 
 const BookingItem: React.FC<IBookingItemProps> = ({ 
+    carId,
+    carBrand,
     carModel, 
     pickupDate, 
     dropOffDate, 
@@ -53,9 +58,13 @@ const BookingItem: React.FC<IBookingItemProps> = ({
             <div className="flex flex-col rounded-box py-4 bg-white">
                 <div className='flex flex-col rounded-xl px-6'>
                     <div className='flex gap-2 items-center sm:self-start'>
+                    <Link to={`/details/${carId}`}>
                         <img src={carImg} alt="Booking Car" className='max-w-[100px] rounded-xl' />
+                    </Link>
                         <div className='text-left'>
-                            <p className='font-bold'>{carModel}</p>
+                            <Link to={`/details/${carId}`}>
+                                <p className='font-bold'>{carBrand} {carModel}</p>
+                            </Link>
                             <p className='font-extralight text-xs'>{pickupDate} - {dropOffDate}</p>
                             <p className='font-bold'>{price} €</p>
                         </div>
