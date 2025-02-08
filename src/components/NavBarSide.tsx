@@ -1,14 +1,25 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Vehicle } from "../pages/Home";
+import { supabase } from "../utils/supabase/setupSupabase";
 
 // const types = ["Sport", "SUV", "MPV", "Sedan", "Coupe", "Hatchback"];
 // const capacities = ["2 Person", "4 Person", "6 Person", "8 or More"];
 
 interface NavBarSideProps {
-    data: Vehicle[] | null;
+    fetchedVehicle: Vehicle[] | null;
+    setCheckboxStatesTypes: React.Dispatch<
+        React.SetStateAction<{
+            [key: string]: boolean;
+        }>
+    >;
+    setCheckboxStatesSeats: React.Dispatch<
+        React.SetStateAction<{
+            [key: string]: boolean;
+        }>
+    >;
 }
 
-const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
+const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesTypes, setCheckboxStatesSeats }) => {
     const [rangeValue, setRangeValue] = useState<string>("");
     const [types, setTypes] = useState<string[]>([]);
     const [countedTypes, setCountedTypes] = useState<Record<string, number>>();
@@ -16,29 +27,22 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
     const [countedCapacities, setCountedCapacities] = useState<Record<string, number>>();
     const [prices, setPrices] = useState<number[]>([]);
     const [midPrice, setMidPrice] = useState<number>();
-    const [checkboxStates, setCheckboxStates] = useState<{ [key: string]: boolean }>({});
 
-    function createTypes(data: Vehicle[]) {
+    async function createTypes() {
+        const { data } = await supabase.from("vehicle_types").select();
         if (data) {
-            // auslesen der vorhandenen typen
-            const typesSet = new Set(
-                data.map((vehicle) => {
-                    return vehicle.vehicle_type.name;
+            const typeSet = new Set(
+                data.map((type) => {
+                    return type.name;
                 })
             );
-            const typesFromSet = Array.from(typesSet).sort();
+            const typesFromSet = Array.from(typeSet).sort();
             setTypes(typesFromSet);
-
-            // zählen der vorhandenen typen
-            const typeCount = data.reduce((acc: Record<string, number>, vehicle: Vehicle) => {
-                acc[vehicle.vehicle_type.name] = (acc[vehicle.vehicle_type.name] || 0) + 1;
-                return acc;
-            }, {});
-            setCountedTypes(typeCount);
         }
     }
 
-    function createCapacities(data: Vehicle[]) {
+    async function createCapacities() {
+        const { data } = await supabase.from("vehicles").select("seats");
         if (data) {
             const capacitiesSet = new Set(
                 data.map((vehicle) => {
@@ -47,19 +51,12 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
             );
             const capacitiesFromSet = Array.from(capacitiesSet).sort();
             setCapacities(capacitiesFromSet);
-
-            // zählen der vorhandenen capacities
-            const typeCount = data.reduce((acc: Record<string, number>, vehicle: Vehicle) => {
-                acc[vehicle.seats] = (acc[vehicle.seats] || 0) + 1;
-                return acc;
-            }, {});
-            setCountedCapacities(typeCount);
         }
     }
 
-    function createPrices(data: Vehicle[]) {
-        if (data) {
-            const prices = data.map((vehicle) => {
+    function createPrices(fetchedVehicle: Vehicle[]) {
+        if (fetchedVehicle) {
+            const prices = fetchedVehicle.map((vehicle) => {
                 return vehicle.price_per_day != null ? vehicle.price_per_day : 0;
             });
             const maxPrice = Math.max(...prices);
@@ -74,25 +71,29 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
         }
     }
 
-    function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCheckboxChangeType(event: React.ChangeEvent<HTMLInputElement>) {
         const { id, checked } = event.target;
-        setCheckboxStates((prevStates) => ({
+        setCheckboxStatesTypes((prevStates) => ({
+            ...prevStates,
+            [id]: checked,
+        }));
+    }
+
+    function handleCheckboxChangeSeats(event: React.ChangeEvent<HTMLInputElement>) {
+        const { id, checked } = event.target;
+        setCheckboxStatesSeats((prevStates) => ({
             ...prevStates,
             [id]: checked,
         }));
     }
 
     useEffect(() => {
-        if (data) {
-            createTypes(data);
-            createCapacities(data);
-            createPrices(data);
+        if (fetchedVehicle) {
+            createTypes();
+            createCapacities();
+            createPrices(fetchedVehicle);
         }
-    }, [data]);
-
-    useEffect(() => {}, [checkboxStates]);
-
-    console.log(checkboxStates);
+    }, [fetchedVehicle]);
 
     return (
         <aside className="flex flex-col gap-14 bg-base-100 w-[327px] px-3.5 py-8 shadow-sm rounded-md">
@@ -102,7 +103,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
                 <div className="flex flex-col gap-8">
                     {types.map((type, index) => (
                         <div key={index} className="flex items-center gap-2 font-Jakarta-SemiBold text-neutral-600 text-xl">
-                            <input type="checkbox" id={type} className="checkbox  checkbox-xs checkbox-primary" onChange={handleCheckboxChange} />
+                            <input type="checkbox" id={type} className="checkbox  checkbox-xs checkbox-primary" onChange={handleCheckboxChangeType} />
                             <label htmlFor={`type-${type.toLowerCase()}`}>{type}</label>
                             <span className="text-neutral-400">{countedTypes ? countedTypes[type] : ""}</span>
                         </div>
@@ -115,7 +116,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
                 <div className="flex flex-col gap-8">
                     {capacities.map((capacity, index) => (
                         <div key={index} className="flex items-center gap-2 font-Jakarta-SemiBold text-xl text-neutral-600">
-                            <input type="checkbox" id={`capacity-${capacity}`} className="checkbox checkbox-xs checkbox-primary" onChange={handleCheckboxChange} />
+                            <input type="checkbox" id={`${capacity}`} className="checkbox checkbox-xs checkbox-primary" onChange={handleCheckboxChangeSeats} />
                             <label htmlFor={`capacity-${capacity}`}>{`${capacity} seats`}</label>
                             <span className="text-neutral-400">{countedCapacities ? countedCapacities[capacity] : ""}</span>
                         </div>
