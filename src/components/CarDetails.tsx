@@ -48,7 +48,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
           alt={`${vehicle.brand.name} ${vehicle.model} image`}
         />
       </figure>
-      <div className="card bg-base-100 shadow-sm rounded-box   gap-[30px] p-[30px] md:w-[541px]">
+      <div className="card bg-base-100 shadow-sm rounded-box   gap-[30px] p-[30px] md:w-[541px] static">
         <div>
           <h1 className="text-[28px] font-bold text-blue-950">
             {`${vehicle.brand.name} ${vehicle.model}`}

@@ -1,12 +1,13 @@
 import * as L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { useEffect } from 'react';
+import getCityCoordinates from '../utils/functions/getCityCoordinates';
 
 interface IBookingItemProps {
     carModel: string,
-    pickupDate: string, //* Der Typ muss noch diskutiert werden
-    dropOffDate: string, //* Der Typ muss noch diskutiert werden
-    price: number | string, //* Der Typ muss noch diskutiert werden
+    pickupDate: string,
+    dropOffDate: string,
+    price: number | string,
     pickupCity: string,
     dropOffCity: string,
     carImg: string
@@ -23,24 +24,31 @@ const BookingItem: React.FC<IBookingItemProps> = ({
 }) => {
     
     useEffect(() => {
-        const map = L.map('map').setView([51.233334, 6.783333], 13); //* Diese Daten müssen auch dynahmisch sein
+        const map = L.map('map').setView([0, 0], 13);
     
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
-    
-        L.marker([51.233334, 6.783333]).addTo(map)
-            // .bindPopup('Here is the marker!')
+
+        getCityCoordinates(pickupCity)
+        .then(({ latitude, longitude }) => {
+            map.setView([latitude, longitude], 13);
+
+            L.marker([latitude, longitude])
+            .addTo(map)
+            .bindPopup('Selected city')
             .openPopup();
-    
+        })
+        .catch((error) => console.error(error));
+
         return () => {
             map.remove();
         };
 
-    }, []);
+    }, [pickupCity, dropOffCity]);
 
     return (  
-        <div className='flex flex-col'>
+        <div className='flex flex-col w-full max-w-[1440px]'>
             <p className='font-bold text-left ml-6 mb-2'>{pickupDate}</p>
             <div className="flex flex-col rounded-box py-4 bg-white">
                 <div className='flex flex-col rounded-xl px-6'>

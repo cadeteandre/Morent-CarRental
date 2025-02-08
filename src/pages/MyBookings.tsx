@@ -7,7 +7,7 @@ import { IBookedVehicle } from "../interfaces/IBookedVehicle";
 
 const MyBookings = () => {
 
-    const { user, setUser } = useContext(mainContext) as {user: User, setUser: React.Dispatch<React.SetStateAction<User>>}
+    const { setUser } = useContext(mainContext) as {setUser: React.Dispatch<React.SetStateAction<User>>}
 
     const [selected, setSelected] = useState("Upcoming");
     const [userBookings, setUserBookings] = useState<IBookedVehicle[]>([]);
@@ -32,12 +32,11 @@ const MyBookings = () => {
               .eq('profile_id', user.id);
         
               if (bookingsError) {
-                console.error("Erro ao buscar bookings:", bookingsError.message);
+                console.error("Error fetching for bookings:", bookingsError.message);
                 return;
               }
         
               const bookingsWithVehicleIds = bookings.map((booked) => booked.vehicle_id);
-              console.log("IDs dos veículos alugados:", bookingsWithVehicleIds);
         
               if (bookingsWithVehicleIds.length > 0) {
                 const { data: vehicles, error: vehiclesError } = await supabase
@@ -58,7 +57,7 @@ const MyBookings = () => {
                   .in('id', bookingsWithVehicleIds);
         
                 if (vehiclesError) {
-                  console.error("Erro ao buscar veículos:", vehiclesError.message);
+                  console.error("Error searching for vehicles:", vehiclesError.message);
                 } else {
                   // Maps bookings to corresponding vehicles
                   const vehiclesWithBookings = vehicles.map(vehicle => {
@@ -76,14 +75,12 @@ const MyBookings = () => {
                         : null
                     };
                   });
-        
-                  console.log("Veículos encontrados com detalhes de aluguel:", vehiclesWithBookings);
-                  console.log(vehiclesWithBookings);
-                  setUserBookings(vehiclesWithBookings);
+
+                  setUserBookings(vehiclesWithBookings as unknown as IBookedVehicle[]);
                 }
               } else {
                 setUserBookings([]);
-                console.log("Nenhum veículo alugado encontrado para este usuário.");
+                console.log("No rental vehicles found for this user.");
               }
             }
           }
@@ -91,9 +88,8 @@ const MyBookings = () => {
           fetchBookings();
     }, [setUser])
 
-    console.log(user);
     return (  
-        <section className="flex flex-col px-4 text-center py-8">
+        <section className="flex flex-col px-4 text-center py-8 items-center">
             <h1 className="text-2xl font-bold mb-8">My Bookings</h1>
             <hr className="w-full self-center text-gray-400" />
             <div className="flex flex-col items-center space-y-4 border rounded-3xl self-center my-6">
@@ -120,11 +116,11 @@ const MyBookings = () => {
                 <BookingItem
                     key={singleVehicle.id}
                     carModel={singleVehicle.model} 
-                    pickupDate="04.02.2025" 
-                    dropOffDate="05-02-2025" 
+                    pickupDate={singleVehicle.booking.startDate} 
+                    dropOffDate={singleVehicle.booking.endDate} 
                     price={singleVehicle.price_per_day} 
-                    pickupCity="Düsseldorf" 
-                    dropOffCity="Köln"
+                    pickupCity={singleVehicle.booking.pickupLocation.name} 
+                    dropOffCity={singleVehicle.booking.dropoffLocation.name}
                     carImg={singleVehicle.car_img}
                 />
             ))
