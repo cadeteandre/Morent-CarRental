@@ -19,7 +19,7 @@ const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
             if(error) console.error(error.message);
         }
         checkLoginStatus();
-    }, [setIsLoggedIn, setUser])
+    }, [])
 
     return isLoggedIn ? children : <Navigate to={'/login'} replace />;
 }

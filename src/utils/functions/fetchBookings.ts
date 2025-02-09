@@ -1,13 +1,10 @@
-import { User } from "@supabase/supabase-js";
 import { IBookedVehicle } from "../../interfaces/IBookedVehicle";
 import { supabase } from "../supabase/setupSupabase";
+import { User } from '@supabase/supabase-js';
 
-export default async function fetchBookings(setUser:React.Dispatch<React.SetStateAction<User>>, setUserBookings: React.Dispatch<React.SetStateAction<IBookedVehicle[]>>) {
-    const { data: { user } } = await supabase.auth.getUser();
+export default async function fetchBookings(user: User, setUserBookings: React.Dispatch<React.SetStateAction<IBookedVehicle[]>>) {
 
     if (user?.id) {
-      setUser(user);
-
       const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
       .select(`

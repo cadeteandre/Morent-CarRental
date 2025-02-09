@@ -1,20 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import BookingItem from "../components/BookingItem";
-import { mainContext } from "../context/MainProvider";
-import { User } from "@supabase/supabase-js";
+// import { mainContext } from "../context/MainProvider";
+// import { User } from "@supabase/supabase-js";
 import { IBookedVehicle } from "../interfaces/IBookedVehicle";
 import fetchBookings from "../utils/functions/fetchBookings";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 const MyBookings = () => {
 
-    const { setUser } = useContext(mainContext) as {setUser: React.Dispatch<React.SetStateAction<User>>}
+    const { user } = useContext(mainContext) as {user: User};
 
     const [selected, setSelected] = useState("Upcoming");
     const [userBookings, setUserBookings] = useState<IBookedVehicle[]>([]);
 
     useEffect(() => {
-          fetchBookings(setUser, setUserBookings);
-    }, [setUser])
+          fetchBookings(user, setUserBookings);
+    }, [user])
 
     return (  
         <section className="flex flex-col px-4 text-center py-8 items-center">
