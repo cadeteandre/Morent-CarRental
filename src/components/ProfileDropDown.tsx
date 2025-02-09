@@ -3,9 +3,6 @@ import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase/setupSupabase";
 import { Link } from "react-router";
-import { Tables } from "../utils/supabase/supabase";
-
-type Profile = Tables<"profiles">;
 
 const ProfileDropDown = () => {
   const { user, setUser } = useContext(mainContext) as {

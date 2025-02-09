@@ -1,13 +1,42 @@
 import { Link } from "react-router";
 import ProfileDropDown from "./ProfileDropDown";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
+import { supabase } from "../utils/supabase/setupSupabase";
+import { Tables } from "../utils/supabase/supabase";
+
+type TSearchResult = Tables<"vehicles">;
 
 const Header = () => {
   const { user } = useContext(mainContext) as {
     user: User | null;
   };
+  const [input, setInput] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<TSearchResult[]>([]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  useEffect(() => {
+    const getSearchResults = async () => {
+      if (input.length > 0) {
+        const { data, error } = await supabase
+          .from("vehicles")
+          .select()
+          .ilike("model", `%${input}%`);
+
+        if (error) {
+          console.error(error.message);
+        }
+        if (data) {
+          setSearchResults(data);
+        }
+      }
+    };
+
+    getSearchResults();
+  }, [input]);
 
   return (
     <header className="my-6 font-Jakarta-Bold ">
@@ -33,8 +62,11 @@ const Header = () => {
             )}
           </div>
         </div>{" "}
-        <div className="w-full flex justify-center md:justify-start">
-          <label htmlFor="searchInput" className="input rounded-4xl w-md ">
+        <div className="w-full flex  flex-col dropdown justify-start items-center md:items-start">
+          <label
+            htmlFor="searchInput"
+            className="input rounded-4xl w-full md:w-md"
+          >
             <svg
               className="h-[1.8em] opacity-30"
               xmlns="http://www.w3.org/2000/svg"
@@ -52,13 +84,34 @@ const Header = () => {
               </g>
             </svg>
             <input
-              type="search"
+              type="text"
               className="font-Jakarta-Medium"
               required
               id="searchInput"
-              placeholder="Search by car brand or model"
-            />
+              value={input}
+              onChange={(e) => handleChange(e)}
+              placeholder="Search by car model"
+            />{" "}
           </label>
+
+          {input.length > 0 && (
+            <div className="dropdown-content menu bg-base-100 rounded-box z-1  w-52 p-2 shadow-sm mt-12  ml-12 self-start">
+              {" "}
+              <ul>
+                {searchResults.length > 0 ? (
+                  searchResults.map((singleCar: TSearchResult) => (
+                    <Link to={`/details/${singleCar.id}`} key={singleCar.id}>
+                      <li className="hover:bg-secondary hover:text-white">
+                        {singleCar.model}
+                      </li>
+                    </Link>
+                  ))
+                ) : (
+                  <li>No results found.</li>
+                )}
+              </ul>{" "}
+            </div>
+          )}
         </div>
         {user ? (
           <div className="desktop-icons  gap-5 hidden md:flex ">
