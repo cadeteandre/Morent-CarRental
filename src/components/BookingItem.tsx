@@ -1,8 +1,7 @@
-import * as L from 'leaflet';
 import "leaflet/dist/leaflet.css";
-import { useEffect } from 'react';
-import getCityCoordinates from '../utils/functions/getCityCoordinates';
 import { Link } from 'react-router';
+import LeafletMap from "./LeafletMap";
+import calculateTotalPrice from "../utils/functions/calculateTotalPrice";
 
 interface IBookingItemProps {
     carId: string,
@@ -10,10 +9,11 @@ interface IBookingItemProps {
     carModel: string,
     pickupDate: string,
     dropOffDate: string,
-    price: number | string,
+    price: number,
     pickupCity: string,
     dropOffCity: string,
-    carImg: string
+    carImg: string,
+    mapNumber: number
 }
 
 const BookingItem: React.FC<IBookingItemProps> = ({ 
@@ -25,35 +25,12 @@ const BookingItem: React.FC<IBookingItemProps> = ({
     price, 
     pickupCity, 
     dropOffCity, 
-    carImg
+    carImg,
+    mapNumber
 }) => {
-    
-    useEffect(() => {
-        const map = L.map('map').setView([0, 0], 13);
-    
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
-
-        getCityCoordinates(pickupCity)
-        .then(({ latitude, longitude }) => {
-            map.setView([latitude, longitude], 13);
-
-            L.marker([latitude, longitude])
-            .addTo(map)
-            .bindPopup('Selected city')
-            .openPopup();
-        })
-        .catch((error) => console.error(error));
-
-        return () => {
-            map.remove();
-        };
-
-    }, [pickupCity, dropOffCity]);
 
     return (  
-        <div className='flex flex-col w-full max-w-[1440px]'>
+        <div className='flex flex-col w-full max-w-[1440px] mb-8'>
             <p className='font-bold text-left ml-6 mb-2'>{pickupDate}</p>
             <div className="flex flex-col rounded-box py-4 bg-white">
                 <div className='flex flex-col rounded-xl px-6'>
@@ -66,7 +43,7 @@ const BookingItem: React.FC<IBookingItemProps> = ({
                                 <p className='font-bold'>{carBrand} {carModel}</p>
                             </Link>
                             <p className='font-extralight text-xs'>{pickupDate} - {dropOffDate}</p>
-                            <p className='font-bold'>{price} €</p>
+                            <p className='font-bold'>{calculateTotalPrice(price, pickupDate, dropOffDate)} €</p>
                         </div>
                     </div>
                     <hr className="w-full self-center my-4 opacity-50" />
@@ -78,7 +55,7 @@ const BookingItem: React.FC<IBookingItemProps> = ({
                                 <p className='text-xs'>{dropOffCity}</p>
                             </div>
                         </div>
-                        <div id="map" className='h-[200px] w-full rounded-2xl'></div>
+                        <LeafletMap pickupCity={pickupCity} mapNumber={mapNumber} />
                     </div>
                 </div>
             </div>
