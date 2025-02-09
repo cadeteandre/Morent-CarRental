@@ -14,7 +14,7 @@ export default function MainProvider({
   const [selectedCar, setSelectedCar] = useState<
     Vehicle | TVehicleDetail | null
   >(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [refreshFavList, setRefreshFavList] = useState<boolean>(false);
 
   return (
     <mainContext.Provider
@@ -23,8 +23,8 @@ export default function MainProvider({
         setUser,
         selectedCar,
         setSelectedCar,
-        isLoggedIn,
-        setIsLoggedIn,
+        refreshFavList,
+        setRefreshFavList,
       }}
     >
       {children}

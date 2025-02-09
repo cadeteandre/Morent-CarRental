@@ -19,8 +19,9 @@ export interface IVehicle {
 const UserFavCarsList: React.FC = () => {
   const [favoriteVehicles, setFavoriteVehicles] = useState<IVehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(mainContext) as {
+  const { user, refreshFavList } = useContext(mainContext) as {
     user: User | null;
+    refreshFavList: boolean;
   };
 
   useEffect(() => {
@@ -58,14 +59,14 @@ const UserFavCarsList: React.FC = () => {
     };
 
     fetchFavoriteVehicles();
-  }, [user]);
+  }, [user, refreshFavList]);
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
   return (
-    <section className="favorite-cars-list">
+    <section className="flex flex-wrap gap-8">
       {favoriteVehicles.length === 0 ? (
         <p>No favorite vehicles found.</p>
       ) : (

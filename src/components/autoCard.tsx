@@ -27,8 +27,9 @@ interface AutoCardProps {
 
 const AutoCard: FC<AutoCardProps> = (props) => {
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
-  const { user } = useContext(mainContext) as {
+  const { user, setRefreshFavList } = useContext(mainContext) as {
     user: User | null;
+    setRefreshFavList: React.Dispatch<React.SetStateAction<boolean>>;
   };
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
@@ -48,7 +49,8 @@ const AutoCard: FC<AutoCardProps> = (props) => {
       } else {
         await addFavorite(props.vehicle_id, user.id);
       }
-      setIsFavorited(!isFavorited);
+      setIsFavorited((prev) => !prev);
+      setRefreshFavList((prev) => !prev);
     }
   };
 
