@@ -101,7 +101,7 @@ const Header = () => {
                 {searchResults.length > 0 ? (
                   searchResults.map((singleCar: TSearchResult) => (
                     <Link to={`/details/${singleCar.id}`} key={singleCar.id}>
-                      <li className="hover:bg-secondary hover:text-white">
+                      <li className="hover:bg-secondary hover:text-white p-2">
                         {singleCar.model}
                       </li>
                     </Link>
