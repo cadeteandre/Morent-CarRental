@@ -10,7 +10,7 @@ export default function MainProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User>(null!);
+  const [user, setUser] = useState<User | null>(null!);
   const [selectedCar, setSelectedCar] = useState<
     Vehicle | TVehicleDetail | null
   >(null);
