@@ -5,7 +5,7 @@ const PaymentConfirmed = () => {
     <section>
       <div className="hero bg-base-200 min-h-screen font-Jakarta-SemiBold">
         <div className="hero-content text-center">
-          <div className="max-w-md flex flex-col justify-center items-center">
+          <div className="max-w-md flex flex-col justify-center items-center p-5">
             <figure className="w-28 h-w-28">
               <svg
                 viewBox="0 0 329 329"
