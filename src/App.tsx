@@ -13,6 +13,8 @@ import MyBookings from "./pages/MyBookings";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import PaymentConfirmed from "./pages/PaymentConfirmed";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,11 +23,26 @@ function App() {
         <Route index element={<Home />} />
         <Route path="details/:carId" element={<Details />} />
         <Route path="payment" element={<Payment />} />
-        <Route path="favorites" element={<Favorites />} />
-        <Route path="my_bookings" element={<MyBookings />} />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="payment_confirmed" element={<PaymentConfirmed />} />
+
+        //* Protected Routes
+          <Route path="favorites" element={
+            <ProtectedRoute>
+              <Favorites />
+            </ProtectedRoute>
+          } />
+          <Route path="my_bookings" element={
+            <ProtectedRoute>
+              <MyBookings />
+            </ProtectedRoute>
+          } />
+          <Route path="profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
       </Route>
     )
   );

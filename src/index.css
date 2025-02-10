@@ -7,8 +7,18 @@
   --font-display: "Arial";
   --font-Jakarta-SemiBold: "PlusJakartaSans-SemiBold";
   --font-Jakarta-Regular: "PlusJakartaSans-Regular";
+  --font-Jakarta-Bold: "PlusJakartaSans-Bold";
+  --font-Jakarta-Medium: "PlusJakartaSans-Medium";
 }
 
+@font-face {
+  font-family: "PlusJakartaSans-Bold";
+  src: url("/fonts/PlusJakartaSans-Bold.ttf");
+}
+@font-face {
+  font-family: "PlusJakartaSans-Medium";
+  src: url("/fonts/PlusJakartaSans-Medium.ttf");
+}
 @font-face {
   font-family: "PlusJakartaSans-SemiBold";
   src: url("/fonts/PlusJakartaSans-SemiBold.ttf");

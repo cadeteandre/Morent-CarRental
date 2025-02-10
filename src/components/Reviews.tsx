@@ -1,7 +1,7 @@
 import { IReview } from "../interfaces/IReview";
 
 interface IReviewsProps {
-  reviews: IReview[]
+  reviews: IReview[];
 }
 
 const getStarRating = (stars: number): string => {
@@ -23,7 +23,10 @@ const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
   return (
     <ul className="list bg-base-100 rounded-box shadow-md font-display">
       <li className="p-4 pb-2 text-base font-bold tracking-wide flex items-center gap-2.5">
-        Reviews <div className="badge bg-blue-600 text-white badge-lg">{reviews.length}</div>
+        Reviews{" "}
+        <div className="badge bg-blue-600 text-white badge-lg">
+          {reviews.length}
+        </div>
       </li>
       {reviews.map((singleReview, i) => (
         <li key={i} className="list-row flex flex-row items-center">
@@ -36,15 +39,16 @@ const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
             <div className="flex flex-row justify-between items-center ">
               <p className="text-[18.7px] font-bold">{`${singleReview.profiles.firstname} ${singleReview.profiles.lastname}`}</p>{" "}
               <div>
-                <p className="text-neutral-400">{formatDate(singleReview.created_at)}</p>
-                <p className="text-md text-amber-400">{getStarRating(singleReview.stars)}</p>
+                <p className="text-neutral-400">
+                  {formatDate(singleReview.created_at)}
+                </p>
+                <p className="text-md text-amber-400">
+                  {getStarRating(singleReview.stars)}
+                </p>
               </div>
             </div>
 
-            <p className=" text-sm opacity-60">
-              {singleReview.text}
-              (Model: Volkswagen Golf)
-            </p>
+            <p className=" text-sm opacity-60">{singleReview.text}</p>
           </div>
         </li>
       ))}

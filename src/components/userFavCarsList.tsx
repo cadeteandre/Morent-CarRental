@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { supabase } from "../utils/supabase/setupSupabase";
+import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 import AutoCard from "./autoCard";
 
 export interface IVehicle {
@@ -17,66 +19,54 @@ export interface IVehicle {
 const UserFavCarsList: React.FC = () => {
   const [favoriteVehicles, setFavoriteVehicles] = useState<IVehicle[]>([]);
   const [loading, setLoading] = useState(true);
-
-  console.log(favoriteVehicles);
+  const { user, refreshFavList } = useContext(mainContext) as {
+    user: User | null;
+    refreshFavList: boolean;
+  };
 
   useEffect(() => {
     const fetchFavoriteVehicles = async () => {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      if (userError) {
-        console.error("Error fetching user:", userError);
+      if (user) {
+        const { data: favorites, error } = await supabase
+          .from("favorites")
+          .select("vehicle_id")
+          .eq("profile_id", user.id);
+
+        if (error) {
+          console.error("Error fetching favorites:", error);
+          setLoading(false);
+          return;
+        }
+
+        const favoritesIds = favorites.map((fav) => fav.vehicle_id);
+
+        const { data: favoriteVehicles, error: vehiclesError } = await supabase
+          .from("vehicles")
+          .select(
+            "brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img, id "
+          )
+          .in("id", favoritesIds);
+
+        if (vehiclesError) {
+          console.error("Error fetching vehicles:", vehiclesError);
+          setLoading(false);
+          return;
+        }
+
+        setFavoriteVehicles(favoriteVehicles);
         setLoading(false);
-        return;
       }
-      if (!user) {
-        console.error("User not logged in");
-        setLoading(false);
-        return;
-      }
-
-      const { data: favorites, error: favError } = await supabase
-        .from("favorites")
-        .select("vehicle_id")
-        .eq("profile_id", user.id);
-
-      if (favError) {
-        console.error("Error fetching favorites:", favError);
-        setLoading(false);
-        return;
-      }
-
-      const favoritesIds = favorites.map((fav) => fav.vehicle_id);
-
-      const { data: favoriteVehicles, error: vehiclesError } = await supabase
-        .from("vehicles")
-        .select(
-          "brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img, id "
-        )
-        .in("id", favoritesIds);
-      console.log(favoriteVehicles);
-
-      if (vehiclesError) {
-        console.error("Error fetching vehicles:", vehiclesError);
-        setLoading(false);
-        return;
-      }
-
-      setFavoriteVehicles(favoriteVehicles);
-      setLoading(false);
     };
 
     fetchFavoriteVehicles();
-  }, []);
+  }, [user, refreshFavList]);
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
   return (
-    <div className="favorite-cars-list">
+    <section className="flex flex-wrap gap-8">
       {favoriteVehicles.length === 0 ? (
         <p>No favorite vehicles found.</p>
       ) : (
@@ -96,7 +86,7 @@ const UserFavCarsList: React.FC = () => {
           </div>
         ))
       )}
-    </div>
+    </section>
   );
 };
 
