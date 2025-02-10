@@ -34,7 +34,7 @@ const Header = () => {
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-20 mt-3 w-52 py-2 px-6 shadow">
                             <h1 className="text-xl font-bold">Hi, Max</h1>
                             <li>
-                                <Link to={'/'}>
+                                <Link to={'/profile'}>
                                     <img src="/svg/profile-dropdown-icon.svg" alt="Profile Icon" />
                                     Profile
                                 </Link>
