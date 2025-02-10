@@ -155,7 +155,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, set
             </fieldset>
 
             {/* Price*/}
-            {prices[0] != prices[1] && prices.length > 0 && (
+            {prices[0] != prices[1] && (
                 <fieldset>
                     <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">Price</legend>
                     <label htmlFor="price" className="sr-only">
