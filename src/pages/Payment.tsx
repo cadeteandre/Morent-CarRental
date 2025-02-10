@@ -529,7 +529,7 @@ const Payment = () => {
               <div className=" flex flex-row items-center gap-5  w-full">
                 <figure className="size-20 rounded-lg overflow-hidden flex items-center justify-center">
                   <img
-                    className="w-full h-full object-contain "
+                    className="w-full h-full object-cover rounded-lg "
                     src={
                       selectedCar.car_img
                         ? selectedCar.car_img
@@ -537,7 +537,6 @@ const Payment = () => {
                     }
                   />
                 </figure>
-
                 <div className="flex flex-col ">
                   <h1 className="text-lg font-bold text-neutral-800">
                     {`${selectedCar.brand.name} ${selectedCar.model}`}
@@ -548,45 +547,45 @@ const Payment = () => {
                     </p>
                     <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
                   </div>
-                </div>
-                <div className="divider h-[1px]"></div>
-                <div className="mb-5">
-                  <div
-                    className="flex justify-between items-center mb-5
+                </div>{" "}
+              </div>
+              <div className="divider h-[1px]"></div>
+              <div className="mb-5">
+                <div
+                  className="flex justify-between items-center mb-5
                 "
-                  >
-                    <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
-                  </div>
-                  <div className="flex justify-between items-center mb-5">
-                    <p>Tax</p>{" "}
-                    <p>{`€ ${
-                      selectedCar.price_per_day && pickupDate && dropoffDate
-                        ? calculateTax(
-                            selectedCar.price_per_day,
-                            diffInDaysConversor(pickupDate, dropoffDate),
-                            0.19
-                          )
-                        : 0
-                    }`}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p>Total Price</p>
-                    <p>{`€ ${
-                      selectedCar.price_per_day && pickupDate && dropoffDate
-                        ? calculateTotalPrice(
-                            selectedCar.price_per_day,
-                            pickupDate,
-                            dropoffDate
-                          )
-                        : selectedCar.price_per_day
-                    }`}</p>
-                  </div>
+                >
+                  <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
+                </div>
+                <div className="flex justify-between items-center mb-5">
+                  <p>Tax</p>{" "}
+                  <p>{`€ ${
+                    selectedCar.price_per_day && pickupDate && dropoffDate
+                      ? calculateTax(
+                          selectedCar.price_per_day,
+                          diffInDaysConversor(pickupDate, dropoffDate),
+                          0.19
+                        )
+                      : 0
+                  }`}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p>Total Price</p>
+                  <p>{`€ ${
+                    selectedCar.price_per_day && pickupDate && dropoffDate
+                      ? calculateTotalPrice(
+                          selectedCar.price_per_day,
+                          pickupDate,
+                          dropoffDate
+                        )
+                      : selectedCar.price_per_day
+                  }`}</p>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="card text-center w-xs h-fit bg-white p-5 gap-6 rounded-lg md:w-sm">
+          <div className="card w-xs h-fit bg-white    p-5 rounded-lg md:w-md">
             <h1 className="text-2xl font-bold text-neutral-800">
               Rental Summary
             </h1>
