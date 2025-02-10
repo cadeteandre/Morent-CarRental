@@ -6,17 +6,21 @@ import getCityCoordinates from "../utils/functions/getCityCoordinates";
 import { Link } from "react-router";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
+import { IReview } from "../interfaces/IReview";
+import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail;
   location: string;
+  reviews: IReview[];
 }
 
-const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
+const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location, reviews }) => {
   const { user, setSelectedCar } = useContext(mainContext) as {user: User | null,
     setSelectedCar: React.Dispatch<React.SetStateAction<TVehicleDetail>>;
   };
 
+  const reviewsStars: number = calculateAverage(reviews.map((singleReview) => singleReview.stars)); 
 
   useEffect(() => {
     const map = L.map("map").setView([0, 0], 13);
@@ -58,8 +62,8 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
           </h1>
           <div className="flex items-center gap-2.5">
             {" "}
-            <p className="text-lg text-amber-400">★★★☆☆</p>
-            <p className="text-sm text-neutral-500">2 Reviewer</p>
+            <p className="text-lg text-amber-400">{getStarRating(reviewsStars)}</p>
+            <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
           </div>{" "}
         </div>
         <div className="flex flex-col gap-3.5 md:flex-row md:justify-between">

@@ -140,8 +140,6 @@ const Payment = () => {
     }
   }
 
-  console.log(selectedCar);
-
   return (
     <form onSubmit={handleSubmit} ref={formRef} className="font-display">
       {/* back btn für desktop version */}
@@ -493,51 +491,59 @@ const Payment = () => {
           </fieldset>
         </div>
         {/* Rental Summary */}
-        <div className="card w-xs h-fit bg-white    p-5 rounded-lg md:w-md ">
-          <h1 className="text-2xl font-bold text-neutral-800">
-            Rental Summary
-          </h1>
-          <p className="text-sm text-neutral-500 mb-5">
-            Prices may change depending on the length of the rental and the
-            price of your rental car.
-          </p>
-          <div className="flex w-full flex-col">
-            <div className=" flex flex-row items-center gap-5  w-full">
-              <figure className="size-20 rounded-md overflow-hidden flex items-center justify-center">
-                <img
-                  className="w-full h-full object-contain "
-                  src={
-                    selectedCar.car_img
-                      ? selectedCar.car_img
-                      : `/images/img_placeholder.png`
-                  }
-                />
-              </figure>
-
-              <div className="flex flex-col ">
-                <h1 className="text-lg font-bold text-neutral-800">
-                  {selectedCar.model}
-                </h1>
-                <div className="flex items-center gap-2.5">
-                  <p className="text-lg text-amber-400">★★★☆☆</p>
-                  <p className="text-sm text-neutral-500">2 Reviewer</p>
+        {selectedCar ? (
+          <div className="card w-xs h-fit bg-white p-5 rounded-lg md:w-md">
+            <h1 className="text-2xl font-bold text-neutral-800">
+              Rental Summary
+            </h1>
+            <p className="text-sm text-neutral-500 mb-5">
+              Prices may change depending on the length of the rental and the
+              price of your rental car.
+            </p>
+            <div className="flex w-full flex-col">
+              <div className=" flex flex-row items-center gap-5  w-full">
+                <figure className="size-20 rounded-md overflow-hidden flex items-center justify-center">
+                  <img
+                    className="w-full h-full object-contain "
+                    src={
+                      selectedCar.car_img
+                        ? selectedCar.car_img
+                        : `/images/img_placeholder.png`
+                    }
+                  />
+                </figure>
+                <div className="flex flex-col ">
+                  <h1 className="text-lg font-bold text-neutral-800">
+                    {selectedCar.model}
+                  </h1>
+                  <div className="flex items-center gap-2.5">
+                    <p className="text-lg text-amber-400">★★★☆☆</p>
+                    <p className="text-sm text-neutral-500">2 Reviewer</p>
+                  </div>
+                </div>
+              </div>
+              <div className="divider h-[1px]"></div>
+              <div className="mb-5">
+                <div
+                  className="flex justify-between items-center mb-5
+                "
+                >
+                  <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p>Tax</p> <p>€0</p>
                 </div>
               </div>
             </div>
-            <div className="divider h-[1px]"></div>
-            <div className="mb-5">
-              <div
-                className="flex justify-between items-center mb-5
-              "
-              >
-                <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
-              </div>
-              <div className="flex justify-between items-center">
-                <p>Tax</p> <p>€0</p>
-              </div>
-            </div>
           </div>
-        </div>
+        ) : (
+          <div className="card text-center w-xs h-fit bg-white p-5  gap-6 rounded-lg md:w-sm">
+            <h1 className="text-2xl font-bold text-neutral-800">
+              Rental Summary
+            </h1>
+            <p>No car selected</p>
+          </div>
+        )}
       </section>
       {/* Rent now! button */}
       <button
