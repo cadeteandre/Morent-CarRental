@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import BookingItem from "../components/BookingItem";
-// import { mainContext } from "../context/MainProvider";
-// import { User } from "@supabase/supabase-js";
 import { IBookedVehicle } from "../interfaces/IBookedVehicle";
 import fetchBookings from "../utils/functions/fetchBookings";
 import { mainContext } from "../context/MainProvider";
@@ -12,9 +10,12 @@ const MyBookings = () => {
     const [selected, setSelected] = useState("Upcoming");
     const [userBookings, setUserBookings] = useState<IBookedVehicle[]>([]);
 
+    const { user } = useContext(mainContext) as {user: User};
+
+
     useEffect(() => {
-        fetchBookings(setUser, setUserBookings);
-    }, [setUser]);
+        fetchBookings(user, setUserBookings);
+    }, [user]);
 
     const today = new Date();
 

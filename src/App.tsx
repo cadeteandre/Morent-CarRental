@@ -8,13 +8,11 @@ import RootLayout from "./rootLayout/RootLayout";
 import Home from "./pages/Home";
 import Details from "./pages/Details";
 import Payment from "./pages/Payment";
-import Favorites from "./pages/Favorites";
 import MyBookings from "./pages/MyBookings";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import PaymentConfirmed from "./pages/PaymentConfirmed";
-import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 function App() {
   const router = createBrowserRouter(
@@ -26,23 +24,9 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="payment_confirmed" element={<PaymentConfirmed />} />
-
-        //* Protected Routes
-          <Route path="favorites" element={
-            <ProtectedRoute>
-              <Favorites />
-            </ProtectedRoute>
-          } />
-          <Route path="my_bookings" element={
-            <ProtectedRoute>
-              <MyBookings />
-            </ProtectedRoute>
-          } />
-          <Route path="profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
+        <Route path="favorites" element={<Payment />} />
+        <Route path="my_bookings" element={<MyBookings />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     )
   );

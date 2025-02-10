@@ -137,7 +137,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
               : `not available`}
             <span className="text-neutral-400 text-sm">day</span>
           </p>
-          <Link to={'/payment'}>
+          <Link to={`${user ? '/payment' : '/login'}`}>
             <button onClick={handleSelectedCar} className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">
               Rent Now
             </button>

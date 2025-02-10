@@ -5,6 +5,7 @@ import { TVehicleDetail } from "../pages/Details";
 import getCityCoordinates from "../utils/functions/getCityCoordinates";
 import { Link } from "react-router";
 import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail;
@@ -12,12 +13,13 @@ interface ICarDetailsProps {
 }
 
 const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
-  const { setSelectedCar } = useContext(mainContext) as {
+  const { user, setSelectedCar } = useContext(mainContext) as {user: User | null,
     setSelectedCar: React.Dispatch<React.SetStateAction<TVehicleDetail>>;
   };
 
+
   useEffect(() => {
-    const map = L.map("map").setView([50.938361, 6.959974], 13);
+    const map = L.map("map").setView([0, 0], 13);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -102,7 +104,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
             {`€ ${vehicle.price_per_day}`} /{" "}
             <span className="text-neutral-400 text-base">day</span>
           </p>
-          <Link to={"/payment"}>
+          <Link to={`${user ? '/payment' : '/login'}`}>
             <button
               onClick={() => setSelectedCar(vehicle)}
               className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit"
