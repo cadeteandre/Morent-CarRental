@@ -1,14 +1,9 @@
 import { IReview } from "../interfaces/IReview";
+import getStarRating from "../utils/functions/getStarRating";
 
 interface IReviewsProps {
   reviews: IReview[];
 }
-
-const getStarRating = (stars: number): string => {
-  const filledStars = "★".repeat(stars);
-  const emptyStars = "☆".repeat(5 - stars);
-  return filledStars + emptyStars;
-};
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);

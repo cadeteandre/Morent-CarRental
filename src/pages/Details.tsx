@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import CarDetails from "../components/CarDetails";
-import Reviews from "../components/Reviews";
+import Reviews from '../components/Reviews';
 import { useEffect, useState } from "react";
 import fetchLocationByCarId from "../utils/functions/fetchLocationByCarId";
 import fetchCarById from "../utils/functions/fetchCarById";
@@ -77,7 +77,7 @@ const Details = () => {
         <BackIcon /> Back
       </button>
       <div className="flex flex-col items-center justify-center gap-6 mb-10 ">
-        <CarDetails vehicle={vehicle} location={location} />
+        <CarDetails vehicle={vehicle} location={location} reviews={reviews} />
 
         <Reviews reviews={reviews} />
 
