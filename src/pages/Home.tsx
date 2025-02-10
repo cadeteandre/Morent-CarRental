@@ -127,7 +127,7 @@ const Home = () => {
 
   return (
     <section className=" flex flex-col gap-8 items-center">
-      <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between md:w-full">
+      <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between ">
         <AdCard
           adTitle={`The Best Platform for Car Rental`}
           adText="Ease of doing a car rental safely and reliably. Of course at a low price."

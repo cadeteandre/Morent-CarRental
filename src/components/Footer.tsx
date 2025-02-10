@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="footer bg-white p-10 font-display  ">
+    <footer className="footer bg-white p-10 font-display xl:max-w-[1440px] xl:mx-auto ">
       <section className="w-full grid grid-rows-2 grid-cols-2 gap-y-8 gap-x-2  md:grid-rows-1  md:gap-x-7 md:grid-cols-[3fr_1fr_1fr_1fr]">
         <div className="section1 flex  flex-col gap-2.5 ">
           <h1 className="text-primary font-Jakarta-Bold text-2xl  ">MORENT</h1>

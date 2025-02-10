@@ -34,7 +34,7 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
     }, []);
 
     return (
-      <div className="card bg-white rounded-lg w-full py-4 px-6  md:px-8 font-display md:max-w-[586px]">
+      <div className="card bg-white rounded-lg w-full py-4 px-6  md:px-8 font-display lg:max-w-[586px]">
         <p className="text-sm font-bold  mb-2">{componentTitle}</p>
         <div className="flex justify-between w-full">
           <div className="flex flex-col items-start ">
@@ -42,7 +42,7 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
             <input
               list={listId}
               name="locations"
-              className="border-none text-sm w-24 md:w-fit"
+              className="border-none text-sm w-24 lg:w-fit"
               placeholder="type here..."
               ref={locationRef}
             />
@@ -62,7 +62,7 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
                 type="date"
                 name="pickup-date"
                 id="pickup-date"
-                className="border-none text-sm w-24 md:w-fit"
+                className="border-none text-sm w-24 lg:w-fit"
                 ref={dateRef}
               />
             </div>

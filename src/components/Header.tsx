@@ -39,7 +39,7 @@ const Header = () => {
   }, [input]);
 
   return (
-    <header className="my-6 font-Jakarta-Bold px-6 md:px-14 ">
+    <header className="my-6 font-Jakarta-Bold px-6 md:px-14 xl:max-w-[1440px] xl:mx-auto ">
       <nav className="navbar bg-base-100  flex flex-col gap-8 items-center justify-center  md:flex-row md:justify-between">
         <div className="flex items-center justify-between w-full md:w-fit">
           {" "}
