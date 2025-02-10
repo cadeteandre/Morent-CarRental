@@ -11,6 +11,10 @@ import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import { Vehicle } from "./Home";
 import { TVehicleDetail } from "./Details";
+import fetchReviewsByCar from "../utils/functions/fetchReviewsByCar";
+import { IReview } from "../interfaces/IReview";
+import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
+import calculateTotalPrice from "../utils/functions/calculateTotalPrice";
 
 type Booking = Tables<"bookings">;
 
@@ -38,6 +42,9 @@ const Payment = () => {
     user: User;
     selectedCar: Vehicle | TVehicleDetail;
   };
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const reviewsStars: number = calculateAverage(reviews.map((singleReview) => singleReview.stars)); 
+  const carId = selectedCar?.id;
 
   async function fetchLocations() {
     const { data, error } = await supabase.from("locations").select("*");
@@ -53,7 +60,9 @@ const Payment = () => {
 
   useEffect(() => {
     fetchLocations();
-  }, []);
+    fetchReviewsByCar(carId, setReviews);
+  }, [carId]);
+
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,7 +97,7 @@ const Payment = () => {
         start_date: pickUpDateValue,
         end_date: dropOffDateValue,
         vehicle_id: selectedCar?.id,
-        price: 500,
+        price: Number(calculateTotalPrice(selectedCar.price_per_day, pickUpDateValue, dropOffDateValue)),
       };
 
       const { data, error } = await supabase
@@ -514,11 +523,11 @@ const Payment = () => {
                 </figure>
                 <div className="flex flex-col ">
                   <h1 className="text-lg font-bold text-neutral-800">
-                    {selectedCar.model}
+                    {`${selectedCar.brand.name} ${selectedCar.model}`}
                   </h1>
                   <div className="flex items-center gap-2.5">
-                    <p className="text-lg text-amber-400">★★★☆☆</p>
-                    <p className="text-sm text-neutral-500">2 Reviewer</p>
+                    <p className="text-lg text-amber-400">{getStarRating(reviewsStars)}</p>
+                    <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
                   </div>
                 </div>
               </div>
@@ -537,7 +546,7 @@ const Payment = () => {
             </div>
           </div>
         ) : (
-          <div className="card text-center w-xs h-fit bg-white p-5  gap-6 rounded-lg md:w-sm">
+          <div className="card text-center w-xs h-fit bg-white p-5 gap-6 rounded-lg md:w-sm">
             <h1 className="text-2xl font-bold text-neutral-800">
               Rental Summary
             </h1>
