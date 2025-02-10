@@ -161,7 +161,7 @@ const Payment = () => {
       >
         <BackIcon /> Back
       </button>
-      <section className="flex flex-col gap-[30px] md:flex-row">
+      <section className="flex flex-col gap-[30px] md:flex-row md:justify-between">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
           <fieldset className="fieldset w-xs bg-white  p-5 rounded-lg md:w-full ">
@@ -409,7 +409,7 @@ const Payment = () => {
               Please enter your payment method
             </p>
             <div className="flex flex-col gap-5 ">
-              <div className="flex  items-center gap-2.5  bg-neutral-50 rounded-md  p-[15px]">
+              <div className="flex  items-center gap-2.5  bg-neutral-50 rounded-lg  p-[15px]">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -424,7 +424,7 @@ const Payment = () => {
                   Credit Card <CreditCardIcon />
                 </label>
               </div>
-              <div className="flex items-center gap-2.5  bg-neutral-50 rounded-md  p-[15px] ">
+              <div className="flex items-center gap-2.5  bg-neutral-50 rounded-lg  p-[15px] ">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -439,7 +439,7 @@ const Payment = () => {
                   PayPal <PayPalIcon />
                 </label>
               </div>{" "}
-              <div className="flex items-center  gap-2.5  bg-neutral-50 rounded-md  p-[15px]">
+              <div className="flex items-center  gap-2.5  bg-neutral-50 rounded-lg  p-[15px]">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -470,7 +470,7 @@ const Payment = () => {
               ready!
             </p>
             <div className="flex flex-col gap-5 ">
-              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-md  p-[15px] items-start ">
+              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-lg  p-[15px] items-start ">
                 <input
                   type="checkbox"
                   name="checkboxMarketing"
@@ -479,7 +479,7 @@ const Payment = () => {
                 I agree with sending marketing and newsletter emails. No spam,
                 promised!
               </label>
-              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-md  p-[15px] items-start ">
+              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-lg  p-[15px] items-start ">
                 <input
                   type="checkbox"
                   name="checkboxPolicy"
@@ -501,34 +501,34 @@ const Payment = () => {
         </div>
         {/* Rental Summary */}
         {selectedCar ? (
-          <div className="card w-xs h-fit bg-white p-5 rounded-lg md:w-md">
-            <h1 className="text-2xl font-bold text-neutral-800">
-              Rental Summary
-            </h1>
-            <p className="text-sm text-neutral-500 mb-5">
-              Prices may change depending on the length of the rental and the
-              price of your rental car.
-            </p>
-            <div className="flex w-full flex-col">
-              <div className=" flex flex-row items-center gap-5  w-full">
-                <figure className="size-20 rounded-md overflow-hidden flex items-center justify-center">
-                  <img
-                    className="w-full h-full object-contain "
-                    src={
-                      selectedCar.car_img
-                        ? selectedCar.car_img
-                        : `/images/img_placeholder.png`
-                    }
-                  />
-                </figure>
-                <div className="flex flex-col ">
-                  <h1 className="text-lg font-bold text-neutral-800">
-                    {`${selectedCar.brand.name} ${selectedCar.model}`}
-                  </h1>
-                  <div className="flex items-center gap-2.5">
-                    <p className="text-lg text-amber-400">{getStarRating(reviewsStars)}</p>
-                    <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
-                  </div>
+        <div className="card w-xs h-fit bg-white    p-5 rounded-lg md:w-md ">
+          <h1 className="text-2xl font-bold text-neutral-800">
+            Rental Summary
+          </h1>
+          <p className="text-sm text-neutral-500 mb-5">
+            Prices may change depending on the length of the rental and the
+            price of your rental car.
+          </p>
+          <div className="flex w-full flex-col">
+            <div className=" flex flex-row items-center gap-5  w-full">
+              <figure className="size-20 rounded-lg overflow-hidden flex items-center justify-center">
+                <img
+                  className="w-full h-full object-contain "
+                  src={
+                    selectedCar.car_img
+                      ? selectedCar.car_img
+                      : `/images/img_placeholder.png`
+                  }
+                />
+              </figure>
+
+              <div className="flex flex-col ">
+                <h1 className="text-lg font-bold text-neutral-800">
+                  {`${selectedCar.brand.name} ${selectedCar.model}`}
+                </h1>
+                <div className="flex items-center gap-2.5">
+                  <p className="text-lg text-amber-400">{getStarRating(reviewsStars)}</p>
+                  <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
                 </div>
               </div>
               <div className="divider h-[1px]"></div>

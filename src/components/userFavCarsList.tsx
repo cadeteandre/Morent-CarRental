@@ -66,24 +66,23 @@ const UserFavCarsList: React.FC = () => {
   }
 
   return (
-    <section className="flex flex-wrap gap-8">
+    <section className="flex flex-wrap flex-col md:flex-row gap-8">
       {favoriteVehicles.length === 0 ? (
         <p>No favorite vehicles found.</p>
       ) : (
         favoriteVehicles.map((vehicle) => (
-          <div key={vehicle.id} className="flex items-center">
-            <AutoCard
-              brand={vehicle.brand.name}
-              model={vehicle.model}
-              vehicle_type={vehicle.vehicle_type.name}
-              consumption={vehicle.consumption}
-              gear_type={vehicle.gear_type}
-              seats={vehicle.seats}
-              price_per_day={vehicle.price_per_day}
-              car_img={vehicle.car_img}
-              vehicle_id={vehicle.id}
-            />
-          </div>
+          <AutoCard
+            key={vehicle.id}
+            brand={vehicle.brand.name}
+            model={vehicle.model}
+            vehicle_type={vehicle.vehicle_type.name}
+            consumption={vehicle.consumption}
+            gear_type={vehicle.gear_type}
+            seats={vehicle.seats}
+            price_per_day={vehicle.price_per_day}
+            car_img={vehicle.car_img}
+            vehicle_id={vehicle.id}
+          />
         ))
       )}
     </section>
