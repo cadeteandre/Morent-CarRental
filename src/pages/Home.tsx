@@ -25,7 +25,7 @@ const Home = () => {
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [checkboxStatesTypes, setCheckboxStatesTypes] = useState<{ [key: string]: boolean }>({});
     const [checkboxStatesSeats, setCheckboxStatesSeats] = useState<{ [key: string]: boolean }>({});
-    const [maxPrice, setMaxPrice] = useState<number>();
+    const [maxPrice, setMaxPrice] = useState<number>(1001);
 
     const pickupLocationRef = useRef<HTMLInputElement>(null);
     const pickupDateRef = useRef<HTMLInputElement>(null);
