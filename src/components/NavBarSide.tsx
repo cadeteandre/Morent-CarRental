@@ -69,6 +69,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, set
             setPrices(priceRange);
             setMidPrice(middlePrice);
             setRangeValue(String(middlePrice));
+            console.log("createPrices fetchedVehicle");
         } else if (filteredVehicles?.length > 0) {
             const prices = filteredVehicles.map((vehicle) => {
                 return vehicle.price_per_day != null ? vehicle.price_per_day : 0;
@@ -110,10 +111,12 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, set
     }, []);
 
     useEffect(() => {
-        if (fetchedVehicle || filteredVehicles) {
+        if (fetchedVehicle?.length > 0 || filteredVehicles.length > 0) {
             createPrices(fetchedVehicle, filteredVehicles);
+        } else {
+            setPrices([]);
         }
-    }, [fetchedVehicle, filteredVehicles]);
+    }, [fetchedVehicle.length, filteredVehicles.length]);
 
     useEffect(() => {
         if (prices.length === 2) {
@@ -123,7 +126,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, set
         }
     }, [prices]);
 
-    console.log(midPrice);
+    console.log(prices);
 
     return (
         <aside className="flex flex-col gap-14 bg-base-100 w-[327px] px-3.5 py-8 shadow-sm rounded-md">
@@ -155,7 +158,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, set
             </fieldset>
 
             {/* Price*/}
-            {prices[0] != prices[1] && (
+            {prices[0] != prices[1] && prices.length > 0 && (
                 <fieldset>
                     <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">Price</legend>
                     <label htmlFor="price" className="sr-only">
