@@ -43,6 +43,7 @@ const Home = () => {
             } else {
                 setFetchedVehicle(data);
                 setFilteredVehicles([]);
+                getTableRows();
             }
         }
 
@@ -113,6 +114,18 @@ const Home = () => {
         dropoffTimeRef.current!.value = pickupTime as string;
     }
 
+    function handleReset() {
+        pickupLocationRef.current!.value = "";
+        pickupDateRef.current!.value = "";
+        pickupTimeRef.current!.value = "";
+
+        dropoffLocationRef.current!.value = "";
+        dropoffDateRef.current!.value = "";
+        dropoffTimeRef.current!.value = "";
+
+        fetchVehicles("initial", fetchLimit);
+    }
+
     useEffect(() => {
         getTableRows();
     }, []);
@@ -158,6 +171,9 @@ const Home = () => {
                 </div>
                 <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={() => fetchVehicles("search", fetchLimit)}>
                     Search Car
+                </button>
+                <button className="btn bg-blue-600 text-white h-fit p-4 cursor-pointer rounded-sm hover:bg-blue-800" onClick={handleReset}>
+                    Reset
                 </button>
             </section>
             <section>
