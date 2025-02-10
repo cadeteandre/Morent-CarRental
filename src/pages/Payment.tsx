@@ -565,6 +565,7 @@ const Payment = () => {
                   pickupDate &&
                   dropoffDate ? calculateTotalPrice(selectedCar.price_per_day, pickupDate, dropoffDate) : selectedCar.price_per_day}`}</p>
                 </div>
+                </div>
               </div>
             </div>
           </div>
