@@ -12,58 +12,57 @@ import { IReview } from "../interfaces/IReview";
 import fetchTotalVehiclesInCity from "../utils/functions/fetchTotalVehiclesInCity";
 
 export type TVehicleDetail = {
-    brand: { name: string },
-    model: string,
-    vehicle_type: { name: string },
-    gear_type: 'Automatic' | 'Manuel',
-    ps: number,
-    color: { name: string },
-    seats: number,
-    consumption: number,
-    fuel: { name: string },
-    luggage: number,
-    price_per_day: number,
-    car_img: string
-}
+  id: string;
+  brand: { name: string };
+  model: string;
+  vehicle_type: { name: string };
+  gear_type: "Automatic" | "Manuel";
+  ps: number;
+  color: { name: string };
+  seats: number;
+  consumption: number;
+  fuel: { name: string };
+  luggage: number;
+  price_per_day: number;
+  car_img: string;
+};
 
 const Details = () => {
+  const { carId } = useParams();
 
-    const { carId } = useParams()
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [vehicle, setVehicle] = useState<TVehicleDetail | null>(null);
+  const [location, setLocation] = useState<string | null>(null);
+  const [vehicleList, setVehicleList] = useState<Vehicle[]>([]);
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [fetchLimit, setFetchLimit] = useState<number>(2);
+  const [totalVehicles, setTotalVehicles] = useState<number>(0);
 
-    const [vehicle, setVehicle] = useState<TVehicleDetail | null>(null);
-    const [location, setLocation] = useState<string | null>(null);
-    const [vehicleList, setVehicleList] = useState<Vehicle[]>([]);
-    const [reviews, setReviews] = useState<IReview[]>([]);
-    const [fetchLimit, setFetchLimit] = useState<number>(2);
-    const [totalVehicles, setTotalVehicles] = useState<number>(0);
-
-    useEffect(() => {
-        if(carId) {
-            fetchCarById(carId, setVehicle);
-            fetchLocationByCarId(carId, setLocation);
-            fetchReviewsByCar(carId, setReviews);
-        } 
-
-        if(location) {
-            fetchCarsByCity(location, setVehicleList, fetchLimit);
-            fetchTotalVehiclesInCity(location, setTotalVehicles);
-        }
-
-    }, [carId, location, fetchLimit])
-
-    function loadMore() {
-        setFetchLimit((prev) => {
-            if (prev < totalVehicles) {
-                const newLimit = prev + 2;
-                return newLimit;
-            } else {
-                return prev;
-            }
-        });
+  useEffect(() => {
+    if (carId) {
+      fetchCarById(carId, setVehicle);
+      fetchLocationByCarId(carId, setLocation);
+      fetchReviewsByCar(carId, setReviews);
     }
 
+    if (location) {
+      fetchCarsByCity(location, setVehicleList, fetchLimit);
+      fetchTotalVehiclesInCity(location, setTotalVehicles);
+    }
+  }, [carId, location, fetchLimit]);
+
+  function loadMore() {
+    setFetchLimit((prev) => {
+      if (prev < totalVehicles) {
+        const newLimit = prev + 2;
+        return newLimit;
+      } else {
+        return prev;
+      }
+    });
+  }
+  
     if(!vehicle || !location || !carId) return <p>Loading...</p>
     return (  
         <section className="py-8">

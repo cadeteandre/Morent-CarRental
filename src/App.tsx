@@ -13,6 +13,7 @@ import MyBookings from "./pages/MyBookings";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import PaymentConfirmed from "./pages/PaymentConfirmed";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="payment" element={<Payment />} />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="payment_confirmed" element={<PaymentConfirmed />} />
 
         //* Protected Routes
           <Route path="favorites" element={
