@@ -25,6 +25,7 @@ const Home = () => {
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [checkboxStatesTypes, setCheckboxStatesTypes] = useState<{ [key: string]: boolean }>({});
     const [checkboxStatesSeats, setCheckboxStatesSeats] = useState<{ [key: string]: boolean }>({});
+    const [maxPrice, setMaxPrice] = useState<number>();
 
     const pickupLocationRef = useRef<HTMLInputElement>(null);
     const pickupDateRef = useRef<HTMLInputElement>(null);
@@ -65,7 +66,7 @@ const Home = () => {
             if (fetchedVehicle) {
                 const selectedTypes = Object.keys(checkboxStatesTypes).filter((key) => checkboxStatesTypes[key]);
                 const selectedSeats = Object.keys(checkboxStatesSeats).filter((key) => checkboxStatesSeats[key]);
-                const { data } = await supabase.rpc("get_filtered_vehicles", { row_limit: fetchLimit, selectedtypes: selectedTypes, seatcount: selectedSeats });
+                const { data } = await supabase.rpc("get_filtered_vehicles", { row_limit: fetchLimit, selectedtypes: selectedTypes, seatcount: selectedSeats, maxprice: maxPrice });
                 setFilteredVehicles(data as Vehicle[]);
                 setFetchedVehicle([]);
             }
@@ -117,13 +118,24 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
+        let timeout: ReturnType<typeof setTimeout>;
+
         if ((Object.keys(checkboxStatesTypes).length === 0 && Object.keys(checkboxStatesSeats).length === 0) || (Object.values(checkboxStatesTypes).every((value) => value === false) && Object.values(checkboxStatesSeats).every((value) => value === false))) {
+            setFetchLimit(8);
             fetchVehicles("initial", fetchLimit);
         } else {
             setFetchLimit(1000);
-            fetchVehicles("filter", fetchLimit);
+            timeout = setTimeout(() => {
+                fetchVehicles("filter", fetchLimit);
+            }, 1000);
         }
-    }, [checkboxStatesTypes, checkboxStatesSeats, fetchLimit]);
+
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
+    }, [checkboxStatesTypes, checkboxStatesSeats, fetchLimit, maxPrice]);
 
     function toggleFilter() {
         setShowFilter((prev) => !prev);
@@ -131,9 +143,6 @@ const Home = () => {
 
     console.log(filteredVehicles);
     console.log(fetchedVehicle);
-
-    console.log(checkboxStatesTypes);
-    console.log(checkboxStatesSeats);
 
     return (
         <section className="p-4 flex flex-col gap-6 items-center">
@@ -159,7 +168,7 @@ const Home = () => {
                     Filter
                 </button>
                 <div className="flex flex-col">
-                    <div>{showFilter && <NavBarSide fetchedVehicle={fetchedVehicle} filteredVehicles={filteredVehicles} setCheckboxStatesTypes={setCheckboxStatesTypes} setCheckboxStatesSeats={setCheckboxStatesSeats} />}</div>
+                    <div>{showFilter && <NavBarSide setCheckboxStatesTypes={setCheckboxStatesTypes} setCheckboxStatesSeats={setCheckboxStatesSeats} setMaxPrice={setMaxPrice} />}</div>
                     {filteredVehicles?.length > 0 && <div>{filteredVehicles ? filteredVehicles.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
                     {fetchedVehicle?.length > 0 && <div>{fetchedVehicle ? fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
                 </div>
