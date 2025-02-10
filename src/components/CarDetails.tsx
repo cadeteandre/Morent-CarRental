@@ -46,7 +46,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
     <div className=" flex w-[327px] flex-col gap-7 font-display md:flex-row md:w-full ">
       <figure className=" bg-base-100 shadow-sm rounded-lg flex items-center justify-center md:w-lg md:h-[401px] md:overflow-hidden ">
         <img
-          className="md:w-full md:h-full md:object-cover "
+          className="md:w-full md:h-full md:object-cover rounded-lg"
           src={vehicle.car_img}
           alt={`${vehicle.brand.name} ${vehicle.model} image`}
         />
@@ -107,7 +107,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
           <Link to={`${user ? "/payment" : "/login"}`}>
             <button
               onClick={() => setSelectedCar(vehicle)}
-              className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit"
+              className="btn btn-primary text-white w-full text-sm mb-7 md:w-fit"
             >
               Rent Now
             </button>
