@@ -20,6 +20,7 @@ import calculateTotalPrice, {
   calculateTax,
   diffInDaysConversor,
 } from "../utils/functions/calculateTotalPrice";
+import EmptyAlert from "../components/EmptyAlert";
 
 type Booking = Tables<"bookings">;
 
@@ -289,7 +290,7 @@ const Payment = () => {
                     htmlFor="pickUpLocation"
                     className="fieldset-label text-neutral-800 text-sm mb-[5px]"
                   >
-                    Locations
+                    Location
                   </label>
                   <input
                     list="pickUpLocations"
@@ -354,7 +355,7 @@ const Payment = () => {
                     htmlFor="dropOffLocation"
                     className="fieldset-label text-neutral-800 text-sm mb-[5px]"
                   >
-                    Locations
+                    Location
                   </label>
                   <input
                     list="dropOffLocations"
@@ -589,7 +590,7 @@ const Payment = () => {
             <h1 className="text-2xl font-bold text-neutral-800">
               Rental Summary
             </h1>
-            <p>No car selected</p>
+            <EmptyAlert text={"No car selected"} />
           </div>
         )}
       </section>

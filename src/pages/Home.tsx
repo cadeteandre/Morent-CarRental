@@ -263,7 +263,7 @@ const Home = () => {
             />
           </div>
           <button
-            className="btn btn-accent  self-end cursor-pointer hover:bg-blue-800"
+            className="btn btn-accent w-full md:w-fit  self-end cursor-pointer hover:bg-blue-800"
             onClick={() => fetchVehicles("search", fetchLimit)}
           >
             Search Car
@@ -342,12 +342,12 @@ const Home = () => {
           {filteredVehicles!.length > 0 && (
             <p className="text-neutral-400">{`${
               filteredVehicles!.length
-            } cars shown.`}</p>
+            } cars shown`}</p>
           )}
           {fetchedVehicle!.length > 0 && (
             <p className="text-neutral-400">{`${
               fetchedVehicle!.length
-            } of ${tableRows} cars shown.`}</p>
+            } of ${tableRows} cars shown`}</p>
           )}
         </section>
       </section>

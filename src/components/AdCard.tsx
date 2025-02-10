@@ -13,7 +13,7 @@ const AdCard: React.FC<IAdCardProps> = ({
 }) => {
   return (
     <div
-      className="card max-h-[325px] w-full md:max-w-[610px]  rounded-lg text-white bg-cover bg-center static"
+      className="card max-h-[325px] w-full   rounded-lg text-white bg-cover bg-center static"
       style={{ backgroundImage: `url(${adBackgroundImg})` }}
     >
       <div className="card-body  ">
