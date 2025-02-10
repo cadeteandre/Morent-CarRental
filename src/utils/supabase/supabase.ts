@@ -84,13 +84,6 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "bookings_profile_id_fkey";
-            columns: ["profile_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
             foreignKeyName: "bookings_vehicle_id_fkey";
             columns: ["vehicle_id"];
             isOneToOne: false;
@@ -413,6 +406,24 @@ export type Database = {
           city: string;
           start_date: string;
           end_date: string;
+        };
+        Returns: {
+          id: string;
+          brand: Json;
+          consumption: number;
+          gear_type: Database["public"]["Enums"]["enum_gear_types"];
+          model: string;
+          price_per_day: number;
+          seats: number;
+          vehicle_type: Json;
+          car_img: string;
+        }[];
+      };
+      get_filtered_vehicles: {
+        Args: {
+          selectedtypes?: string[];
+          seatcount?: number[];
+          maxprice?: number;
         };
         Returns: {
           id: string;
