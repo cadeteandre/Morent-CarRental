@@ -183,19 +183,19 @@ const Home = () => {
                 </button>
                 <div className="flex flex-col">
                     <div>{showFilter && <NavBarSide setCheckboxStatesTypes={setCheckboxStatesTypes} setCheckboxStatesSeats={setCheckboxStatesSeats} setMaxPrice={setMaxPrice} />}</div>
-                    {filteredVehicles?.length > 0 && <div>{filteredVehicles ? filteredVehicles.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
-                    {fetchedVehicle?.length > 0 && <div>{fetchedVehicle ? fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
+                    {filteredVehicles!.length > 0 && <div>{filteredVehicles ? filteredVehicles.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
+                    {fetchedVehicle!.length > 0 && <div>{fetchedVehicle ? fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
                 </div>
             </section>
             <section className="w-full items-center flex justify-between">
-                {fetchedVehicle.length > 0 && (
+                {fetchedVehicle!.length > 0 && (
                     <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                         Load More
                     </button>
                 )}
 
-                {filteredVehicles?.length > 0 && <p className="text-[#90A3BF]">{`${filteredVehicles.length} cars shown.`}</p>}
-                {fetchedVehicle.length > 0 && <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>}
+                {filteredVehicles!.length > 0 && <p className="text-[#90A3BF]">{`${filteredVehicles!.length} cars shown.`}</p>}
+                {fetchedVehicle!.length > 0 && <p className="text-[#90A3BF]">{`${fetchedVehicle!.length} of ${tableRows} cars shown.`}</p>}
             </section>
         </section>
     );

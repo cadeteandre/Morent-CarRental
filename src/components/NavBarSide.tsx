@@ -12,7 +12,7 @@ interface NavBarSideProps {
             [key: string]: boolean;
         }>
     >;
-    setMaxPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
+    setMaxPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const NavBarSide: FC<NavBarSideProps> = ({ setCheckboxStatesTypes, setCheckboxStatesSeats, setMaxPrice }) => {
