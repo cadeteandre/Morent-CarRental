@@ -140,6 +140,8 @@ const Payment = () => {
     }
   }
 
+  console.log(selectedCar);
+
   return (
     <form onSubmit={handleSubmit} ref={formRef} className="font-display">
       {/* back btn für desktop version */}
