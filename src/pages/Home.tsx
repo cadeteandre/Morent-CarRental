@@ -56,7 +56,8 @@ const Home = () => {
 
             const { data } = await supabase.rpc("get_available_vehicles", { city: pickupLocation, start_date: pickupDate, end_date: dropoffDate });
 
-            setFetchedVehicle(data as Vehicle[]);
+            setFilteredVehicles(data as Vehicle[]);
+            setFetchedVehicle([]);
 
             if (data) {
                 setTableRows(data?.length);
@@ -187,9 +188,12 @@ const Home = () => {
                 </div>
             </section>
             <section className="w-full items-center flex justify-between">
-                <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
-                    Load More
-                </button>
+                {fetchedVehicle.length > 0 && (
+                    <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
+                        Load More
+                    </button>
+                )}
+
                 {filteredVehicles?.length > 0 && <p className="text-[#90A3BF]">{`${filteredVehicles.length} cars shown.`}</p>}
                 {fetchedVehicle.length > 0 && <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>}
             </section>
