@@ -12,6 +12,7 @@ import { IReview } from "../interfaces/IReview";
 import fetchTotalVehiclesInCity from "../utils/functions/fetchTotalVehiclesInCity";
 
 export type TVehicleDetail = {
+  id: string;
   brand: { name: string };
   model: string;
   vehicle_type: { name: string };
@@ -61,55 +62,47 @@ const Details = () => {
       }
     });
   }
-
-  if (!vehicle || !location) return <p>Loading...</p>;
-  return (
-    <section className="py-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="cursor-pointer flex items-center justify-center mb-6"
-      >
-        <img src="/svg/back-btn-icon.svg" alt="Back button icon" />
-        <span className="text-[#90A3BF] py-1 text-lg">back</span>
-      </button>
-      <div className="flex flex-col items-center justify-center gap-6 mb-10 px-8">
-        <div>
-          <CarDetails vehicle={vehicle} location={location} />
-        </div>
-        <div>
-          <Reviews reviews={reviews} />
-        </div>
-        <div className="mb-4">
-          <p className="text-[#90A3BF] text-lg mb-4">Available Nearby</p>
-          <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
-            {vehicleList.map((vehicle, i) => (
-              <AutoCard
-                key={i}
-                brand={vehicle.brand.name}
-                consumption={vehicle.consumption}
-                gear_type={vehicle.gear_type}
-                model={vehicle.model}
-                price_per_day={vehicle.price_per_day}
-                seats={vehicle.seats}
-                vehicle_type={vehicle.vehicle_type.name}
-                car_img={vehicle.car_img}
-                vehicle_id={vehicle.id}
-              />
-            ))}
-          </section>
-        </div>
-        <div className="w-full items-center flex justify-between">
-          <button
-            onClick={loadMore}
-            className="btn border-0 bg-blue-600 text-white"
-          >
-            Show more car
-          </button>
-          <span className="text-[#90A3BF]">{`${vehicleList.length} of ${totalVehicles} cars shown`}</span>
-        </div>
-      </div>
-    </section>
-  );
-};
+  
+    if(!vehicle || !location || !carId) return <p>Loading...</p>
+    return (  
+        <section className="py-8">
+            <button onClick={() => navigate(-1)} className="cursor-pointer flex items-center justify-center mb-6">
+                <img src="/svg/back-btn-icon.svg" alt="Back button icon" />
+                <span className="text-[#90A3BF] py-1 text-lg">back</span>
+            </button> 
+            <div className="flex flex-col items-center justify-center gap-6 mb-10 px-8">
+                <div>
+                    <CarDetails vehicle={vehicle} location={location} />
+                </div>
+                <div>
+                    <Reviews reviews={reviews} />
+                </div>
+                <div className="mb-4">
+                    <p className="text-[#90A3BF] text-lg mb-4">Available Nearby</p>
+                    <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
+                        {vehicleList.map((vehicle, i) => (
+                            <AutoCard 
+                                key={i} 
+                                brand={vehicle.brand.name} 
+                                consumption={vehicle.consumption} 
+                                gear_type={vehicle.gear_type} 
+                                model={vehicle.model} 
+                                price_per_day={vehicle.price_per_day} 
+                                seats={vehicle.seats} 
+                                vehicle_type={vehicle.vehicle_type.name} 
+                                car_img={vehicle.car_img}
+                                vehicle_id={vehicle.id}
+                            />
+                        ))}
+                    </section>
+                </div>
+                <div className="w-full items-center flex justify-between">
+                    <button onClick={loadMore} className="btn border-0 bg-blue-600 text-white">Show more car</button>
+                    <span className="text-[#90A3BF]">{`${vehicleList.length} of ${totalVehicles} cars shown`}</span>
+                </div>
+            </div>
+        </section>
+    );
+}
 
 export default Details;

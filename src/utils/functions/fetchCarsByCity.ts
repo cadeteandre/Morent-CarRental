@@ -24,6 +24,7 @@ export default async function fetchCarsByCity(
     .select(
       `
       vehicles(
+        id,
         brand(name),
         consumption,
         gear_type,
