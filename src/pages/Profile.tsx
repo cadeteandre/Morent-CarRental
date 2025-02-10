@@ -1,43 +1,55 @@
 import { useContext, useRef, useState } from "react";
 import ImageUploadIcon from "../assets/SVG/ImageUploadIcon";
-
 import { supabase } from "../utils/supabase/setupSupabase";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 
 const Profile = () => {
   const imageFileRef = useRef<HTMLInputElement>(null!);
-  const imageUrlRef = useRef<string | null>(null!);
   const [uploadSuccess, setUploadSuccess] = useState<string>("");
   const [uploadError, setUploadError] = useState<string>("");
   const { user } = useContext(mainContext) as {
     user: User;
   };
-  async function uploadImgFile() {
+  async function uploadImgFile(): Promise<void> {
     try {
-      console.log("user", user);
-
       if (imageFileRef.current.files && user) {
         const imageFile = imageFileRef.current?.files[0];
-        const fileName = `${user.id}_${imageFile.name}`;
+        if(!imageFile) {
+          setUploadError('No file selected');
+          return;
+        } 
+
+        const fileName = `${user.id}_${Date.now()}_${imageFile.name}`;
 
         const { data, error } = await supabase.storage
           .from("profile_pictures")
           .upload(fileName, imageFile, {
             cacheControl: "3600",
-            upsert: false,
+            upsert: true,
           });
 
         if (data) {
           setUploadSuccess(`"${imageFile.name}" ✅uploaded`);
           setUploadError("");
 
-          const { data: publicURL } = supabase.storage
+          const publicURL = supabase.storage
             .from("profile_pictures")
-            .getPublicUrl(data.path);
+            .getPublicUrl(fileName).data.publicUrl;
 
-          if (publicURL) {
-            imageUrlRef.current = publicURL.publicUrl;
+          if(publicURL) {
+            const { error: profileError } = await supabase
+            .from('profiles')
+            .update({ img_url: publicURL })
+            .eq('id', user.id)
+
+            if(profileError) {
+              setUploadError('Error updating profile ❌');
+              setUploadSuccess('');
+            } else {
+              setUploadSuccess(`"${imageFile.name}" ✅ updated`);
+              setUploadError('')
+            }
           }
         }
         if (error) {
@@ -57,7 +69,7 @@ const Profile = () => {
   }
 
   return (
-    <section>
+    <section className="flex items-center">
       {" "}
       <div className="w-md mx-auto p-16 flex flex-col gap-4 font-Jakarta-SemiBold">
         <label className="text-sm" htmlFor="profile_image">
@@ -71,7 +83,7 @@ const Profile = () => {
           className="file-input file-input-xs w-full"
         />
         {uploadError.length > 0 && (
-          <p className="text-red-600 text-center">🚨{uploadError}</p>
+          <p className="text-red-400 text-center">🚨{uploadError}</p>
         )}
         {uploadSuccess.length > 0 && (
           <p className="text-green-900 text-center  ">{uploadSuccess}</p>

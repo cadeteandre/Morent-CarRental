@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import PaymentConfirmed from "./pages/PaymentConfirmed";
+import Favorites from "./pages/Favorites";
 
 function App() {
   const router = createBrowserRouter(
@@ -24,7 +25,7 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="payment_confirmed" element={<PaymentConfirmed />} />
-        <Route path="favorites" element={<Payment />} />
+        <Route path="favorites" element={<Favorites />} />
         <Route path="my_bookings" element={<MyBookings />} />
         <Route path="profile" element={<Profile />} />
       </Route>
