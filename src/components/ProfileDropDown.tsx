@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase/setupSupabase";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const ProfileDropDown = () => {
   const { user, setUser } = useContext(mainContext) as {
@@ -10,6 +10,9 @@ const ProfileDropDown = () => {
     setUser: React.Dispatch<React.SetStateAction<User | null>>;
   };
   const [profileURL, setProfileURL] = useState<string | null>("");
+
+  const navigate = useNavigate();
+
   async function getProfileImgURL() {
     const { data, error } = await supabase
       .from("profiles")
@@ -33,6 +36,7 @@ const ProfileDropDown = () => {
     const { error } = await supabase.auth.signOut();
     console.log(error);
     setUser(null);
+    navigate('/')
   }
   return (
     <div className="dropdown dropdown-end ">

@@ -46,6 +46,7 @@ const Home = () => {
     type: "initial" | "search" | "filter",
     limit: number
   ) {
+
     if (type === "initial") {
       const { data, error } = await supabase
         .from("vehicles")
@@ -64,6 +65,20 @@ const Home = () => {
     }
 
     if (type === "search") {
+
+      //handle possible errors by searching button
+      if (
+        !pickupDateRef.current?.value ||
+        !pickupLocationRef.current?.value ||
+        !pickupTimeRef.current?.value ||
+        !dropoffDateRef.current?.value ||
+        !dropoffLocationRef.current?.value ||
+        !dropoffTimeRef.current?.value
+      ) {
+        alert('Please enter pickup and drop-off details');
+        return;
+      }
+
       const pickupLocation = pickupLocationRef.current?.value as string;
       const pickupDate = pickupDateRef.current?.value as string;
 
@@ -208,7 +223,6 @@ const Home = () => {
         />
       </section>
       <section className="flex flex-col justify-center gap-6 w-full ">
-        {/* <h2>Find your car for today!</h2> */}
         <div className="flex flex-col  md:flex-row md:justify-between items-center gap-6">
           <PickUpDropOff
             componentTitle="Pickup"
