@@ -162,6 +162,7 @@ const Home = () => {
 
   useEffect(() => {
     getTableRows();
+    handleReset();
   }, []);
 
   useEffect(() => {
