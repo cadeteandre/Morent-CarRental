@@ -81,7 +81,7 @@ const NavBarSide: FC<NavBarSideProps> = ({
   }, []);
 
   return (
-    <aside className="flex flex-col gap-14 bg-base-100 w-full max-w-[368px] px-3.5 py-8 shadow-sm rounded-lg">
+    <aside className="flex flex-col gap-10 bg-base-100 w-full max-w-[309px] md:w-[309px] p-7  shadow-sm rounded-lg mb-8 md:mb-0 md:mr-7">
       {/* Type*/}
       <fieldset>
         <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">
@@ -91,7 +91,7 @@ const NavBarSide: FC<NavBarSideProps> = ({
           {types.map((type, index) => (
             <div
               key={index}
-              className="flex items-center gap-2 font-Jakarta-SemiBold text-neutral-600 text-xl"
+              className="flex items-center gap-2 font-Jakarta-SemiBold text-neutral-600 text-base"
             >
               <input
                 type="checkbox"
@@ -114,7 +114,7 @@ const NavBarSide: FC<NavBarSideProps> = ({
           {capacities.map((capacity, index) => (
             <div
               key={index}
-              className="flex items-center gap-2 font-Jakarta-SemiBold text-xl text-neutral-600"
+              className="flex items-center gap-2 font-Jakarta-SemiBold text-base text-neutral-600"
             >
               <input
                 type="checkbox"
@@ -151,7 +151,7 @@ const NavBarSide: FC<NavBarSideProps> = ({
           }
         />
         <p className="font-Jakarta-SemiBold mt-3 text-neutral-600">
-          {rangePrice === 1001 ? "no Limit" : `Max. €${rangePrice}.00`}
+          {rangePrice === 1001 ? "No Limit" : `Max. €${rangePrice}.00`}
         </p>
       </fieldset>
     </aside>
