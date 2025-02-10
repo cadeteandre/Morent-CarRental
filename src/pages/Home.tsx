@@ -46,6 +46,7 @@ const Home = () => {
     type: "initial" | "search" | "filter",
     limit: number
   ) {
+
     if (type === "initial") {
       const { data, error } = await supabase
         .from("vehicles")
@@ -64,6 +65,20 @@ const Home = () => {
     }
 
     if (type === "search") {
+
+      //handle possible errors by searching button
+      if (
+        !pickupDateRef.current?.value ||
+        !pickupLocationRef.current?.value ||
+        !pickupTimeRef.current?.value ||
+        !dropoffDateRef.current?.value ||
+        !dropoffLocationRef.current?.value ||
+        !dropoffTimeRef.current?.value
+      ) {
+        alert('Please enter pickup and drop-off details');
+        return;
+      }
+
       const pickupLocation = pickupLocationRef.current?.value as string;
       const pickupDate = pickupDateRef.current?.value as string;
 
