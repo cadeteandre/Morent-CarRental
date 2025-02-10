@@ -7,6 +7,7 @@ import { supabase } from "../utils/supabase/setupSupabase";
 
 interface NavBarSideProps {
     fetchedVehicle: Vehicle[] | null;
+    filteredVehicles: Vehicle[] | null;
     setCheckboxStatesTypes: React.Dispatch<
         React.SetStateAction<{
             [key: string]: boolean;
@@ -19,14 +20,14 @@ interface NavBarSideProps {
     >;
 }
 
-const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesTypes, setCheckboxStatesSeats }) => {
+const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, filteredVehicles, setCheckboxStatesTypes, setCheckboxStatesSeats }) => {
     const [rangeValue, setRangeValue] = useState<string>("");
     const [types, setTypes] = useState<string[]>([]);
-    const [countedTypes, setCountedTypes] = useState<Record<string, number>>();
     const [capacities, setCapacities] = useState<number[]>([]);
-    const [countedCapacities, setCountedCapacities] = useState<Record<string, number>>();
+    // const [countedTypes, setCountedTypes] = useState<Record<string, number>>();
+    // const [countedCapacities, setCountedCapacities] = useState<Record<string, number>>();
     const [prices, setPrices] = useState<number[]>([]);
-    const [midPrice, setMidPrice] = useState<number>();
+    const [midPrice, setMidPrice] = useState<number>(0);
 
     async function createTypes() {
         const { data } = await supabase.from("vehicle_types").select();
@@ -54,8 +55,8 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesType
         }
     }
 
-    function createPrices(fetchedVehicle: Vehicle[]) {
-        if (fetchedVehicle) {
+    function createPrices(fetchedVehicle: Vehicle[] | null, filteredVehicles: Vehicle[] | null) {
+        if (fetchedVehicle?.length > 0) {
             const prices = fetchedVehicle.map((vehicle) => {
                 return vehicle.price_per_day != null ? vehicle.price_per_day : 0;
             });
@@ -68,6 +69,22 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesType
             setPrices(priceRange);
             setMidPrice(middlePrice);
             setRangeValue(String(middlePrice));
+        } else if (filteredVehicles?.length > 0) {
+            const prices = filteredVehicles.map((vehicle) => {
+                return vehicle.price_per_day != null ? vehicle.price_per_day : 0;
+            });
+            const maxPrice = Math.max(...prices);
+            const minPrice = Math.min(...prices);
+
+            const priceRange = [minPrice, maxPrice];
+            // const middlePrice = Math.ceil(maxPrice - (maxPrice - minPrice) / 2);
+
+            setPrices(priceRange);
+            // setMidPrice(middlePrice);
+            // setRangeValue(String(middlePrice));
+
+            console.log("priceRange: ", priceRange);
+            // console.log("middlePrice: ", middlePrice);
         }
     }
 
@@ -88,12 +105,25 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesType
     }
 
     useEffect(() => {
-        if (fetchedVehicle) {
-            createTypes();
-            createCapacities();
-            createPrices(fetchedVehicle);
+        createTypes();
+        createCapacities();
+    }, []);
+
+    useEffect(() => {
+        if (fetchedVehicle || filteredVehicles) {
+            createPrices(fetchedVehicle, filteredVehicles);
         }
-    }, [fetchedVehicle]);
+    }, [fetchedVehicle, filteredVehicles]);
+
+    useEffect(() => {
+        if (prices.length === 2) {
+            const middlePrice = Math.ceil((prices[0] + prices[1]) / 2);
+            setMidPrice(middlePrice);
+            setRangeValue(String(middlePrice));
+        }
+    }, [prices]);
+
+    console.log(midPrice);
 
     return (
         <aside className="flex flex-col gap-14 bg-base-100 w-[327px] px-3.5 py-8 shadow-sm rounded-md">
@@ -105,7 +135,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesType
                         <div key={index} className="flex items-center gap-2 font-Jakarta-SemiBold text-neutral-600 text-xl">
                             <input type="checkbox" id={type} className="checkbox  checkbox-xs checkbox-primary" onChange={handleCheckboxChangeType} />
                             <label htmlFor={`type-${type.toLowerCase()}`}>{type}</label>
-                            <span className="text-neutral-400">{countedTypes ? countedTypes[type] : ""}</span>
+                            {/* <span className="text-neutral-400">{countedTypes ? countedTypes[type] : ""}</span> */}
                         </div>
                     ))}
                 </div>
@@ -118,20 +148,20 @@ const NavBarSide: FC<NavBarSideProps> = ({ fetchedVehicle, setCheckboxStatesType
                         <div key={index} className="flex items-center gap-2 font-Jakarta-SemiBold text-xl text-neutral-600">
                             <input type="checkbox" id={`${capacity}`} className="checkbox checkbox-xs checkbox-primary" onChange={handleCheckboxChangeSeats} />
                             <label htmlFor={`capacity-${capacity}`}>{`${capacity} seats`}</label>
-                            <span className="text-neutral-400">{countedCapacities ? countedCapacities[capacity] : ""}</span>
+                            {/* <span className="text-neutral-400">{countedCapacities ? countedCapacities[capacity] : ""}</span> */}
                         </div>
                     ))}
                 </div>
             </fieldset>
 
             {/* Price*/}
-            {prices[0] != prices[1] && (
+            {prices[0] != prices[1] && prices.length > 0 && (
                 <fieldset>
                     <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">Price</legend>
                     <label htmlFor="price" className="sr-only">
                         Price Range
                     </label>
-                    <input id="price" type="range" min={prices[0]} max={prices[1]} defaultValue={Number(midPrice)} className="range range-primary range-xs" onChange={(e: ChangeEvent<HTMLInputElement>) => setRangeValue(e.target.value)} />
+                    <input id="price" type="range" min={prices[0]} max={prices[1]} value={Number(midPrice)} className="range range-primary range-xs" onChange={(e: ChangeEvent<HTMLInputElement>) => setRangeValue(e.target.value)} />
                     <p className="font-Jakarta-SemiBold mt-3 text-neutral-600">Max. €{rangeValue}.00</p>
                 </fieldset>
             )}
