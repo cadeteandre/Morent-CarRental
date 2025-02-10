@@ -46,7 +46,7 @@ const ProfileDropDown = () => {
       </div>
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-20 mt-3 w-52 py-6 px-4 shadow flex flex-col  gap-2"
+        className="menu menu-sm dropdown-content bg-base-100 rounded-lg z-20 mt-3 w-52 py-6 px-4 shadow flex flex-col  gap-2"
       >
         <h1 className="text-lg font-bold ml-3">
           Hi, {user?.user_metadata.firstname}
