@@ -10,7 +10,7 @@ export type Vehicle = {
   id: string;
   brand: { name: string };
   consumption: number;
-  gear_type: "Automatic" | "Manuel";
+  gear_type: "Automatic" | "Manual";
   model: string;
   price_per_day: number | null;
   seats: number;

@@ -10,7 +10,7 @@ export interface IVehicle {
   model: string;
   vehicle_type: { name: string };
   consumption: number;
-  gear_type: "Automatic" | "Manuel";
+  gear_type: "Automatic" | "Manual";
   seats: number;
   price_per_day: number | null;
   car_img: string | null;
