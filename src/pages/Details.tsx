@@ -66,7 +66,7 @@ const Details = () => {
 
   if (!vehicle || !location || !carId) return <p>Loading...</p>;
   return (
-    <section className="py-8">
+    <section>
       <button
         type="button"
         onClick={() => {
@@ -76,16 +76,16 @@ const Details = () => {
       >
         <BackIcon /> Back
       </button>
-      <div className="flex flex-col items-center justify-center gap-6 mb-10 px-8">
-        <div>
-          <CarDetails vehicle={vehicle} location={location} />
-        </div>
-        <div>
-          <Reviews reviews={reviews} />
-        </div>
-        <div className="mb-4">
-          <p className="text-[#90A3BF] text-lg mb-4">Available Nearby</p>
-          <section className="justify-center flex flex-col flex-wrap sm:flex-row items-center gap-6">
+      <div className="flex flex-col items-center justify-center gap-6 mb-10 ">
+        <CarDetails vehicle={vehicle} location={location} />
+
+        <Reviews reviews={reviews} />
+
+        <div className="mb-4 w-full">
+          <p className="text-neutral-400 font-display text-lg mt-11 mb-4 hidden md:flex">
+            Available Nearby
+          </p>
+          <section className="justify-center flex flex-col flex-wrap md:flex-row md:w-full md:justify-start items-center gap-6">
             {vehicleList.map((vehicle, i) => (
               <AutoCard
                 key={i}
@@ -103,10 +103,7 @@ const Details = () => {
           </section>
         </div>
         <div className="w-full items-center flex justify-between">
-          <button
-            onClick={loadMore}
-            className="btn border-0 bg-blue-600 text-white"
-          >
+          <button onClick={loadMore} className="btn btn-primary ">
             Show more car
           </button>
           <span className="text-[#90A3BF]">{`${vehicleList.length} of ${totalVehicles} cars shown`}</span>

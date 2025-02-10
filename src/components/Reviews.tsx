@@ -21,17 +21,17 @@ const formatDate = (dateString: string): string => {
 
 const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
   return (
-    <ul className="list bg-base-100 rounded-lg shadow-md font-display">
+    <ul className="list bg-base-100 rounded-lg shadow-md font-display p-7 md:w-full">
       <li className="p-4 pb-2 text-base font-bold tracking-wide flex items-center gap-2.5">
         Reviews{" "}
-        <div className="badge bg-blue-600 text-white badge-lg">
+        <div className="badge bg-primary text-white badge-lg">
           {reviews.length}
         </div>
       </li>
       {reviews.map((singleReview, i) => (
         <li key={i} className="list-row flex flex-row items-center">
           <img
-            className="size-10 rounded-full "
+            className="size-10 rounded-lg self-start "
             src={singleReview.profiles.img_url}
           />
 

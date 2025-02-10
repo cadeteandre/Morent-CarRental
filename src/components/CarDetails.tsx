@@ -104,7 +104,10 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
             {`€ ${vehicle.price_per_day}`} /{" "}
             <span className="text-neutral-400 text-base">day</span>
           </p>
-          <Link to={`${user ? "/payment" : "/login"}`}>
+          <Link
+            to={`${user ? "/payment" : "/login"}`}
+            className="w-full md:w-fit"
+          >
             <button
               onClick={() => setSelectedCar(vehicle)}
               className="btn btn-primary text-white w-full text-sm mb-7 md:w-fit"
