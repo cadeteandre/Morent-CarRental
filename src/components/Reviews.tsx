@@ -21,7 +21,7 @@ const formatDate = (dateString: string): string => {
 
 const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
   return (
-    <ul className="list bg-base-100 rounded-box shadow-md font-display">
+    <ul className="list bg-base-100 rounded-lg shadow-md font-display">
       <li className="p-4 pb-2 text-base font-bold tracking-wide flex items-center gap-2.5">
         Reviews{" "}
         <div className="badge bg-blue-600 text-white badge-lg">

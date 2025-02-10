@@ -35,20 +35,24 @@ const AutoCard: FC<AutoCardProps> = (props) => {
     setRefreshFavList: React.Dispatch<React.SetStateAction<boolean>>;
   };
 
-  const { setSelectedCar } = useContext(mainContext) as {setSelectedCar: React.Dispatch<React.SetStateAction<Vehicle | TVehicleDetail | null>>}
+  const { setSelectedCar } = useContext(mainContext) as {
+    setSelectedCar: React.Dispatch<
+      React.SetStateAction<Vehicle | TVehicleDetail | null>
+    >;
+  };
 
   function handleSelectedCar() {
-      setSelectedCar({
-        id: props.vehicle_id,
-        brand: { name: props.brand },
-        consumption: props.consumption,
-        gear_type: props.gear_type,
-        model: props.model,
-        price_per_day: props.price_per_day,
-        seats: props.seats,
-        vehicle_type: { name: props.vehicle_type },
-        car_img: props.car_img
-      });
+    setSelectedCar({
+      id: props.vehicle_id,
+      brand: { name: props.brand },
+      consumption: props.consumption,
+      gear_type: props.gear_type,
+      model: props.model,
+      price_per_day: props.price_per_day,
+      seats: props.seats,
+      vehicle_type: { name: props.vehicle_type },
+      car_img: props.car_img,
+    });
   }
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
@@ -96,6 +100,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
         <figure>
           <Link to={`/details/${props.vehicle_id}`}>
             <img
+              className="rounded-lg"
               src={props.car_img ? props.car_img : "./svg/platzhalter_bild.svg"}
               alt={
                 props.car_img
@@ -106,7 +111,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
           </Link>
         </figure>
 
-        <ul className="flex justify-between items-center mb-9">
+        <ul className="flex justify-between items-center mb-7 mt-2">
           <li
             className="flex gap-1 items-center text-neutral-500"
             title="consumption"
@@ -137,8 +142,11 @@ const AutoCard: FC<AutoCardProps> = (props) => {
               : `not available`}
             <span className="text-neutral-400 text-sm">day</span>
           </p>
-          <Link to={`${user ? '/payment' : '/login'}`}>
-            <button onClick={handleSelectedCar} className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold">
+          <Link to={`${user ? "/payment" : "/login"}`}>
+            <button
+              onClick={handleSelectedCar}
+              className="btn bg-primary text-white text-xs font-Jakarta-SemiBold"
+            >
               Rent Now
             </button>
           </Link>

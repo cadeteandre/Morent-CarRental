@@ -402,7 +402,7 @@ const Payment = () => {
               Please enter your payment method
             </p>
             <div className="flex flex-col gap-5 ">
-              <div className="flex  items-center gap-2.5  bg-neutral-50 rounded-md  p-[15px]">
+              <div className="flex  items-center gap-2.5  bg-neutral-50 rounded-lg  p-[15px]">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -417,7 +417,7 @@ const Payment = () => {
                   Credit Card <CreditCardIcon />
                 </label>
               </div>
-              <div className="flex items-center gap-2.5  bg-neutral-50 rounded-md  p-[15px] ">
+              <div className="flex items-center gap-2.5  bg-neutral-50 rounded-lg  p-[15px] ">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -432,7 +432,7 @@ const Payment = () => {
                   PayPal <PayPalIcon />
                 </label>
               </div>{" "}
-              <div className="flex items-center  gap-2.5  bg-neutral-50 rounded-md  p-[15px]">
+              <div className="flex items-center  gap-2.5  bg-neutral-50 rounded-lg  p-[15px]">
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -463,7 +463,7 @@ const Payment = () => {
               ready!
             </p>
             <div className="flex flex-col gap-5 ">
-              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-md  p-[15px] items-start ">
+              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-lg  p-[15px] items-start ">
                 <input
                   type="checkbox"
                   name="checkboxMarketing"
@@ -472,7 +472,7 @@ const Payment = () => {
                 I agree with sending marketing and newsletter emails. No spam,
                 promised!
               </label>
-              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-md  p-[15px] items-start ">
+              <label className="fieldset-label text-neutral-800 text-sm  bg-neutral-50 rounded-lg  p-[15px] items-start ">
                 <input
                   type="checkbox"
                   name="checkboxPolicy"
@@ -503,7 +503,7 @@ const Payment = () => {
           </p>
           <div className="flex w-full flex-col">
             <div className=" flex flex-row items-center gap-5  w-full">
-              <figure className="size-20 rounded-md overflow-hidden flex items-center justify-center">
+              <figure className="size-20 rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   className="w-full h-full object-contain "
                   src={
