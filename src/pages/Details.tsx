@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import CarDetails from "../components/CarDetails";
-import Reviews from '../components/Reviews';
+import Reviews from "../components/Reviews";
 import { useEffect, useState } from "react";
 import fetchLocationByCarId from "../utils/functions/fetchLocationByCarId";
 import fetchCarById from "../utils/functions/fetchCarById";
@@ -17,7 +17,7 @@ export type TVehicleDetail = {
   brand: { name: string };
   model: string;
   vehicle_type: { name: string };
-  gear_type: "Automatic" | "Manuel";
+  gear_type: "Automatic" | "Manual";
   ps: number;
   color: { name: string };
   seats: number;

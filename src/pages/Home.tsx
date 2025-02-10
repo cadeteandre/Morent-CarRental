@@ -10,7 +10,7 @@ export type Vehicle = {
   id: string;
   brand: { name: string };
   consumption: number;
-  gear_type: "Automatic" | "Manuel";
+  gear_type: "Automatic" | "Manual";
   model: string;
   price_per_day: number | null;
   seats: number;
@@ -207,135 +207,151 @@ const Home = () => {
   }
 
   return (
-    <section className=" flex flex-col gap-8 items-center">
-      <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between ">
-        <AdCard
-          adTitle={`The Best Platform for Car Rental`}
-          adText="Ease of doing a car rental safely and reliably. Of course at a low price."
-          adBackgroundImg="/images/ad-card-bg1.png"
-          adCarImg="/images/ad-car1.png"
-        />
-        <AdCard
-          adTitle="Easy way to rent a car at a low price"
-          adText="Providing cheap car rental services and safe and comfortable facilities."
-          adBackgroundImg="/images/ad-card-bg2.png"
-          adCarImg="/images/ad-car2.png"
-        />
-      </section>
-      <section className="flex flex-col justify-center gap-6 w-full ">
-        <div className="flex flex-col  md:flex-row md:justify-between items-center gap-6">
-          <PickUpDropOff
-            componentTitle="Pickup"
-            listId="pickup"
-            locationRef={pickupLocationRef}
-            dateRef={pickupDateRef}
-            timeRef={pickupTimeRef}
+    <section className="md:flex ">
+      <div className="hidden md:flex  ">
+        {showFilter && (
+          <NavBarSide
+            setCheckboxStatesTypes={setCheckboxStatesTypes}
+            setCheckboxStatesSeats={setCheckboxStatesSeats}
+            setMaxPrice={setMaxPrice}
           />
-          <button
-            className="btn btn-primary text-white h-fit p-4 cursor-pointer  hover:bg-blue-800"
-            onClick={handleSwitch}
-          >
-            <img
-              src="./svg/austauschen.svg"
-              alt="Change Locations Icon"
-              className="w-7 h-7"
+        )}
+      </div>
+      <section className=" flex flex-col gap-8 items-center">
+        {showFilter ? (
+          <></>
+        ) : (
+          <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between ">
+            <AdCard
+              adTitle={`The Best Platform for Car Rental`}
+              adText="Ease of doing a car rental safely and reliably. Of course at a low price."
+              adBackgroundImg="/images/ad-card-bg1.png"
+              adCarImg="/images/ad-car1.png"
             />
-          </button>
-          <PickUpDropOff
-            componentTitle="Drop-Off"
-            listId="dropoff"
-            locationRef={dropoffLocationRef}
-            dateRef={dropoffDateRef}
-            timeRef={dropoffTimeRef}
-          />
-        </div>
-        <button
-          className="btn btn-primary  self-end cursor-pointer hover:bg-blue-800"
-          onClick={() => fetchVehicles("search", fetchLimit)}
-        >
-          Search Car
-        </button>
-      </section>
-      <section className="flex flex-col">
-        <button
-          className="btn btn-primary mb-5 self-end cursor-pointer hover:bg-blue-800"
-          onClick={toggleFilter}
-        >
-          <FilterIcon />
-          Filter
-        </button>
-        <div className="flex flex-col">
-          <div>
-            {showFilter && (
-              <NavBarSide
-                setCheckboxStatesTypes={setCheckboxStatesTypes}
-                setCheckboxStatesSeats={setCheckboxStatesSeats}
-                setMaxPrice={setMaxPrice}
+            <AdCard
+              adTitle="Easy way to rent a car at a low price"
+              adText="Providing cheap car rental services and safe and comfortable facilities."
+              adBackgroundImg="/images/ad-card-bg2.png"
+              adCarImg="/images/ad-car2.png"
+            />
+          </section>
+        )}
+        <section className="flex flex-col justify-center gap-6 w-full  ">
+          {/* <h2>Find your car for today!</h2> */}
+          <div className="flex flex-col  md:flex-row md:justify-between items-center gap-6">
+            <PickUpDropOff
+              componentTitle="Pickup"
+              listId="pickup"
+              locationRef={pickupLocationRef}
+              dateRef={pickupDateRef}
+              timeRef={pickupTimeRef}
+            />
+            <button
+              className="btn btn-primary text-white h-fit p-4 cursor-pointer  hover:bg-blue-800"
+              onClick={handleSwitch}
+            >
+              <img
+                src="./svg/austauschen.svg"
+                alt="Change Locations Icon"
+                className="w-7 h-7"
               />
+            </button>
+            <PickUpDropOff
+              componentTitle="Drop-Off"
+              listId="dropoff"
+              locationRef={dropoffLocationRef}
+              dateRef={dropoffDateRef}
+              timeRef={dropoffTimeRef}
+            />
+          </div>
+          <button
+            className="btn btn-accent  self-end cursor-pointer hover:bg-blue-800"
+            onClick={() => fetchVehicles("search", fetchLimit)}
+          >
+            Search Car
+          </button>
+        </section>
+        <section className="flex flex-col">
+          <button
+            className="btn btn-primary mb-5 self-end cursor-pointer hover:bg-blue-800"
+            onClick={toggleFilter}
+          >
+            <FilterIcon />
+            Filter
+          </button>
+          <div className="flex flex-col">
+            <div className="md:hidden">
+              {showFilter && (
+                <NavBarSide
+                  setCheckboxStatesTypes={setCheckboxStatesTypes}
+                  setCheckboxStatesSeats={setCheckboxStatesSeats}
+                  setMaxPrice={setMaxPrice}
+                />
+              )}
+            </div>
+            {filteredVehicles!.length > 0 && (
+              <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7  ">
+                {filteredVehicles
+                  ? filteredVehicles.map((vehicle, i) => (
+                      <AutoCard
+                        key={i}
+                        brand={vehicle.brand.name}
+                        consumption={vehicle.consumption}
+                        gear_type={vehicle.gear_type}
+                        model={vehicle.model}
+                        price_per_day={vehicle.price_per_day}
+                        seats={vehicle.seats}
+                        vehicle_type={vehicle.vehicle_type.name}
+                        car_img={vehicle.car_img}
+                        vehicle_id={vehicle.id}
+                      />
+                    ))
+                  : "Es gab ein Fehler bei der Datenabfrage..."}
+              </div>
+            )}
+            {fetchedVehicle!.length > 0 && (
+              <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
+                {fetchedVehicle
+                  ? fetchedVehicle.map((vehicle, i) => (
+                      <AutoCard
+                        key={i}
+                        brand={vehicle.brand.name}
+                        consumption={vehicle.consumption}
+                        gear_type={vehicle.gear_type}
+                        model={vehicle.model}
+                        price_per_day={vehicle.price_per_day}
+                        seats={vehicle.seats}
+                        vehicle_type={vehicle.vehicle_type.name}
+                        car_img={vehicle.car_img}
+                        vehicle_id={vehicle.id}
+                      />
+                    ))
+                  : "Es gab ein Fehler bei der Datenabfrage..."}
+              </div>
             )}
           </div>
+        </section>
+        <section className="w-full items-center flex justify-between">
+          {fetchedVehicle!.length > 0 && (
+            <button
+              className="btn btn-primary text-base font-Jakarta-SemiBold"
+              onClick={loadMore}
+            >
+              Load More
+            </button>
+          )}
+
           {filteredVehicles!.length > 0 && (
-            <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
-              {filteredVehicles
-                ? filteredVehicles.map((vehicle, i) => (
-                    <AutoCard
-                      key={i}
-                      brand={vehicle.brand.name}
-                      consumption={vehicle.consumption}
-                      gear_type={vehicle.gear_type}
-                      model={vehicle.model}
-                      price_per_day={vehicle.price_per_day}
-                      seats={vehicle.seats}
-                      vehicle_type={vehicle.vehicle_type.name}
-                      car_img={vehicle.car_img}
-                      vehicle_id={vehicle.id}
-                    />
-                  ))
-                : "Es gab ein Fehler bei der Datenabfrage..."}
-            </div>
+            <p className="text-neutral-400">{`${
+              filteredVehicles!.length
+            } cars shown.`}</p>
           )}
           {fetchedVehicle!.length > 0 && (
-            <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
-              {fetchedVehicle
-                ? fetchedVehicle.map((vehicle, i) => (
-                    <AutoCard
-                      key={i}
-                      brand={vehicle.brand.name}
-                      consumption={vehicle.consumption}
-                      gear_type={vehicle.gear_type}
-                      model={vehicle.model}
-                      price_per_day={vehicle.price_per_day}
-                      seats={vehicle.seats}
-                      vehicle_type={vehicle.vehicle_type.name}
-                      car_img={vehicle.car_img}
-                      vehicle_id={vehicle.id}
-                    />
-                  ))
-                : "Es gab ein Fehler bei der Datenabfrage..."}
-            </div>
+            <p className="text-neutral-400">{`${
+              fetchedVehicle!.length
+            } of ${tableRows} cars shown.`}</p>
           )}
-        </div>
-      </section>
-      <section className="w-full items-center flex justify-between">
-        {fetchedVehicle!.length > 0 && (
-          <button
-            className="btn btn-primary text-base font-Jakarta-SemiBold"
-            onClick={loadMore}
-          >
-            Load More
-          </button>
-        )}
-
-        {filteredVehicles!.length > 0 && (
-          <p className="text-neutral-400">{`${
-            filteredVehicles!.length
-          } cars shown.`}</p>
-        )}
-        {fetchedVehicle!.length > 0 && (
-          <p className="text-neutral-400">{`${
-            fetchedVehicle!.length
-          } of ${tableRows} cars shown.`}</p>
-        )}
+        </section>
       </section>
     </section>
   );
