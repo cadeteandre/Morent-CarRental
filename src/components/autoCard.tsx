@@ -4,7 +4,11 @@ import GearTypeIcon from "../assets/SVG/GearTypeIcon";
 import HeartIcon from "../assets/SVG/HeartIcon";
 import SeatIcon from "../assets/SVG/SeatIcon";
 
-import { addFavorite, checkIfFavorited, removeFavorite } from "../utils/functions/userFavoriteCars";
+import {
+  addFavorite,
+  checkIfFavorited,
+  removeFavorite,
+} from "../utils/functions/userFavoriteCars";
 import RedHeartIcon from "../assets/SVG/RedHeartIcon";
 import { User } from "@supabase/supabase-js";
 import { Link } from "react-router";
@@ -13,15 +17,15 @@ import { Vehicle } from "../pages/Home";
 import { TVehicleDetail } from "../pages/Details";
 
 interface AutoCardProps {
-    vehicle_id: string;
-    brand: string;
-    model: string;
-    vehicle_type: string;
-    consumption: number;
-    gear_type: "Automatic" | "Manuel";
-    seats: number;
-    price_per_day: number | null;
-    car_img: string | null;
+  vehicle_id: string;
+  brand: string;
+  model: string;
+  vehicle_type: string;
+  consumption: number;
+  gear_type: "Automatic" | "Manuel";
+  seats: number;
+  price_per_day: number | null;
+  car_img: string | null;
 }
 
 const AutoCard: FC<AutoCardProps> = (props) => {
@@ -58,43 +62,20 @@ const AutoCard: FC<AutoCardProps> = (props) => {
       }
     };
 
-    const { setSelectedCar } = useContext(mainContext) as { setSelectedCar: React.Dispatch<React.SetStateAction<Vehicle | TVehicleDetail | null>> };
+    fetchFavoriteStatus();
+  }, [props.vehicle_id]);
 
-    function handleSelectedCar() {
-        setSelectedCar({
-            id: props.vehicle_id,
-            brand: { name: props.brand },
-            consumption: props.consumption,
-            gear_type: props.gear_type,
-            model: props.model,
-            price_per_day: props.price_per_day,
-            seats: props.seats,
-            vehicle_type: { name: props.vehicle_type },
-            car_img: props.car_img,
-        });
+  const handleClickFavIcon = async () => {
+    if (user) {
+      if (isFavorited) {
+        await removeFavorite(props.vehicle_id, user.id);
+      } else {
+        await addFavorite(props.vehicle_id, user.id);
+      }
+      setIsFavorited((prev) => !prev);
+      setRefreshFavList((prev) => !prev);
     }
-    useEffect(() => {
-        const fetchFavoriteStatus = async () => {
-            if (user) {
-                const isFav = await checkIfFavorited(props.vehicle_id);
-                setIsFavorited(isFav);
-            }
-        };
-
-        fetchFavoriteStatus();
-    }, [props.vehicle_id]);
-
-    const handleClickFavIcon = async () => {
-        if (user) {
-            if (isFavorited) {
-                await removeFavorite(props.vehicle_id, user.id);
-            } else {
-                await addFavorite(props.vehicle_id, user.id);
-            }
-            setIsFavorited((prev) => !prev);
-            setRefreshFavList((prev) => !prev);
-        }
-    };
+  };
 
   return (
     <article className="card rounded-lg bg-base-100 w-[327px] md:w-[309px] shadow-sm font-display static">

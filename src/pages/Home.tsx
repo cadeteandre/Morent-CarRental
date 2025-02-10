@@ -19,34 +19,49 @@ export type Vehicle = {
 };
 
 const Home = () => {
-    const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[] | null>([]);
-    const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[] | null>([]);
-    const [fetchLimit, setFetchLimit] = useState<number>(8);
-    const [tableRows, setTableRows] = useState<number>(0);
-    const [showFilter, setShowFilter] = useState<boolean>(false);
-    const [checkboxStatesTypes, setCheckboxStatesTypes] = useState<{ [key: string]: boolean }>({});
-    const [checkboxStatesSeats, setCheckboxStatesSeats] = useState<{ [key: string]: boolean }>({});
-    const [maxPrice, setMaxPrice] = useState<number>(1001);
+  const [fetchedVehicle, setFetchedVehicle] = useState<Vehicle[] | null>([]);
+  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[] | null>(
+    []
+  );
+  const [fetchLimit, setFetchLimit] = useState<number>(8);
+  const [tableRows, setTableRows] = useState<number>(0);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [checkboxStatesTypes, setCheckboxStatesTypes] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [checkboxStatesSeats, setCheckboxStatesSeats] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [maxPrice, setMaxPrice] = useState<number>(1001);
 
-    const pickupLocationRef = useRef<HTMLInputElement>(null);
-    const pickupDateRef = useRef<HTMLInputElement>(null);
-    const pickupTimeRef = useRef<HTMLInputElement>(null);
+  const pickupLocationRef = useRef<HTMLInputElement>(null);
+  const pickupDateRef = useRef<HTMLInputElement>(null);
+  const pickupTimeRef = useRef<HTMLInputElement>(null);
 
-    const dropoffLocationRef = useRef<HTMLInputElement>(null);
-    const dropoffDateRef = useRef<HTMLInputElement>(null);
-    const dropoffTimeRef = useRef<HTMLInputElement>(null);
+  const dropoffLocationRef = useRef<HTMLInputElement>(null);
+  const dropoffDateRef = useRef<HTMLInputElement>(null);
+  const dropoffTimeRef = useRef<HTMLInputElement>(null);
 
-    async function fetchVehicles(type: "initial" | "search" | "filter", limit: number) {
-        if (type === "initial") {
-            const { data, error } = await supabase.from("vehicles").select("id, brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").lte("price_per_day", maxPrice).limit(limit);
-            if (error) {
-                console.error("Fehler beim Fetchen der Vehicles: ", error);
-            } else {
-                setFetchedVehicle(data);
-                setFilteredVehicles([]);
-                getTableRows();
-            }
-        }
+  async function fetchVehicles(
+    type: "initial" | "search" | "filter",
+    limit: number
+  ) {
+    if (type === "initial") {
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select(
+          "id, brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img "
+        )
+        .lte("price_per_day", maxPrice)
+        .limit(limit);
+      if (error) {
+        console.error("Fehler beim Fetchen der Vehicles: ", error);
+      } else {
+        setFetchedVehicle(data);
+        setFilteredVehicles([]);
+        getTableRows();
+      }
+    }
 
     if (type === "search") {
       const pickupLocation = pickupLocationRef.current?.value as string;
@@ -61,98 +76,115 @@ const Home = () => {
         end_date: dropoffDate,
       });
 
-            setFilteredVehicles(data as Vehicle[]);
-            setFetchedVehicle([]);
+      setFilteredVehicles(data as Vehicle[]);
+      setFetchedVehicle([]);
 
-            if (data) {
-                setTableRows(data?.length);
-            }
-        }
+      if (data) {
+        setTableRows(data?.length);
+      }
+    }
 
-        if (type === "filter") {
-            if (fetchedVehicle) {
-                const selectedTypes = Object.keys(checkboxStatesTypes).filter((key) => checkboxStatesTypes[key]);
-                const selectedSeats = Object.keys(checkboxStatesSeats).filter((key) => checkboxStatesSeats[key]);
-                const { data } = await supabase.rpc("get_filtered_vehicles", { selectedtypes: selectedTypes, seatcount: selectedSeats, maxprice: maxPrice });
-                setFilteredVehicles(data as Vehicle[]);
-                setFetchedVehicle([]);
-            }
-        }
+    if (type === "filter") {
+      if (fetchedVehicle) {
+        const selectedTypes = Object.keys(checkboxStatesTypes).filter(
+          (key) => checkboxStatesTypes[key]
+        );
+        const selectedSeats = Object.keys(checkboxStatesSeats).filter(
+          (key) => checkboxStatesSeats[key]
+        );
+        const { data } = await supabase.rpc("get_filtered_vehicles", {
+          selectedtypes: selectedTypes,
+          seatcount: selectedSeats,
+          maxprice: maxPrice,
+        });
+        setFilteredVehicles(data as Vehicle[]);
+        setFetchedVehicle([]);
+      }
     }
   }
 
-    async function getTableRows() {
-        const { count, error } = await supabase.from("vehicles").select("*", { count: "exact", head: true });
-        if (error) {
-            console.error("Fehler beim abfragen der Zeilen der Tabelle 'vehicles': ", error);
-        } else if (!count) {
-            setTableRows(0);
-        } else {
-            setTableRows(count);
-        }
+  async function getTableRows() {
+    const { count, error } = await supabase
+      .from("vehicles")
+      .select("*", { count: "exact", head: true });
+    if (error) {
+      console.error(
+        "Fehler beim abfragen der Zeilen der Tabelle 'vehicles': ",
+        error
+      );
+    } else if (!count) {
+      setTableRows(0);
+    } else {
+      setTableRows(count);
     }
+  }
 
-    function loadMore() {
-        setFetchLimit((prev) => {
-            if (prev < tableRows) {
-                const newLimit = prev + 8;
-                return newLimit;
-            } else {
-                return prev;
-            }
-        });
-    }
+  function loadMore() {
+    setFetchLimit((prev) => {
+      if (prev < tableRows) {
+        const newLimit = prev + 8;
+        return newLimit;
+      } else {
+        return prev;
+      }
+    });
+  }
 
-    function handleSwitch() {
-        const pickupLocation = pickupLocationRef.current?.value;
-        const pickupDate = pickupDateRef.current?.value;
-        const pickupTime = pickupTimeRef.current?.value;
+  function handleSwitch() {
+    const pickupLocation = pickupLocationRef.current?.value;
+    const pickupDate = pickupDateRef.current?.value;
+    const pickupTime = pickupTimeRef.current?.value;
 
-        const dropoffLocation = dropoffLocationRef.current?.value;
-        const dropoffDate = dropoffDateRef.current?.value;
-        const dropoffTime = dropoffTimeRef.current?.value;
+    const dropoffLocation = dropoffLocationRef.current?.value;
+    const dropoffDate = dropoffDateRef.current?.value;
+    const dropoffTime = dropoffTimeRef.current?.value;
 
-        pickupLocationRef.current!.value = dropoffLocation as string;
-        pickupDateRef.current!.value = dropoffDate as string;
-        pickupTimeRef.current!.value = dropoffTime as string;
+    pickupLocationRef.current!.value = dropoffLocation as string;
+    pickupDateRef.current!.value = dropoffDate as string;
+    pickupTimeRef.current!.value = dropoffTime as string;
 
-        dropoffLocationRef.current!.value = pickupLocation as string;
-        dropoffDateRef.current!.value = pickupDate as string;
-        dropoffTimeRef.current!.value = pickupTime as string;
-    }
+    dropoffLocationRef.current!.value = pickupLocation as string;
+    dropoffDateRef.current!.value = pickupDate as string;
+    dropoffTimeRef.current!.value = pickupTime as string;
+  }
 
-    function handleReset() {
-        pickupLocationRef.current!.value = "";
-        pickupDateRef.current!.value = "";
-        pickupTimeRef.current!.value = "";
+  function handleReset() {
+    pickupLocationRef.current!.value = "";
+    pickupDateRef.current!.value = "";
+    pickupTimeRef.current!.value = "";
 
-        dropoffLocationRef.current!.value = "";
-        dropoffDateRef.current!.value = "";
-        dropoffTimeRef.current!.value = "";
+    dropoffLocationRef.current!.value = "";
+    dropoffDateRef.current!.value = "";
+    dropoffTimeRef.current!.value = "";
 
+    fetchVehicles("initial", fetchLimit);
+  }
+
+  useEffect(() => {
+    getTableRows();
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (
+        (Object.keys(checkboxStatesTypes).length === 0 &&
+          Object.keys(checkboxStatesSeats).length === 0) ||
+        (Object.values(checkboxStatesTypes).every((value) => value === false) &&
+          Object.values(checkboxStatesSeats).every((value) => value === false))
+      ) {
         fetchVehicles("initial", fetchLimit);
-    }
+      } else {
+        setFetchLimit(1000);
+        fetchVehicles("filter", fetchLimit);
+      }
+    }, 1000);
 
-    useEffect(() => {
-        getTableRows();
-    }, []);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            if ((Object.keys(checkboxStatesTypes).length === 0 && Object.keys(checkboxStatesSeats).length === 0) || (Object.values(checkboxStatesTypes).every((value) => value === false) && Object.values(checkboxStatesSeats).every((value) => value === false))) {
-                fetchVehicles("initial", fetchLimit);
-            } else {
-                setFetchLimit(1000);
-                fetchVehicles("filter", fetchLimit);
-            }
-        }, 1000);
-
-        return () => {
-            if (timeout) {
-                clearTimeout(timeout);
-            }
-        };
-    }, [checkboxStatesTypes, checkboxStatesSeats, fetchLimit, maxPrice]);
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [checkboxStatesTypes, checkboxStatesSeats, fetchLimit, maxPrice]);
 
   function toggleFilter() {
     setShowFilter((prev) => !prev);
@@ -219,22 +251,79 @@ const Home = () => {
           <FilterIcon />
           Filter
         </button>
-                        <div className="flex flex-col">
-                    <div>{showFilter && <NavBarSide setCheckboxStatesTypes={setCheckboxStatesTypes} setCheckboxStatesSeats={setCheckboxStatesSeats} setMaxPrice={setMaxPrice} />}</div>
-                    {filteredVehicles!.length > 0 && <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">{filteredVehicles ? filteredVehicles.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
-                    {fetchedVehicle!.length > 0 && <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">{fetchedVehicle ? fetchedVehicle.map((vehicle, i) => <AutoCard key={i} brand={vehicle.brand.name} consumption={vehicle.consumption} gear_type={vehicle.gear_type} model={vehicle.model} price_per_day={vehicle.price_per_day} seats={vehicle.seats} vehicle_type={vehicle.vehicle_type.name} car_img={vehicle.car_img} vehicle_id={vehicle.id} />) : "Es gab ein Fehler bei der Datenabfrage..."}</div>}
-                </div>
+        <div className="flex flex-col">
+          <div>
+            {showFilter && (
+              <NavBarSide
+                setCheckboxStatesTypes={setCheckboxStatesTypes}
+                setCheckboxStatesSeats={setCheckboxStatesSeats}
+                setMaxPrice={setMaxPrice}
+              />
+            )}
+          </div>
+          {filteredVehicles!.length > 0 && (
+            <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
+              {filteredVehicles
+                ? filteredVehicles.map((vehicle, i) => (
+                    <AutoCard
+                      key={i}
+                      brand={vehicle.brand.name}
+                      consumption={vehicle.consumption}
+                      gear_type={vehicle.gear_type}
+                      model={vehicle.model}
+                      price_per_day={vehicle.price_per_day}
+                      seats={vehicle.seats}
+                      vehicle_type={vehicle.vehicle_type.name}
+                      car_img={vehicle.car_img}
+                      vehicle_id={vehicle.id}
+                    />
+                  ))
+                : "Es gab ein Fehler bei der Datenabfrage..."}
+            </div>
+          )}
+          {fetchedVehicle!.length > 0 && (
+            <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
+              {fetchedVehicle
+                ? fetchedVehicle.map((vehicle, i) => (
+                    <AutoCard
+                      key={i}
+                      brand={vehicle.brand.name}
+                      consumption={vehicle.consumption}
+                      gear_type={vehicle.gear_type}
+                      model={vehicle.model}
+                      price_per_day={vehicle.price_per_day}
+                      seats={vehicle.seats}
+                      vehicle_type={vehicle.vehicle_type.name}
+                      car_img={vehicle.car_img}
+                      vehicle_id={vehicle.id}
+                    />
+                  ))
+                : "Es gab ein Fehler bei der Datenabfrage..."}
+            </div>
+          )}
+        </div>
       </section>
-              <section className="w-full items-center flex justify-between">
-                {fetchedVehicle!.length > 0 && (
-                    <button className="btn btn-primary text-base font-Jakarta-SemiBold" onClick={loadMore}>
-                        Load More
-                    </button>
-                )}
+      <section className="w-full items-center flex justify-between">
+        {fetchedVehicle!.length > 0 && (
+          <button
+            className="btn btn-primary text-base font-Jakarta-SemiBold"
+            onClick={loadMore}
+          >
+            Load More
+          </button>
+        )}
 
-                {filteredVehicles!.length > 0 && <p className="text-neutral-400">{`${filteredVehicles!.length} cars shown.`}</p>}
-                {fetchedVehicle!.length > 0 && <p className="text-neutral-400">{`${fetchedVehicle!.length} of ${tableRows} cars shown.`}</p>}
-            </section>
+        {filteredVehicles!.length > 0 && (
+          <p className="text-neutral-400">{`${
+            filteredVehicles!.length
+          } cars shown.`}</p>
+        )}
+        {fetchedVehicle!.length > 0 && (
+          <p className="text-neutral-400">{`${
+            fetchedVehicle!.length
+          } of ${tableRows} cars shown.`}</p>
+        )}
+      </section>
     </section>
   );
 };
