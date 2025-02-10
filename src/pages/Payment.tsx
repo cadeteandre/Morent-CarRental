@@ -154,7 +154,7 @@ const Payment = () => {
       >
         <BackIcon /> Back
       </button>
-      <section className="flex flex-col gap-[30px] md:flex-row">
+      <section className="flex flex-col gap-[30px] md:flex-row md:justify-between">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
           <fieldset className="fieldset w-xs bg-white  p-5 rounded-lg md:w-full ">

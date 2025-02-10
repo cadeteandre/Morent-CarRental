@@ -188,7 +188,7 @@ const Home = () => {
         </button>
         <div className="flex flex-col">
           <div>{showFilter && <NavBarSide data={fetchedVehicle} />}</div>
-          <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 md:justify-center">
+          <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 ">
             {fetchedVehicle
               ? fetchedVehicle.map((vehicle, i) => (
                   <AutoCard
