@@ -5,19 +5,25 @@ import { TVehicleDetail } from "../pages/Details";
 import getCityCoordinates from "../utils/functions/getCityCoordinates";
 import { Link } from "react-router";
 import { mainContext } from "../context/MainProvider";
+import { User } from "@supabase/supabase-js";
+import { IReview } from "../interfaces/IReview";
+import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail;
   location: string;
+  reviews: IReview[];
 }
 
-const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
-  const { setSelectedCar } = useContext(mainContext) as {
+const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location, reviews }) => {
+  const { user, setSelectedCar } = useContext(mainContext) as {user: User | null,
     setSelectedCar: React.Dispatch<React.SetStateAction<TVehicleDetail>>;
   };
 
+  const reviewsStars: number = calculateAverage(reviews.map((singleReview) => singleReview.stars)); 
+
   useEffect(() => {
-    const map = L.map("map").setView([50.938361, 6.959974], 13);
+    const map = L.map("map").setView([0, 0], 13);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -42,22 +48,22 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
 
   return (
     <div className=" flex w-[327px] flex-col gap-7 font-display md:flex-row md:w-full ">
-      <figure className=" bg-base-100 shadow-sm rounded-box flex items-center justify-center md:w-lg md:h-[401px] md:overflow-hidden ">
+      <figure className=" bg-base-100 shadow-sm rounded-lg flex items-center justify-center md:w-lg md:h-[401px] md:overflow-hidden ">
         <img
-          className="md:w-full md:h-full md:object-cover "
+          className="md:w-full md:h-full md:object-cover rounded-lg"
           src={vehicle.car_img}
           alt={`${vehicle.brand.name} ${vehicle.model} image`}
         />
       </figure>
-      <div className="card bg-base-100 shadow-sm rounded-box   gap-[30px] p-[30px] md:w-[541px] static">
+      <div className="card bg-base-100 shadow-sm rounded-lg   gap-[30px] p-[30px] md:w-[541px] static">
         <div>
           <h1 className="text-[28px] font-bold text-blue-950">
             {`${vehicle.brand.name} ${vehicle.model}`}
           </h1>
           <div className="flex items-center gap-2.5">
             {" "}
-            <p className="text-lg text-amber-400">★★★☆☆</p>
-            <p className="text-sm text-neutral-500">2 Reviewer</p>
+            <p className="text-lg text-amber-400">{getStarRating(reviewsStars)}</p>
+            <p className="text-sm text-neutral-500">{`${reviews.length} Reviewer`}</p>
           </div>{" "}
         </div>
         <div className="flex flex-col gap-3.5 md:flex-row md:justify-between">
@@ -102,10 +108,13 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
             {`€ ${vehicle.price_per_day}`} /{" "}
             <span className="text-neutral-400 text-base">day</span>
           </p>
-          <Link to={"/payment"}>
+          <Link
+            to={`${user ? "/payment" : "/login"}`}
+            className="w-full md:w-fit"
+          >
             <button
               onClick={() => setSelectedCar(vehicle)}
-              className="btn bg-blue-600 text-white w-full text-sm mb-7 md:w-fit"
+              className="btn btn-primary text-white w-full text-sm mb-7 md:w-fit"
             >
               Rent Now
             </button>
@@ -113,7 +122,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location }) => {
         </div>
       </div>
 
-      <div id="map" className="h-[400px] flex w-[327px] rounded-sm "></div>
+      <div id="map" className="h-[400px] flex w-[327px] rounded-lg "></div>
     </div>
   );
 };

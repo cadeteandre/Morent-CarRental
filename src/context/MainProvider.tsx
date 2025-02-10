@@ -16,7 +16,6 @@ export default function MainProvider({
   const [selectedCar, setSelectedCar] = useState<
     Vehicle | TVehicleDetail | null
   >(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
 
   useEffect(() => {
     async function getUser() {

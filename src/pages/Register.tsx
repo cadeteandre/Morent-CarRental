@@ -63,8 +63,8 @@ const Register = () => {
   };
 
   return (
-    <section className="pt-8 pb-16">
-      <fieldset className="fieldset  shadow-lg  rounded-lg  mx-auto p-8 flex items-center justify-center flex-col w-sm mb-32 font-Jakarta-Regular">
+    <section className="mt-8 mb-16 flex justify-center items-center">
+      <fieldset className="fieldset  shadow-lg  rounded-lg   p-6 flex items-center justify-center flex-col w-full max-w-[400px] bg-white font-Jakarta-Regular">
         <h3 className="text-2xl font-Jakarta-Regular font-semibold pb-8 text-center">
           Create a new account
         </h3>
@@ -85,7 +85,6 @@ const Register = () => {
               required
               placeholder="email@morent.com"
             />
-            <div className="validator-hint">Enter valid email address</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="firstname">
@@ -99,7 +98,6 @@ const Register = () => {
               required
               placeholder="Vorname"
             />
-            <div className="validator-hint">Enter valid name</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="lastname">
@@ -113,7 +111,6 @@ const Register = () => {
               placeholder="Nachname"
               required
             />
-            <div className="validator-hint">Enter valid name</div>
           </div>
           <div className="w-full flex flex-col gap-0.5">
             <label className="text-sm" htmlFor="password">
