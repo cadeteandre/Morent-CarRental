@@ -13,8 +13,13 @@ import { Vehicle } from "./Home";
 import { TVehicleDetail } from "./Details";
 import fetchReviewsByCar from "../utils/functions/fetchReviewsByCar";
 import { IReview } from "../interfaces/IReview";
-import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
-import calculateTotalPrice, { calculateTax, diffInDaysConversor } from "../utils/functions/calculateTotalPrice";
+import getStarRating, {
+  calculateAverage,
+} from "../utils/functions/getStarRating";
+import calculateTotalPrice, {
+  calculateTax,
+  diffInDaysConversor,
+} from "../utils/functions/calculateTotalPrice";
 
 type Booking = Tables<"bookings">;
 
@@ -47,8 +52,8 @@ const Payment = () => {
     reviews.map((singleReview) => singleReview.stars)
   );
   const carId = selectedCar?.id;
-  const [pickupDate, setPickupDate] = useState<string>('');
-  const [dropoffDate, setDropoffDate] = useState<string>('');
+  const [pickupDate, setPickupDate] = useState<string>("");
+  const [dropoffDate, setDropoffDate] = useState<string>("");
 
   async function fetchLocations() {
     const { data, error } = await supabase.from("locations").select("*");
@@ -170,7 +175,7 @@ const Payment = () => {
       >
         <BackIcon /> Back
       </button>
-      <section className="flex flex-col gap-[30px] md:flex-row md:justify-between">
+      <section className="flex flex-col items-center md:items-start gap-[30px] md:flex-row md:justify-between">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
           <fieldset className="fieldset w-xs bg-white  p-5 rounded-lg md:w-full ">
@@ -549,22 +554,33 @@ const Payment = () => {
                   <div
                     className="flex justify-between items-center mb-5
                 "
-                >
-                  <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
-                </div>
-                <div className="flex justify-between items-center mb-5">
-                  <p>Tax</p> <p>{`€ ${
-                  selectedCar.price_per_day && 
-                  pickupDate &&
-                  dropoffDate ? calculateTax(selectedCar.price_per_day, diffInDaysConversor(pickupDate, dropoffDate), 0.19) : 0}`}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p>Total Price</p>
-                  <p>{`€ ${
-                  selectedCar.price_per_day && 
-                  pickupDate &&
-                  dropoffDate ? calculateTotalPrice(selectedCar.price_per_day, pickupDate, dropoffDate) : selectedCar.price_per_day}`}</p>
-                </div>
+                  >
+                    <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
+                  </div>
+                  <div className="flex justify-between items-center mb-5">
+                    <p>Tax</p>{" "}
+                    <p>{`€ ${
+                      selectedCar.price_per_day && pickupDate && dropoffDate
+                        ? calculateTax(
+                            selectedCar.price_per_day,
+                            diffInDaysConversor(pickupDate, dropoffDate),
+                            0.19
+                          )
+                        : 0
+                    }`}</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p>Total Price</p>
+                    <p>{`€ ${
+                      selectedCar.price_per_day && pickupDate && dropoffDate
+                        ? calculateTotalPrice(
+                            selectedCar.price_per_day,
+                            pickupDate,
+                            dropoffDate
+                          )
+                        : selectedCar.price_per_day
+                    }`}</p>
+                  </div>
                 </div>
               </div>
             </div>
