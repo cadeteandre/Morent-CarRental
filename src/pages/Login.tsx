@@ -33,8 +33,8 @@ export const Login = () => {
   };
 
   return (
-    <section className="pt-8 pb-16">
-      <fieldset className="fieldset  shadow-lg  rounded-lg  mx-auto p-8 flex items-center justify-center flex-col w-sm mb-32 font-Jakarta-Regular">
+    <section className="mt-8 mb-16 flex justify-center items-center ">
+      <fieldset className="fieldset  shadow-lg  rounded-lg   p-6 flex items-center justify-center flex-col w-full max-w-[400px] bg-white font-Jakarta-Regular">
         <h3 className="text-2xl font-Jakarta-Regular font-semibold pb-8 text-center">
           Login
         </h3>
@@ -78,7 +78,7 @@ export const Login = () => {
             Sign in
           </button>{" "}
           {isError ? <p>Login failed.</p> : ""}
-          <p className="text-base mt-10 text-center">
+          <p className="text-base font-display mt-10 text-center">
             No account? Register{" "}
             <Link className="text-info" to={"/register"}>
               Here
