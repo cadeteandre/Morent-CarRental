@@ -37,7 +37,7 @@ const Home = () => {
 
     async function fetchVehicles(type: "initial" | "search" | "filter", limit: number) {
         if (type === "initial") {
-            const { data, error } = await supabase.from("vehicles").select("id, brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").limit(limit);
+            const { data, error } = await supabase.from("vehicles").select("id, brand(name), consumption, gear_type, model, price_per_day, seats, vehicle_type(name), car_img ").lte("price_per_day", maxPrice).limit(limit);
             if (error) {
                 console.error("Fehler beim Fetchen der Vehicles: ", error);
             } else {
@@ -66,7 +66,7 @@ const Home = () => {
             if (fetchedVehicle) {
                 const selectedTypes = Object.keys(checkboxStatesTypes).filter((key) => checkboxStatesTypes[key]);
                 const selectedSeats = Object.keys(checkboxStatesSeats).filter((key) => checkboxStatesSeats[key]);
-                const { data } = await supabase.rpc("get_filtered_vehicles", { row_limit: fetchLimit, selectedtypes: selectedTypes, seatcount: selectedSeats, maxprice: maxPrice });
+                const { data } = await supabase.rpc("get_filtered_vehicles", { selectedtypes: selectedTypes, seatcount: selectedSeats, maxprice: maxPrice });
                 setFilteredVehicles(data as Vehicle[]);
                 setFetchedVehicle([]);
             }
@@ -118,17 +118,14 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        let timeout: ReturnType<typeof setTimeout>;
-
-        if ((Object.keys(checkboxStatesTypes).length === 0 && Object.keys(checkboxStatesSeats).length === 0) || (Object.values(checkboxStatesTypes).every((value) => value === false) && Object.values(checkboxStatesSeats).every((value) => value === false))) {
-            setFetchLimit(8);
-            fetchVehicles("initial", fetchLimit);
-        } else {
-            setFetchLimit(1000);
-            timeout = setTimeout(() => {
+        const timeout = setTimeout(() => {
+            if ((Object.keys(checkboxStatesTypes).length === 0 && Object.keys(checkboxStatesSeats).length === 0) || (Object.values(checkboxStatesTypes).every((value) => value === false) && Object.values(checkboxStatesSeats).every((value) => value === false))) {
+                fetchVehicles("initial", fetchLimit);
+            } else {
+                setFetchLimit(1000);
                 fetchVehicles("filter", fetchLimit);
-            }, 1000);
-        }
+            }
+        }, 1000);
 
         return () => {
             if (timeout) {
@@ -177,7 +174,8 @@ const Home = () => {
                 <button className="btn bg-blue-600 text-white text-xs font-Jakarta-SemiBold" onClick={loadMore}>
                     Load More
                 </button>
-                {fetchedVehicle && <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>}
+                {filteredVehicles?.length > 0 && <p className="text-[#90A3BF]">{`${filteredVehicles.length} cars shown.`}</p>}
+                {fetchedVehicle.length > 0 && <p className="text-[#90A3BF]">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>}
             </section>
         </section>
     );

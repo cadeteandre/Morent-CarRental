@@ -107,7 +107,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ setCheckboxStatesTypes, setCheckboxSt
                 <label htmlFor="price" className="sr-only">
                     Price Range
                 </label>
-                <input id="price" type="range" min={0} max={1001} defaultValue={1001} value={Number(rangePrice)} className="range range-primary range-xs" onChange={(e: ChangeEvent<HTMLInputElement>) => handlePriceRangeChange(e.target.value)} />
+                <input id="price" type="range" min={0} max={1001} value={Number(rangePrice)} className="range range-primary range-xs" onChange={(e: ChangeEvent<HTMLInputElement>) => handlePriceRangeChange(e.target.value)} />
                 <p className="font-Jakarta-SemiBold mt-3 text-neutral-600">{rangePrice === 1001 ? "no Limit" : `Max. €${rangePrice}.00`}</p>
             </fieldset>
         </aside>
