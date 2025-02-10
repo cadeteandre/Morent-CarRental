@@ -103,7 +103,7 @@ const NavBarSide: FC<NavBarSideProps> = ({ data }) => {
   console.log(checkboxStates);
 
   return (
-    <aside className="flex flex-col gap-14 bg-base-100 w-[327px] px-3.5 py-8 shadow-sm rounded-lg">
+    <aside className="flex flex-col gap-14 bg-base-100 w-full max-w-[368px] px-3.5 py-8 shadow-sm rounded-lg">
       {/* Type*/}
       <fieldset>
         <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">
