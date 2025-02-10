@@ -34,19 +34,15 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
     }, []);
 
     return (
-      <div className="card bg-white rounded-lg flex items-center justify-center p-4 max-w-full">
-        <p className="text-[14px] font-bold self-start mb-2">
-          {componentTitle}
-        </p>
-        <div className="flex gap-2 max-w-full">
-          <div className="flex flex-col items-center">
-            <label htmlFor="pickup-location" className="self-start">
-              Location:
-            </label>
+      <div className="card bg-white rounded-lg w-full py-4 px-6  md:px-8 font-display md:max-w-[586px]">
+        <p className="text-sm font-bold  mb-2">{componentTitle}</p>
+        <div className="flex justify-between w-full">
+          <div className="flex flex-col items-start ">
+            <label htmlFor="pickup-location">Location</label>
             <input
               list={listId}
               name="locations"
-              className="border-none"
+              className="border-none text-sm w-24 md:w-fit"
               placeholder="type here..."
               ref={locationRef}
             />
@@ -59,27 +55,27 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
                 ))}
             </datalist>
           </div>
-          <div className="flex flex-col items-center max-w-[35%]">
-            <label htmlFor="pickup-date" className="self-start">
-              Datum:
-            </label>
-            <input
-              type="date"
-              name="pickup-date"
-              id="pickup-date"
-              className="border-none max-w-full"
-              ref={dateRef}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="pickup-time">Time:</label>
-            <input
-              type="time"
-              name="pickup-time"
-              id="pickup-time"
-              className="border-none"
-              ref={timeRef}
-            />
+          <div className="date-time-box flex gap-2.5 ">
+            <div className="flex flex-col items-start">
+              <label htmlFor="pickup-date">Datum</label>
+              <input
+                type="date"
+                name="pickup-date"
+                id="pickup-date"
+                className="border-none text-sm w-24 md:w-fit"
+                ref={dateRef}
+              />
+            </div>
+            <div className="flex flex-col items-start ">
+              <label htmlFor="pickup-time">Time</label>
+              <input
+                type="time"
+                name="pickup-time"
+                id="pickup-time"
+                className="border-none text-sm"
+                ref={timeRef}
+              />
+            </div>
           </div>
         </div>
       </div>

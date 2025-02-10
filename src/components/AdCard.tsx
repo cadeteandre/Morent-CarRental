@@ -18,7 +18,7 @@ const AdCard: React.FC<IAdCardProps> = ({
       className="card max-h-[325px]  rounded-lg text-white bg-cover bg-center static"
       style={{ backgroundImage: `url(${adBackgroundImg})` }}
     >
-      <div className="card-body">
+      <div className="card-body ">
         <h2 className="text-2xl font-bold">{adTitle}</h2>
         <p className="font-light">{adText}</p>
         <div className="card-actions justify-start">

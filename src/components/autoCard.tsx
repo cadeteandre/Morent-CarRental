@@ -78,7 +78,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
   };
 
   return (
-    <article className="card bg-base-100 w-[327px] shadow-sm font-display static">
+    <article className="card bg-base-100 w-[327px] md:w-[309px] shadow-sm font-display static">
       <div className="card-body p-6">
         <div className="flex flex-row justify-between items-center">
           <Link to={`/details/${props.vehicle_id}`}>

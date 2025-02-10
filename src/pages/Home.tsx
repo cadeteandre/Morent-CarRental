@@ -127,7 +127,7 @@ const Home = () => {
 
   return (
     <section className=" flex flex-col gap-8 items-center">
-      <section className="flex flex-col justify-center gap-6 w-full md:flex-row">
+      <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between md:w-full">
         <AdCard
           adTitle={`The Best Platform for Car Rental`}
           adText="Ease of doing a car rental safely and reliably. Of course at a low price."
@@ -143,9 +143,9 @@ const Home = () => {
           adCarImg="/images/ad-car2.png"
         />
       </section>
-      <section className="flex flex-col">
+      <section className="flex flex-col justify-center gap-6 w-full ">
         {/* <h2>Find your car for today!</h2> */}
-        <div className="flex flex-col md:flex-row items-center gap-6">
+        <div className="flex flex-col  md:flex-row md:justify-between items-center gap-6">
           <PickUpDropOff
             componentTitle="Pickup"
             listId="pickup"
@@ -188,7 +188,7 @@ const Home = () => {
         </button>
         <div className="flex flex-col">
           <div>{showFilter && <NavBarSide data={fetchedVehicle} />}</div>
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:gap-7 md:justify-center">
             {fetchedVehicle
               ? fetchedVehicle.map((vehicle, i) => (
                   <AutoCard
@@ -208,7 +208,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="w-full items-center flex justify-between">
+      <section className="w-full items-center flex justify-between ">
         <button
           className="btn btn-primary text-base font-Jakarta-SemiBold"
           onClick={loadMore}
@@ -216,7 +216,7 @@ const Home = () => {
           Load More
         </button>
         {fetchedVehicle && (
-          <p className="text-neutral-400">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
+          <p className="text-neutral-400 ">{`${fetchedVehicle.length} of ${tableRows} cars shown.`}</p>
         )}
       </section>
     </section>
