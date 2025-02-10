@@ -422,7 +422,7 @@ export type Database = {
       get_filtered_vehicles: {
         Args: {
           selectedtypes?: string[];
-          seatcount?: number[];
+          seatcount?: string[];
           maxprice?: number;
         };
         Returns: {
