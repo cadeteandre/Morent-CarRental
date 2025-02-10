@@ -3,13 +3,14 @@ import ConsumptionIcon from "../assets/SVG/ConsumptionIcon";
 import GearTypeIcon from "../assets/SVG/GearTypeIcon";
 import HeartIcon from "../assets/SVG/HeartIcon";
 import SeatIcon from "../assets/SVG/SeatIcon";
-import { supabase } from "../utils/supabase/setupSupabase";
+
 import {
   addFavorite,
   checkIfFavorited,
   removeFavorite,
 } from "../utils/functions/userFavoriteCars";
 import RedHeartIcon from "../assets/SVG/RedHeartIcon";
+import { User } from "@supabase/supabase-js";
 import { Link } from "react-router";
 import { mainContext } from "../context/MainProvider";
 import { Vehicle } from "../pages/Home";
@@ -28,10 +29,13 @@ interface AutoCardProps {
 }
 
 const AutoCard: FC<AutoCardProps> = (props) => {
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  const { user, setRefreshFavList } = useContext(mainContext) as {
+    user: User | null;
+    setRefreshFavList: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 
   const { setSelectedCar } = useContext(mainContext) as {setSelectedCar: React.Dispatch<React.SetStateAction<Vehicle | TVehicleDetail | null>>}
-
-  const [isFavorited, setIsFavorited] = useState(false);
 
   function handleSelectedCar() {
       setSelectedCar({
@@ -46,38 +50,28 @@ const AutoCard: FC<AutoCardProps> = (props) => {
         car_img: props.car_img
       });
   }
-
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
-      const isFav = await checkIfFavorited(props.vehicle_id);
-      setIsFavorited(isFav);
+      if (user) {
+        const isFav = await checkIfFavorited(props.vehicle_id);
+        setIsFavorited(isFav);
+      }
     };
 
     fetchFavoriteStatus();
   }, [props.vehicle_id]);
-  const handleClick = async () => {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-    if (error) {
-      console.error("Error getting user:", error);
-      return;
-    }
-    if (!user) {
-      console.error("User not logged in");
-      return;
-    }
-    const userId = user.id;
 
-    if (isFavorited) {
-      await removeFavorite(props.vehicle_id, userId);
-    } else {
-      await addFavorite(props.vehicle_id, userId);
+  const handleClickFavIcon = async () => {
+    if (user) {
+      if (isFavorited) {
+        await removeFavorite(props.vehicle_id, user.id);
+      } else {
+        await addFavorite(props.vehicle_id, user.id);
+      }
+      setIsFavorited((prev) => !prev);
+      setRefreshFavList((prev) => !prev);
     }
-    setIsFavorited(!isFavorited);
   };
-  console.log(props);
 
   return (
     <article className="card bg-base-100 w-[327px] shadow-sm font-display static">
@@ -88,7 +82,7 @@ const AutoCard: FC<AutoCardProps> = (props) => {
           </Link>
           <button
             type="button"
-            onClick={handleClick}
+            onClick={handleClickFavIcon}
             title="add to my Favorites"
             className="cursor-pointer"
           >

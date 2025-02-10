@@ -3,7 +3,7 @@ const Footer = () => {
     <footer className="footer bg-white p-10 font-display  ">
       <section className="w-full grid grid-rows-2 grid-cols-2 gap-y-8 gap-x-2  md:grid-rows-1  md:gap-x-7 md:grid-cols-[3fr_1fr_1fr_1fr]">
         <div className="section1 flex  flex-col gap-2.5 ">
-          <h1 className="text-primary font-bold text-2xl  ">MORENT</h1>
+          <h1 className="text-primary font-Jakarta-Bold text-2xl  ">MORENT</h1>
           <p className="text-neutral-600  text-sm/7 ">
             Our vision is to provide convenience and help increase your sales
             business.

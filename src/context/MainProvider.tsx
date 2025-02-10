@@ -11,6 +11,7 @@ export default function MainProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [refreshFavList, setRefreshFavList] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [selectedCar, setSelectedCar] = useState<
     Vehicle | TVehicleDetail | null
@@ -34,8 +35,8 @@ export default function MainProvider({
         setUser,
         selectedCar,
         setSelectedCar,
-        isLoggedIn,
-        setIsLoggedIn,
+        refreshFavList,
+        setRefreshFavList,
       }}
     >
       {children}
