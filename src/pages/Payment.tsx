@@ -14,7 +14,7 @@ import { TVehicleDetail } from "./Details";
 import fetchReviewsByCar from "../utils/functions/fetchReviewsByCar";
 import { IReview } from "../interfaces/IReview";
 import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
-import calculateTotalPrice from "../utils/functions/calculateTotalPrice";
+import calculateTotalPrice, { calculateTax, diffInDaysConversor } from "../utils/functions/calculateTotalPrice";
 
 type Booking = Tables<"bookings">;
 
@@ -45,6 +45,8 @@ const Payment = () => {
   const [reviews, setReviews] = useState<IReview[]>([]);
   const reviewsStars: number = calculateAverage(reviews.map((singleReview) => singleReview.stars)); 
   const carId = selectedCar?.id;
+  const [pickupDate, setPickupDate] = useState<string>('');
+  const [dropoffDate, setDropoffDate] = useState<string>('');
 
   async function fetchLocations() {
     const { data, error } = await supabase.from("locations").select("*");
@@ -62,6 +64,7 @@ const Payment = () => {
     fetchLocations();
     fetchReviewsByCar(carId, setReviews);
   }, [carId]);
+
 
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -148,7 +151,7 @@ const Payment = () => {
       dropOffTimeRef.current.value = "";
     }
   }
-
+  console.log(pickupDate, dropoffDate);
   return (
     <form onSubmit={handleSubmit} ref={formRef} className="font-display">
       {/* back btn für desktop version */}
@@ -308,6 +311,7 @@ const Payment = () => {
                     id="pickUpDate"
                     ref={pickUpDateRef}
                     className="input validator bg-neutral-50 md:w-full"
+                    onChange={(e) => setPickupDate(e.target.value)}
                     required
                   />
                   <div className="validator-hint">Enter valid Date</div>
@@ -371,6 +375,7 @@ const Payment = () => {
                     type="date"
                     id="dropOffDate"
                     ref={dropOffDateRef}
+                    onChange={(e) => setDropoffDate(e.target.value)}
                     required
                     className="input validator bg-neutral-50 md:w-full"
                   />
@@ -539,8 +544,18 @@ const Payment = () => {
                 >
                   <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
                 </div>
+                <div className="flex justify-between items-center mb-5">
+                  <p>Tax</p> <p>{`€ ${
+                  selectedCar.price_per_day && 
+                  pickupDate &&
+                  dropoffDate ? calculateTax(selectedCar.price_per_day, diffInDaysConversor(pickupDate, dropoffDate), 0.19) : 0}`}</p>
+                </div>
                 <div className="flex justify-between items-center">
-                  <p>Tax</p> <p>€0</p>
+                  <p>Total Price</p>
+                  <p>{`€ ${
+                  selectedCar.price_per_day && 
+                  pickupDate &&
+                  dropoffDate ? calculateTotalPrice(selectedCar.price_per_day, pickupDate, dropoffDate) : selectedCar.price_per_day}`}</p>
                 </div>
               </div>
             </div>
