@@ -64,7 +64,7 @@ const Details = () => {
         });
     }
 
-    if(!vehicle || !location) return <p>Loading...</p>
+    if(!vehicle || !location || !carId) return <p>Loading...</p>
     return (  
         <section className="py-8">
             <button onClick={() => navigate(-1)} className="cursor-pointer flex items-center justify-center mb-6">
@@ -91,7 +91,8 @@ const Details = () => {
                                 price_per_day={vehicle.price_per_day} 
                                 seats={vehicle.seats} 
                                 vehicle_type={vehicle.vehicle_type.name} 
-                                car_img={vehicle.car_img} 
+                                car_img={vehicle.car_img}
+                                vehicle_id={vehicle.id}
                             />
                         ))}
                     </section>
