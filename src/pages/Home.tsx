@@ -216,9 +216,7 @@ const Home = () => {
         )}
       </div>
       <section className=" flex flex-col gap-8 w-full items-center ">
-        {showFilter ? (
-          <></>
-        ) : (
+        {!showFilter && (
           <section className="flex flex-col justify-center gap-6 w-full md:flex-row md:justify-between ">
             <AdCard
               adTitle={`The Best Platform for Car Rental`}
