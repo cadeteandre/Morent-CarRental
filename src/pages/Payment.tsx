@@ -565,7 +565,7 @@ const Payment = () => {
                 {selectedCar.price_per_day && pickupDate && dropoffDate ? (
                   <div className="flex justify-end">
                     <div className="badge badge-primary mb-5 text-base">
-                      x {diffInDaysConversor(pickupDate, dropoffDate)} Days
+                      x {diffInDaysConversor(pickupDate, dropoffDate)} Day(s)
                     </div>
                   </div>
                 ) : (
