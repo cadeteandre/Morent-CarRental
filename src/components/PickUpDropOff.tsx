@@ -42,7 +42,7 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
             <input
               list={listId}
               id={`location_${componentTitle}`}
-              className="border-none text-sm w-24 lg:w-fit"
+              className="border-none text-sm w-24 lg:w-fit pl-2.5 py-1.5"
               placeholder="type here..."
               ref={locationRef}
             />
