@@ -205,7 +205,7 @@ const Home = () => {
   }
 
   return (
-    <section className=" md:flex ">
+    <section className="flex justify-center ">
       <div className="hidden md:flex  ">
         {showFilter && (
           <NavBarSide
@@ -215,7 +215,7 @@ const Home = () => {
           />
         )}
       </div>
-      <section className=" flex flex-col gap-8 items-center ">
+      <section className=" flex flex-col gap-8 w-full items-center ">
         {showFilter ? (
           <></>
         ) : (

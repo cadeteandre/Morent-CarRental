@@ -38,10 +38,10 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
         <p className="text-sm font-bold  mb-2">{componentTitle}</p>
         <div className="flex justify-between w-full">
           <div className="flex flex-col items-start ">
-            <label htmlFor="pickup-location">Location</label>
+            <label htmlFor={`location_${componentTitle}`}>Location</label>
             <input
               list={listId}
-              name="locations"
+              id={`location_${componentTitle}`}
               className="border-none text-sm w-24 lg:w-fit"
               placeholder="type here..."
               ref={locationRef}
