@@ -165,7 +165,11 @@ const Payment = () => {
   }
   console.log(pickupDate, dropoffDate);
   return (
-    <form onSubmit={handleSubmit} ref={formRef} className="font-display">
+    <form
+      onSubmit={handleSubmit}
+      ref={formRef}
+      className="font-display flex flex-col  items-center md:items-start"
+    >
       {/* back btn für desktop version */}
       <button
         type="button"
@@ -176,7 +180,7 @@ const Payment = () => {
       >
         <BackIcon /> Back
       </button>
-      <section className="flex flex-col items-center md:items-start gap-[30px] md:flex-row md:justify-between">
+      <section className="flex flex-col items-center md:items-start gap-[30px] md:flex-row md:justify-between md:self-center">
         <div className="flex flex-col gap-[30px] md:w-3xl">
           {/* Billing Info */}
           <fieldset className="fieldset w-xs bg-white  p-5 rounded-lg md:w-full ">
@@ -597,7 +601,7 @@ const Payment = () => {
       {/* Rent now! button */}
       <button
         type="submit"
-        className="btn btn-primary  text-xs font-Jakarta-SemiBold mt-8"
+        className="btn btn-primary w-xs md:w-fit  text-xs font-Jakarta-SemiBold mt-8"
       >
         Rent Now!
       </button>
