@@ -2,6 +2,8 @@ import * as L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import getCityCoordinates from '../utils/functions/getCityCoordinates';
 import { useEffect } from 'react';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 interface ILeafletMapProps {
     pickupCity: string,
@@ -21,7 +23,16 @@ const LeafletMap: React.FC<ILeafletMapProps> = ({ pickupCity, mapNumber }) => {
         .then(({ latitude, longitude }) => {
             map.setView([latitude, longitude], 13);
 
-            L.marker([latitude, longitude])
+            const customIcon = L.icon({
+                iconUrl: markerIcon,
+                shadowUrl: markerShadow,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            L.marker([latitude, longitude], { icon: customIcon })
             .addTo(map)
             .bindPopup('Selected city')
             .openPopup();
