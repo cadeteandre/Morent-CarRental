@@ -81,7 +81,7 @@ const NavBarSide: FC<NavBarSideProps> = ({
   }, []);
 
   return (
-    <aside className="flex flex-col gap-10 bg-base-100 w-full max-w-[309px] md:w-[309px] p-7  shadow-sm rounded-lg mb-8 md:mb-0 md:mr-7">
+    <aside className="flex flex-col gap-10 bg-base-100 w-[309px]  p-7  shadow-sm rounded-lg mb-8 md:mb-0  md:mr-7">
       {/* Type*/}
       <fieldset>
         <legend className="uppercase font-bold text-neutral-400 text-[10.7px] font-Jakarta-SemiBold tracking-widest mb-7">

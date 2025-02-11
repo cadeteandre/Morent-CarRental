@@ -205,7 +205,7 @@ const Home = () => {
   }
 
   return (
-    <section className="md:flex ">
+    <section className=" md:flex ">
       <div className="hidden md:flex  ">
         {showFilter && (
           <NavBarSide
@@ -215,7 +215,7 @@ const Home = () => {
           />
         )}
       </div>
-      <section className=" flex flex-col gap-8 items-center">
+      <section className=" flex flex-col gap-8 items-center ">
         {showFilter ? (
           <></>
         ) : (
@@ -263,7 +263,7 @@ const Home = () => {
             />
           </div>
           <button
-            className="btn btn-accent w-full md:w-fit  self-end cursor-pointer hover:bg-blue-800"
+            className="btn btn-outline bg-white btn-primary w-full md:w-sm  self-center cursor-pointer hover:bg-blue-800"
             onClick={() => fetchVehicles("search", fetchLimit)}
           >
             Search Car
@@ -278,7 +278,7 @@ const Home = () => {
             Filter
           </button>
           <div className="flex flex-col">
-            <div className="md:hidden">
+            <div className="md:hidden flex justify-center">
               {showFilter && (
                 <NavBarSide
                   setCheckboxStatesTypes={setCheckboxStatesTypes}
