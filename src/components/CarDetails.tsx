@@ -8,6 +8,9 @@ import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import { IReview } from "../interfaces/IReview";
 import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail;
@@ -34,7 +37,16 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location, reviews }) 
       .then(({ latitude, longitude }) => {
         map.setView([latitude, longitude], 13);
 
-        L.marker([latitude, longitude])
+        const customIcon = L.icon({
+          iconUrl: markerIcon,
+          shadowUrl: markerShadow,
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+      });
+
+        L.marker([latitude, longitude], { icon: customIcon })
           .addTo(map)
           .bindPopup("Selected city")
           .openPopup();
