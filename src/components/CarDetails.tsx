@@ -1,12 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { TVehicleDetail } from "../pages/Details";
+import getCityCoordinates from "../utils/functions/getCityCoordinates";
 import { Link } from "react-router";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import { IReview } from "../interfaces/IReview";
 import getStarRating, { calculateAverage } from "../utils/functions/getStarRating";
-import LeafletMap from "./LeafletMap";
 
 interface ICarDetailsProps {
   vehicle: TVehicleDetail;
@@ -20,6 +21,30 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location, reviews }) 
   };
 
   const reviewsStars: number = calculateAverage(reviews.map((singleReview) => singleReview.stars)); 
+
+  useEffect(() => {
+    const map = L.map("map").setView([0, 0], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    getCityCoordinates(location)
+      .then(({ latitude, longitude }) => {
+        map.setView([latitude, longitude], 13);
+
+        L.marker([latitude, longitude])
+          .addTo(map)
+          .bindPopup("Selected city")
+          .openPopup();
+      })
+      .catch((error) => console.error(error));
+
+    return () => {
+      map.remove();
+    };
+  }, [location]);
 
   return (
     <div className=" flex w-[327px] flex-col gap-7 font-display md:flex-row md:w-full ">
@@ -96,7 +121,7 @@ const CarDetails: React.FC<ICarDetailsProps> = ({ vehicle, location, reviews }) 
           </Link>
         </div>
       </div>
-      <LeafletMap pickupCity={location} mapNumber={1} />
+      <div id="map" className="h-[400px] flex w-[327px] rounded-lg "></div>
     </div>
   );
 };
