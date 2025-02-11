@@ -562,6 +562,15 @@ const Payment = () => {
                 >
                   <p>Price per Day</p> <p>€ {selectedCar.price_per_day}</p>
                 </div>
+                {selectedCar.price_per_day && pickupDate && dropoffDate ? (
+                  <div className="flex justify-end">
+                    <div className="badge badge-primary mb-5 text-base">
+                      x {diffInDaysConversor(pickupDate, dropoffDate)} Days
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className="flex justify-between items-center mb-5">
                   <p>Tax</p>{" "}
                   <p>{`€ ${
