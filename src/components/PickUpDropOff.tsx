@@ -57,21 +57,19 @@ const PickUpDropOff: React.FC<IPickUpDropOffProps> = forwardRef(
           </div>
           <div className="date-time-box flex gap-2.5 ">
             <div className="flex flex-col items-start">
-              <label htmlFor="pickup-date">Datum</label>
+              <label htmlFor={`date_${componentTitle}`}>Date</label>
               <input
                 type="date"
-                name="pickup-date"
-                id="pickup-date"
+                id={`date_${componentTitle}`}
                 className="border-none text-sm w-24 lg:w-fit"
                 ref={dateRef}
               />
             </div>
             <div className="flex flex-col items-start ">
-              <label htmlFor="pickup-time">Time</label>
+              <label htmlFor={`time_${componentTitle}`}>Time</label>
               <input
                 type="time"
-                name="pickup-time"
-                id="pickup-time"
+                id={`time_${componentTitle}`}
                 className="border-none text-sm"
                 ref={timeRef}
               />
