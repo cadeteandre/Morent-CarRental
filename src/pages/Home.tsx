@@ -46,7 +46,6 @@ const Home = () => {
     type: "initial" | "search" | "filter",
     limit: number
   ) {
-
     if (type === "initial") {
       const { data, error } = await supabase
         .from("vehicles")
@@ -65,7 +64,6 @@ const Home = () => {
     }
 
     if (type === "search") {
-
       //handle possible errors by searching button
       if (
         !pickupDateRef.current?.value ||
@@ -75,7 +73,7 @@ const Home = () => {
         !dropoffLocationRef.current?.value ||
         !dropoffTimeRef.current?.value
       ) {
-        alert('Please enter pickup and drop-off details');
+        alert("Please enter pickup and drop-off details");
         return;
       }
 
@@ -207,7 +205,7 @@ const Home = () => {
   }
 
   return (
-    <section className="md:flex ">
+    <section className="flex justify-center ">
       <div className="hidden md:flex  ">
         {showFilter && (
           <NavBarSide
@@ -217,7 +215,7 @@ const Home = () => {
           />
         )}
       </div>
-      <section className=" flex flex-col gap-8 items-center">
+      <section className=" flex flex-col gap-8 w-full items-center ">
         {showFilter ? (
           <></>
         ) : (
@@ -265,7 +263,7 @@ const Home = () => {
             />
           </div>
           <button
-            className="btn btn-accent  self-end cursor-pointer hover:bg-blue-800"
+            className="btn btn-outline bg-white btn-primary w-full md:w-sm  self-center cursor-pointer hover:bg-blue-800"
             onClick={() => fetchVehicles("search", fetchLimit)}
           >
             Search Car
@@ -280,7 +278,7 @@ const Home = () => {
             Filter
           </button>
           <div className="flex flex-col">
-            <div className="md:hidden">
+            <div className="md:hidden flex justify-center">
               {showFilter && (
                 <NavBarSide
                   setCheckboxStatesTypes={setCheckboxStatesTypes}
@@ -344,12 +342,12 @@ const Home = () => {
           {filteredVehicles!.length > 0 && (
             <p className="text-neutral-400">{`${
               filteredVehicles!.length
-            } cars shown.`}</p>
+            } cars shown`}</p>
           )}
           {fetchedVehicle!.length > 0 && (
             <p className="text-neutral-400">{`${
               fetchedVehicle!.length
-            } of ${tableRows} cars shown.`}</p>
+            } of ${tableRows} cars shown`}</p>
           )}
         </section>
       </section>

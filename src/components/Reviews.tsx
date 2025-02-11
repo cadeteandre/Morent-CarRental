@@ -25,10 +25,12 @@ const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
       </li>
       {reviews.map((singleReview, i) => (
         <li key={i} className="list-row flex flex-row items-center">
-          <img
-            className="size-10 rounded-lg self-start "
-            src={singleReview.profiles.img_url}
-          />
+          <figure className="size-10 rounded-lg overflow-hidden flex items-center justify-center self-start md:self-center">
+            <img
+              className="w-full h-full object-cover rounded-lg "
+              src={singleReview.profiles.img_url}
+            />
+          </figure>
 
           <div className="flex flex-col gap-3.5 w-full">
             <div className="flex flex-row justify-between items-center ">

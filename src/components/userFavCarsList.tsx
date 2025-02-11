@@ -3,6 +3,7 @@ import { supabase } from "../utils/supabase/setupSupabase";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
 import AutoCard from "./autoCard";
+import EmptyAlert from "./EmptyAlert";
 
 export interface IVehicle {
   id: string;
@@ -68,7 +69,7 @@ const UserFavCarsList: React.FC = () => {
   return (
     <section className="flex flex-wrap flex-col md:flex-row gap-8">
       {favoriteVehicles.length === 0 ? (
-        <p>No favorite vehicles found.</p>
+        <EmptyAlert text={"No favorite vehicles found"} />
       ) : (
         favoriteVehicles.map((vehicle) => (
           <AutoCard

@@ -45,7 +45,7 @@ const Header = () => {
           {" "}
           <Link
             to={"/"}
-            className="btn btn-ghost text-2xl text-primary md:text-3xl "
+            className="hover:text-blue-700 text-2xl text-primary md:text-3xl "
           >
             MORENT
           </Link>

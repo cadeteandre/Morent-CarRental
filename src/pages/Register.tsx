@@ -96,7 +96,7 @@ const Register = () => {
               id="firstname"
               ref={firstNameRef}
               required
-              placeholder="Vorname"
+              placeholder="John"
             />
           </div>
           <div className="w-full flex flex-col gap-0.5">
@@ -108,7 +108,7 @@ const Register = () => {
               type="text"
               id="lastname"
               ref={lastNameRef}
-              placeholder="Nachname"
+              placeholder="Doe"
               required
             />
           </div>

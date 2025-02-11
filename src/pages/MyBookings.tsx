@@ -4,6 +4,7 @@ import { IBookedVehicle } from "../interfaces/IBookedVehicle";
 import fetchBookings from "../utils/functions/fetchBookings";
 import { mainContext } from "../context/MainProvider";
 import { User } from "@supabase/supabase-js";
+import EmptyAlert from "../components/EmptyAlert";
 
 const MyBookings = () => {
   const [selected, setSelected] = useState("Upcoming");
@@ -32,7 +33,7 @@ const MyBookings = () => {
       <div className="flex flex-col items-center space-y-4 border rounded-3xl self-center my-6">
         <div className="flex items-center justify-between bg-gray-200 rounded-full p-1 max-w-[260px]">
           <button
-            className={`py-1 px-6 text-center rounded-full text-sm transition ${
+            className={`py-1 cursor-pointer hover:text-accent px-6 text-center rounded-full text-sm transition ${
               selected === "Upcoming" ? "bg-white shadow-md" : "text-gray-500"
             }`}
             onClick={() => setSelected("Upcoming")}
@@ -40,7 +41,7 @@ const MyBookings = () => {
             Upcoming
           </button>
           <button
-            className={`py-1 px-6 rounded-full text-sm transition ${
+            className={`py-1 cursor-pointer hover:text-accent px-6 rounded-full text-sm transition ${
               selected === "History" ? "bg-white shadow-md" : "text-gray-500"
             }`}
             onClick={() => setSelected("History")}
@@ -68,7 +69,7 @@ const MyBookings = () => {
           />
         ))
       ) : (
-        <p className="text-gray-500 mt-4">No bookings found.</p>
+        <EmptyAlert text={"No bookings found."} />
       )}
     </section>
   );
