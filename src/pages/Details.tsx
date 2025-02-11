@@ -82,7 +82,7 @@ const Details = () => {
         <Reviews reviews={reviews} />
 
         <div className="mb-4 w-full">
-          <p className="text-neutral-400 font-display text-lg mt-11 mb-4 hidden md:flex">
+          <p className="text-neutral-400 font-display text-lg mt-11 mb-4 flex">
             Available Nearby
           </p>
           <section className="justify-center flex flex-col flex-wrap md:flex-row md:w-full md:justify-start items-center gap-6">
